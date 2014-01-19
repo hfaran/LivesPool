@@ -6,7 +6,7 @@
 
 ## POST
 ### Input
-```
+```json
 {
     "required": [
         "player_names", 
@@ -27,7 +27,7 @@
 }
 ```
 ### Output
-```
+```json
 {
     "type": "object", 
     "properties": {
@@ -56,7 +56,7 @@ POST the required parameters to create a new game
 
 ## POST
 ### Input
-```
+```json
 {
     "required": [
         "ball", 
@@ -78,7 +78,7 @@ POST the required parameters to create a new game
 }
 ```
 ### Output
-```
+```json
 {
     "type": "object", 
     "properties": {
@@ -107,7 +107,7 @@ POST the required parameters to register the pocketing of a ball
 
 ## POST
 ### Input
-```
+```json
 {
     "required": [
         "name"
@@ -121,7 +121,7 @@ POST the required parameters to register the pocketing of a ball
 }
 ```
 ### Output
-```
+```json
 {
     "type": "object", 
     "properties": {
