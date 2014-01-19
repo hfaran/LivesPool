@@ -1,3 +1,5 @@
+import uuid
+
 from tornado_json.requesthandlers import APIHandler
 from tornado_json.utils import io_schema
 
@@ -22,4 +24,5 @@ class CreateGame(APIHandler):
     @io_schema
     def post(self, body):
         """POST RequestHandler"""
-        pass
+        game_id = str(uuid.uuid4())
+
