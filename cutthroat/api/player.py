@@ -2,7 +2,7 @@ from tornado_json.requesthandlers import APIHandler
 from tornado_json.utils import io_schema, api_assert
 
 
-def CreatePlayer(APIHandler):
+class CreatePlayer(APIHandler):
     apid = {}
     apid["post"] = {
         "input_schema": {

@@ -85,3 +85,40 @@
 
 
 
+
+
+
+
+# /api/player/createplayer
+
+    Content-Type: application/json
+
+## POST
+### Input
+```
+{
+    "required": [
+        "name"
+    ], 
+    "type": "object", 
+    "properties": {
+        "name": {
+            "type": "string"
+        }
+    }
+}
+```
+### Output
+```
+{
+    "type": "object", 
+    "properties": {
+        "name": {
+            "type": "string"
+        }
+    }
+}
+```
+
+
+

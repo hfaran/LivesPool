@@ -39,6 +39,6 @@ class Connection(object):
         table = self.db['players']
         table.insert(
                 {
-                    "name": name,
+                    "name": player_name,
                 }
             )
