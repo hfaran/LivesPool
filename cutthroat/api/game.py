@@ -1,9 +1,10 @@
 import uuid
+import json
 from random import shuffle
 from itertools import chain
 
 from tornado_json.requesthandlers import APIHandler
-from tornado_json.utils import io_schema
+from tornado_json.utils import io_schema, api_assert
 
 
 TOTAL_NUM_BALLS = 15
@@ -39,15 +40,17 @@ class CreateGame(APIHandler):
     def post(self, body):
         """POST RequestHandler"""
         game_id = str(uuid.uuid4())
-        player_names = self.argument.body["player_names"]
-        nbpp = self.argument.body["nbpp"]
-        password = self.argument.body["password"]
+        player_names = body["player_names"]
+        nplayers = len(player_names)
+        nbpp = body["nbpp"]
+        password = body["password"]
 
         # Make sure values make sense
-        if nbpp * nplayers > TOTAL_NUM_BALLS:
-            raise ArithmeticError("There are literally not enough balls to "
-                                  "accomodate the game you are trying to "
-                                  "create.")
+        api_assert(nbpp * nplayers < TOTAL_NUM_BALLS, 400,
+                   log_message=("There are literally not enough balls to "
+                    "accomodate the game you are trying to "
+                    "create.")
+        )
 
         balls = generate_balls(TOTAL_NUM_BALLS)
         shuffle(balls)

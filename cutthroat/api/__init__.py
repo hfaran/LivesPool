@@ -1,1 +1,2 @@
-import handlers
+import game
+import player

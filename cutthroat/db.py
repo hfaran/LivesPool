@@ -14,13 +14,13 @@ class Connection(object):
         self.generic_query = conn.generic_query
         self.db = conn._db_dataset
 
-    def create_game(game_id, players, unclaimed_balls):
+    def create_game(self, game_id, players, unclaimed_balls):
         table = self.db['games']
         table.insert(
             {
                 "game_id": game_id,
                 "players": ",".join(players.keys()),
-                "unclaimed_balls": ",".join(unclaimed_balls)
+                "unclaimed_balls": ",".join(map(str, unclaimed_balls))
             }
         )
 
@@ -30,13 +30,13 @@ class Connection(object):
                 {
                     "name": name,
                     "current_game_id": game_id,
-                    "balls": ",".join(balls)
+                    "balls": ",".join(map(str, balls))
                 },
                 ['name']
             )
 
-    def create_player(player_name):
-        table = self.db['player']
+    def create_player(self, player_name):
+        table = self.db['players']
         table.insert(
                 {
                     "name": name,
