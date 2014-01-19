@@ -10,14 +10,17 @@ class CreateGame(APIHandler):
         "input_schema": {
             "type": "object",
             "properties": {
-                "player_names": {"type": "list"},
+                "player_names": {"type": "array"},
                 "nbpp": {"type": "number"},
                 "password": {"type": "string"}
             },
             "required": ["player_names", "nbpp"]
         },
         "output_schema": {
-            "type": "string"
+            "type": "object",
+            "properties": {
+                "game_id": {"type": "string"}
+            }
         },
         "doc": ""
     }
@@ -26,3 +29,4 @@ class CreateGame(APIHandler):
     def post(self, body):
         """POST RequestHandler"""
         game_id = str(uuid.uuid4())
+        return {"game_id": game_id}

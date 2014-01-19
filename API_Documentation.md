@@ -15,7 +15,7 @@
     "type": "object", 
     "properties": {
         "player_names": {
-            "type": "list"
+            "type": "array"
         }, 
         "password": {
             "type": "string"
@@ -29,7 +29,12 @@
 ### Output
 ```
 {
-    "type": "string"
+    "type": "object", 
+    "properties": {
+        "game_id": {
+            "type": "string"
+        }
+    }
 }
 ```
 

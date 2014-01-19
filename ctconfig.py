@@ -36,7 +36,7 @@ def define_options():
     )
     define(
         "mysql_user",
-        default="touchpt-dev"
+        default="cutthroat-dev"
     )
     define(
         "mysql_password",
