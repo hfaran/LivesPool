@@ -2,7 +2,6 @@ import math
 from random import shuffle
 from itertools import chain
 
-
 TOTAL_NUM_BALLS = 15
 
 
@@ -15,7 +14,8 @@ class Player(object):
 
     """Cutthroat Player"""
 
-    def __init__(self, balls):
+    def __init__(self, name, balls):
+        self.name = name
         self.init_balls = balls[:]
         self.balls = balls
 
@@ -29,7 +29,8 @@ class Game(object):
 
     """Cutthroat Game"""
 
-    def __init__(self, nbpp, player_names):
+    def __init__(self, nbpp, player_names, game_id):
+        self.game_id = game_id
         player_names = player_names[:]
         nplayers = len(player_names)
 
@@ -47,7 +48,8 @@ class Game(object):
             _balls = []
             for i in xrange(nbpp):
                 _balls.append(balls.pop())
-            self.players[player_names.pop()] = Player(_balls)
+            pname = player_names.pop()
+            self.players[pname] = Player(pname, _balls)
 
         self.unclaimed_balls = balls[:]
 
