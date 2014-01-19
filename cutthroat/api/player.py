@@ -18,7 +18,11 @@ class CreatePlayer(APIHandler):
                 "name": {"type": "string"}
             }
         },
-        "doc": ""
+        "doc": """
+POST the required parameters to permanently register a new player
+
+* `name`: Username of the player
+"""
     }
 
     @io_schema

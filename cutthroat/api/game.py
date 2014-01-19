@@ -33,7 +33,13 @@ class CreateGame(APIHandler):
                 "game_id": {"type": "string"}
             }
         },
-        "doc": ""
+        "doc": """
+POST the required parameters to create a new game
+
+* `nbpp`: Number of balls per player
+* `password`: Password for the game; only the gamemaster should have access to this as it allows updates to the game
+* `player_names`: List of player names that will join the game
+"""
     }
 
     @io_schema
@@ -48,9 +54,9 @@ class CreateGame(APIHandler):
         # Make sure values make sense
         api_assert(nbpp * nplayers < TOTAL_NUM_BALLS, 400,
                    log_message=("There are literally not enough balls to "
-                    "accomodate the game you are trying to "
-                    "create.")
-        )
+                                "accomodate the game you are trying to "
+                                "create.")
+                   )
 
         balls = generate_balls(TOTAL_NUM_BALLS)
         shuffle(balls)
@@ -88,5 +94,11 @@ class SinkBall(APIHandler):
                 "game_id": {"type": "string"}
             }
         },
-        "doc": ""
+        "doc": """
+POST the required parameters to register the pocketing of a ball
+
+* `ball`: The ball that was pocketed
+* `game_id`: The full game_id of the game for which to register
+* `password`: Password for the game; must be provided in order to update the game
+"""
     }
