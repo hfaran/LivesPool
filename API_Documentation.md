@@ -117,10 +117,14 @@ POST the required parameters to register the pocketing of a ball
 ```json
 {
     "required": [
-        "name"
+        "name", 
+        "password"
     ], 
     "type": "object", 
     "properties": {
+        "password": {
+            "type": "string"
+        }, 
         "name": {
             "type": "string"
         }
@@ -143,5 +147,6 @@ POST the required parameters to register the pocketing of a ball
 POST the required parameters to permanently register a new player
 
 * `name`: Username of the player
+* `password`: Password for future logins
 
 

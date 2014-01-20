@@ -1,7 +1,9 @@
+import logging
 from itertools import chain
 
 from tornado.options import options
 from tornado_json.db import MySQLConnection
+from tornado_json.utils import api_assert
 
 
 def stringify_list(l):
@@ -28,13 +30,20 @@ class Connection(object):
         self.db = conn._db_dataset
 
     def create_game(self, game_id, players, unclaimed_balls, password):
+        ptable = self.db['players']
+        all_players = [p['name'] for p in ptable]
+        api_assert(all(p in all_players for p in players), 409,
+                   log_message="Your list of players contains unregistered"
+                   " names. Please register all players first.")
+
         table = self.db['games']
         table.insert(
             {
                 "game_id": game_id,
                 "players": stringify_list(players.keys()),
                 "unclaimed_balls": stringify_list(unclaimed_balls),
-                "password": password
+                "password": password,
+                "status": "active"
             }
         )
 
@@ -49,11 +58,19 @@ class Connection(object):
                 ['name']
             )
 
-    def create_player(self, player_name):
-        table = self.db['players']
-        table.insert(
+    def create_player(self, player_name, password):
+        ptable = self.db['players']
+        print ptable.all()
+        all_players = [p['name'] for p in ptable]
+        api_assert(player_name not in all_players, 409,
+                   log_message="{} is already registered.".format(player_name))
+
+        ptable.insert(
             {
                 "name": player_name,
+                "current_game_id": "",
+                "balls": "",
+                "password": password
             }
         )
 
@@ -99,3 +116,22 @@ class Connection(object):
         table = self.db['games']
         game = table.find_one(game_id=game_id)
         return game['password'] == password
+
+    def mark_stale_games(self):
+        games = self.db['games']
+        player_table = self.db['players']
+
+        games_to_delete = []
+        for game in games:
+            players = self.get_players_for_game(game['game_id'])
+            for p in players:
+                _p = player_table.find_one(name=p)
+                if all([_p['current_game_id'] != game['game_id'],
+                        game['status'] == "active"]):
+                    games_to_delete.append(game['game_id'])
+                    break
+
+        for game_id in games_to_delete:
+            # games.delete(game_id=game_id)
+            games.update(dict(game_id=game_id, status="stale"), ['game_id'])
+            logging.info("Marked {} as stale.".format(game_id))

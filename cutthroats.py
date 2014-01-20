@@ -104,6 +104,11 @@ def main():
     signal.signal(signal.SIGTERM, sig_handler)
     signal.signal(signal.SIGINT, sig_handler)
 
+    # Add periodic callback to mark stale games every minute
+    p = tornado.ioloop.PeriodicCallback(
+        http_server.request_callback.db_conn.mark_stale_games, 60000)
+    p.start()
+
     print("Welcome to cutthroat-server")
     tornado.ioloop.IOLoop.instance().start()
 
