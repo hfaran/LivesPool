@@ -20,6 +20,7 @@ from tornado_json.routes import get_routes
 import cutthroat
 import ctconfig
 from cutthroat import api
+from cutthroat import auth
 
 
 MAX_WAIT_SECONDS_BEFORE_SHUTDOWN = 3
@@ -74,7 +75,7 @@ def main():
     # Get any commandline options
     tornado.options.parse_command_line()
 
-    routes = get_routes(api)
+    routes = get_routes(api) + get_routes(auth)
     settings = dict(
         template_path=os.path.join(
             os.path.dirname(__file__), "templates"),

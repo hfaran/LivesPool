@@ -163,8 +163,9 @@ class Connection(object):
     def auth_user(self, player_name, password):
         ptable = self.db['players']
         player = ptable.find_one(name=player_name)
+        r = "No user {} exists.".format(player_name)
         api_assert(player, 409,
-                   log_message="No user {} exists.".format(player_name))
+                   log_message=r, reason=r)
         return password == player['password']
 
     def mark_stale_games(self):
