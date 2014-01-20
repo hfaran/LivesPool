@@ -1,5 +1,6 @@
-from tornado_json.requesthandlers import APIHandler
 from tornado_json.utils import io_schema, api_assert
+
+from cutthroat.handlers import APIHandler
 
 
 class CreatePlayer(APIHandler):

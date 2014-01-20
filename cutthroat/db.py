@@ -85,7 +85,6 @@ class Connection(object):
             registered.
         """
         ptable = self.db['players']
-        print ptable.all()
         all_players = [p['name'] for p in ptable]
         api_assert(player_name not in all_players, 409,
                    log_message="{} is already registered.".format(player_name))
@@ -160,6 +159,13 @@ class Connection(object):
         table = self.db['games']
         game = table.find_one(game_id=game_id)
         return game['password'] == password
+
+    def auth_user(self, player_name, password):
+        ptable = self.db['players']
+        player = ptable.find_one(name=player_name)
+        api_assert(player, 409,
+                   log_message="No user {} exists.".format(player_name))
+        return password == player['password']
 
     def mark_stale_games(self):
         """Marks status for stale games as `stale`

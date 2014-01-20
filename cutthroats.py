@@ -6,6 +6,7 @@ import time
 import signal
 import json
 import jsonpickle
+import uuid
 
 import tornado.httpserver
 import tornado.ioloop
@@ -78,7 +79,9 @@ def main():
         template_path=os.path.join(
             os.path.dirname(__file__), "templates"),
         static_path=os.path.join(os.path.dirname(__file__), "static"),
-        gzip=True
+        gzip=True,
+        cookie_secret=str(uuid.uuid4()),
+        login_url="/auth/auth/login"
     )
 
     # If asked to write routes, do so
