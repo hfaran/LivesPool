@@ -7,10 +7,21 @@ from tornado_json.utils import api_assert
 
 
 def stringify_list(l):
+    """Stringify list `l`
+
+    :returns: A comma-joined string rep of `l`
+    :rtype: str
+    """
     return ",".join(map(str, l))
 
 
 def listify_string(func, s):
+    """'Decode' `s` into a list
+
+    :returns: A list of elements from a comma-split of s each wrapped
+        with func
+    :rtype: list
+    """
     if not s:
         return []
     else:
@@ -18,6 +29,8 @@ def listify_string(func, s):
 
 
 class Connection(object):
+
+    """Connection to cutthroat MySQL database"""
 
     def __init__(self):
         conn = MySQLConnection(
@@ -30,6 +43,12 @@ class Connection(object):
         self.db = conn._db_dataset
 
     def create_game(self, game_id, players, unclaimed_balls, password):
+        """Create game with game_id `game_id`
+
+        Adds entry for a new game with given parameters to database, and
+        updates players as well.
+        :raises APIError: If any players are not already registered
+        """
         ptable = self.db['players']
         all_players = [p['name'] for p in ptable]
         api_assert(all(p in all_players for p in players), 409,
@@ -59,6 +78,12 @@ class Connection(object):
             )
 
     def create_player(self, player_name, password):
+        """Register new player `player_name`
+
+        Adds entry for player `player_name` to the database.
+        :raises APIError: If a player with `player_name` is already
+            registered.
+        """
         ptable = self.db['players']
         print ptable.all()
         all_players = [p['name'] for p in ptable]
@@ -75,10 +100,15 @@ class Connection(object):
         )
 
     def get_balls_for_player(self, player_name):
+        """
+        :returns: Balls belonging to player `player_name`
+        :rtype: [int, ...]
+        """
         table = self.db['players']
         return listify_string(int, table.find_one(name=player_name)['balls'])
 
     def remove_ball_for_player(self, player_name, ball):
+        """Remove `ball` from `player_name`'s active list of balls"""
         balls = self.get_balls_for_player(player_name)
         balls.remove(ball)
 
@@ -87,6 +117,7 @@ class Connection(object):
                      ['name'])
 
     def remove_ball_from_unclaimed(self, game_id, ball):
+        """Remove `ball` from `game_id`'s list of unclaimed_balls"""
         table = self.db['games']
         game = table.find_one(game_id=game_id)
         unclaimed_balls = listify_string(int, game['unclaimed_balls'])
@@ -97,12 +128,20 @@ class Connection(object):
         )
 
     def get_players_for_game(self, game_id):
+        """
+        :returns: Players participating in game `game_id`
+        :rtype: [str, ...]
+        """
         table = self.db['games']
         game = table.find_one(game_id=game_id)
         players = listify_string(str, game['players'])
         return players
 
     def get_balls_on_table(self, game_id):
+        """
+        :returns: Balls currently on the table for game `game_id`
+        :rtype: [int, ...]
+        """
         table = self.db['games']
         game = table.find_one(game_id=game_id)
         players = listify_string(str, game['players'])
@@ -113,11 +152,22 @@ class Connection(object):
         ) + unclaimed_balls
 
     def auth_game_update_request(self, game_id, password):
+        """
+        :returns: Boolean indicating whether `password` matches the password-
+            entry in the database for `game_id`
+        :rtype: bool
+        """
         table = self.db['games']
         game = table.find_one(game_id=game_id)
         return game['password'] == password
 
     def mark_stale_games(self):
+        """Marks status for stale games as `stale`
+
+        If any games marked `active` has one or more players who no
+        longer has a `current_game_id` matching the game's `game_id`,
+        the game will have its status changed to `stale`
+        """
         games = self.db['games']
         player_table = self.db['players']
 
@@ -132,6 +182,8 @@ class Connection(object):
                     break
 
         for game_id in games_to_delete:
-            # games.delete(game_id=game_id)
             games.update(dict(game_id=game_id, status="stale"), ['game_id'])
             logging.info("Marked {} as stale.".format(game_id))
+            # If we wanted to delete games instead of simply marking them
+            #   stale, we would do this:
+            # games.delete(game_id=game_id)
