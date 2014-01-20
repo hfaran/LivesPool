@@ -10,7 +10,8 @@
 {
     "required": [
         "player_names", 
-        "nbpp"
+        "nbpp", 
+        "password"
     ], 
     "type": "object", 
     "properties": {

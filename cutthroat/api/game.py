@@ -32,7 +32,7 @@ class CreateGame(APIHandler):
                 "nbpp": {"type": "number"},
                 "password": {"type": "string"}
             },
-            "required": ["player_names", "nbpp"]
+            "required": ["player_names", "nbpp", "password"]
         },
         "output_schema": {
             "type": "object",
@@ -78,7 +78,7 @@ POST the required parameters to create a new game
 
         unclaimed_balls = balls[:]
 
-        self.db_conn.create_game(game_id, players, unclaimed_balls)
+        self.db_conn.create_game(game_id, players, unclaimed_balls, password)
 
         return {"game_id": game_id}
 
@@ -113,8 +113,24 @@ POST the required parameters to register the pocketing of a ball
     @io_schema
     def post(self, body):
         password = body['password']
-        ball = body['balls']
+        ball = body['ball']
         game_id = body['game_id']
 
-        api_assert(self.db_conn.auth_game_update_request())
-        if body["ball"] not in self.db_conn.get_balls_on_table(body[])
+        res = {"game_id": game_id}
+
+        # Authenticate
+        api_assert(self.db_conn.auth_game_update_request(game_id, password),
+                   401, log_message="Bad password: {}".format(password))
+
+        # If ball is already sunk, do nothing
+        if ball not in self.db_conn.get_balls_on_table(game_id):
+            return res
+
+        for p in self.db_conn.get_players_for_game(game_id):
+            if ball in self.db_conn.get_balls_for_player(p):
+                self.db_conn.remove_ball_for_player(p, ball)
+                break
+        else:
+            self.db_conn.remove_ball_from_unclaimed(game_id, ball)
+
+        return res
