@@ -98,8 +98,10 @@ class SinkBall(APIHandler):
         "output_schema": {
             "type": "object",
             "properties": {
-                "game_id": {"type": "string"}
-            }
+                "game_id": {"type": "string"},
+                "message": {"type": "string"}
+            },
+            "required": ["game_id"]
         },
         "doc": """
 POST the required parameters to register the pocketing of a ball
@@ -124,6 +126,7 @@ POST the required parameters to register the pocketing of a ball
 
         # If ball is already sunk, do nothing
         if ball not in self.db_conn.get_balls_on_table(game_id):
+            res['message'] = "Ball {} was not on the table.".format(ball)
             return res
 
         for p in self.db_conn.get_players_for_game(game_id):

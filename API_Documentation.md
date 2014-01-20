@@ -81,9 +81,15 @@ POST the required parameters to create a new game
 ### Output
 ```json
 {
+    "required": [
+        "game_id"
+    ], 
     "type": "object", 
     "properties": {
         "game_id": {
+            "type": "string"
+        }, 
+        "message": {
             "type": "string"
         }
     }

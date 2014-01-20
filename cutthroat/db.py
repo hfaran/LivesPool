@@ -8,6 +8,13 @@ def stringify_list(l):
     return ",".join(map(str, l))
 
 
+def listify_string(func, s):
+    if not s:
+        return []
+    else:
+        return map(func, s.split(","))
+
+
 class Connection(object):
 
     def __init__(self):
@@ -52,7 +59,7 @@ class Connection(object):
 
     def get_balls_for_player(self, player_name):
         table = self.db['players']
-        return map(int, table.find_one(name=player_name)['balls'].split(","))
+        return listify_string(int, table.find_one(name=player_name)['balls'])
 
     def remove_ball_for_player(self, player_name, ball):
         balls = self.get_balls_for_player(player_name)
@@ -64,7 +71,8 @@ class Connection(object):
 
     def remove_ball_from_unclaimed(self, game_id, ball):
         table = self.db['games']
-        unclaimed_balls = map(int, game['unclaimed_balls'].split(","))
+        game = table.find_one(game_id=game_id)
+        unclaimed_balls = listify_string(int, game['unclaimed_balls'])
         unclaimed_balls.remove(ball)
         table.update(dict(game_id=game_id, unclaimed_balls=stringify_list(
             unclaimed_balls)),
@@ -74,14 +82,14 @@ class Connection(object):
     def get_players_for_game(self, game_id):
         table = self.db['games']
         game = table.find_one(game_id=game_id)
-        players = game['players'].split(",")
+        players = listify_string(str, game['players'])
         return players
 
     def get_balls_on_table(self, game_id):
         table = self.db['games']
         game = table.find_one(game_id=game_id)
-        players = game['players'].split(",")
-        unclaimed_balls = map(int, game['unclaimed_balls'].split(","))
+        players = listify_string(str, game['players'])
+        unclaimed_balls = listify_string(int, game['unclaimed_balls'])
 
         return list(
             chain(*[self.get_balls_for_player(p) for p in players])
