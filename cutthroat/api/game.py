@@ -15,6 +15,13 @@ def generate_balls(num):
     return map(lambda x: x + 1, range(num))
 
 
+def balls_sunk(cls, game_id):
+    return list(
+        set(generate_balls(TOTAL_NUM_BALLS)) - set(
+            cls.db_conn.get_balls_on_table(game_id))
+    )
+
+
 class CreateGame(APIHandler):
     apid = {}
     apid["post"] = {
@@ -102,3 +109,12 @@ POST the required parameters to register the pocketing of a ball
 * `password`: Password for the game; must be provided in order to update the game
 """
     }
+
+    @io_schema
+    def post(self, body):
+        password = body['password']
+        ball = body['balls']
+        game_id = body['game_id']
+
+        api_assert(self.db_conn.auth_game_update_request())
+        if body["ball"] not in self.db_conn.get_balls_on_table(body[])
