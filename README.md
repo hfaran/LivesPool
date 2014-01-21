@@ -3,5 +3,5 @@ cutthroat-server
 
 ## Getting Started
     ./install.bash
-    ./touchpointd.py
+    ./cutthroats.py
     # Visit localhost:8888
