@@ -1,16 +1,8 @@
-from cutthroat.handlers import APIHandler, ViewHandler
+from cutthroat.handlers import APIHandler
 
-
-class Login(ViewHandler):
+class Login(APIHandler):
 
     """Handle authentication"""
-
-    def get(self):
-        self.write('<html><body><form action="{}" method="post">'
-                   'Name: <input type="text" name="name">'
-                   'Password: <input type="password" name="password">'
-                   '<input type="submit" value="Sign in">'
-                   '</form></body></html>'.format(self.settings['login_url']))
 
     def post(self):
         player_name = self.get_argument("name")
