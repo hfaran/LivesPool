@@ -163,9 +163,8 @@ class Connection(object):
     def auth_user(self, player_name, password):
         ptable = self.db['players']
         player = ptable.find_one(name=player_name)
-        r = "No user {} exists.".format(player_name)
         api_assert(player, 409,
-                   log_message=r, reason=r)
+                   log_message="No user {} exists.".format(player_name))
         return password == player['password']
 
     def mark_stale_games(self):
@@ -194,3 +193,57 @@ class Connection(object):
             # If we wanted to delete games instead of simply marking them
             #   stale, we would do this:
             # games.delete(game_id=game_id)
+
+    def create_room(self, room_name, password, owner):
+        """Create a new room `room_name`
+
+        Adds entry for room `room_name` to the database.
+        :raises APIError: If a room with `room_name` has already
+            been created.
+        """
+        rtable = self.db['rooms']
+        api_assert(not rtable.find_one(name=room_name), 409,
+                   log_message="Room with name `{}` already exists.".format(
+                       room_name))
+
+        rtable.insert(
+            {
+                "name": room_name,
+                "password": password,
+                "owner": owner,
+                "current_players": ""
+            }
+        )
+
+    def join_room(self, room_name, password, player_name):
+        """Join room `room_name`
+
+        Updates `current_players` entry for room `room_name` with
+        player `player_name` to the database.
+
+        :raises APIError: If a room with `room_name` does not exist;
+            or if the password is incorrect for room `room_name`, or if player
+            `player_name` does not exist
+        """
+        rtable = self.db['rooms']
+        room = rtable.find_one(name=room_name)
+        api_assert(room, 409,
+                   log_message="No room {} exists".format(room_name))
+        api_assert(password == room['password'], 403,
+                   log_message="Bad password for room `{}`.".format(room_name))
+
+        ptable = self.db['players']
+        player = ptable.find_one(name=player_name)
+        api_assert(player, 409,
+                   log_message="No user {} exists.".format(player_name))
+
+        rtable.update(
+            {
+                "name": room_name,
+                "current_players": stringify_list(
+                    listify_string(str, room['current_players']) +
+                    [player_name]
+                )
+            },
+            ['name']
+        )

@@ -9,14 +9,17 @@
 ```json
 {
     "required": [
-        "player_names", 
         "nbpp", 
-        "password"
+        "password", 
+        "room_name"
     ], 
     "type": "object", 
     "properties": {
-        "player_names": {
-            "type": "array"
+        "room_name": {
+            "type": "string"
+        }, 
+        "room_password": {
+            "type": "string"
         }, 
         "password": {
             "type": "string"
@@ -44,7 +47,8 @@ POST the required parameters to create a new game
 
 * `nbpp`: Number of balls per player
 * `password`: Password for the game; only the gamemaster should have access to this as it allows updates to the game
-* `player_names`: List of player names that will join the game
+* `room_name`: Room from which this game is being created
+* `room_password`: (Required only if room is passworded) Password for the room from which this game is being created
 
 
 
@@ -148,5 +152,105 @@ POST the required parameters to permanently register a new player
 
 * `name`: Username of the player
 * `password`: Password for future logins
+
+
+
+
+
+
+# /api/room/createroom
+
+    Content-Type: application/json
+
+## POST
+### Input
+```json
+{
+    "required": [
+        "name", 
+        "owner"
+    ], 
+    "type": "object", 
+    "properties": {
+        "owner": {
+            "type": "string"
+        }, 
+        "password": {
+            "type": "string"
+        }, 
+        "name": {
+            "type": "string"
+        }
+    }
+}
+```
+### Output
+```json
+{
+    "type": "object", 
+    "properties": {
+        "name": {
+            "type": "string"
+        }
+    }
+}
+```
+
+
+POST the required parameters to create a new room
+
+* `name`: Name of the room
+* `password`: (Optional) Password to the room if you wish to keep entry restricted to players who know the password
+* `owner`: Name of the player creating the room
+
+
+
+
+
+
+# /api/room/joinroom
+
+    Content-Type: application/json
+
+## POST
+### Input
+```json
+{
+    "required": [
+        "name", 
+        "player"
+    ], 
+    "type": "object", 
+    "properties": {
+        "player": {
+            "type": "string"
+        }, 
+        "password": {
+            "type": "string"
+        }, 
+        "name": {
+            "type": "string"
+        }
+    }
+}
+```
+### Output
+```json
+{
+    "type": "object", 
+    "properties": {
+        "name": {
+            "type": "string"
+        }
+    }
+}
+```
+
+
+POST the required parameters to create a new room
+
+* `name`: Name of the room
+* `password`: (Optional) Password to the room if it has one
+* `player`: Name of player joining the room
 
 

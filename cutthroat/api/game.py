@@ -29,11 +29,12 @@ class CreateGame(APIHandler):
         "input_schema": {
             "type": "object",
             "properties": {
-                "player_names": {"type": "array"},
+                "room_password": {"type": "string"},
                 "nbpp": {"type": "number"},
-                "password": {"type": "string"}
+                "password": {"type": "string"},
+                "room_name": {"type": "string"}
             },
-            "required": ["player_names", "nbpp", "password"]
+            "required": ["nbpp", "password", "room_name"]
         },
         "output_schema": {
             "type": "object",
@@ -46,9 +47,14 @@ POST the required parameters to create a new game
 
 * `nbpp`: Number of balls per player
 * `password`: Password for the game; only the gamemaster should have access to this as it allows updates to the game
-* `player_names`: List of player names that will join the game
+* `room_name`: Room from which this game is being created
+* `room_password`: (Required only if room is passworded) Password for the room from which this game is being created
 """
     }
+    raise NotImplementedError
+    # Need to fix this RequestHandler to
+    # * get player_names from room
+    # * Authenticate the room credentials and delete the room
 
     @io_schema
     def post(self, body):
