@@ -1,17 +1,17 @@
 from tornado_json import requesthandlers
 
 
-class AuthMixin(object):
+class APIHandler(requesthandlers.APIHandler):
+
+    """APIHandler"""
 
     def get_current_user(self):
         return self.get_secure_cookie("user")
 
 
-class APIHandler(requesthandlers.APIHandler, AuthMixin):
+class ViewHandler(requesthandlers.ViewHandler):
 
-    """New APIHandler with AuthMixin"""
+    """ViewHandler"""
 
-
-class ViewHandler(requesthandlers.ViewHandler, AuthMixin):
-
-    """New ViewHandler with AuthMixin"""
+    def get_current_user(self):
+        return self.get_cookie("user")

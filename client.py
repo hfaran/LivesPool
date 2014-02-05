@@ -54,6 +54,7 @@ class CutthroatAPI(object):
     def list_rooms(self):
         r = requests.get(
             self.base_url + "/api/room/listrooms",
+            cookies=self.cookies
         )
         if r.status_code is 200:
             return r.json()[u"data"]
@@ -71,7 +72,8 @@ class CutthroatAPI(object):
 
         r = requests.post(
             self.base_url + "/api/room/joinroom",
-            data=json.dumps(data)
+            data=json.dumps(data),
+            cookies=self.cookies
         )
         logging.info("{}\n{}".format(r, r.json()))
         return r.json()

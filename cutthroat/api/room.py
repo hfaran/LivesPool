@@ -69,6 +69,7 @@ POST the required parameters to create a new room
     }
 
     @io_schema
+    @authenticated
     def post(self, body):
         self.db_conn.join_room(
             room_name=body["name"],
@@ -94,6 +95,7 @@ GET to receive list of rooms
     }
 
     @io_schema
+    @authenticated
     def get(self, body):
         return self.db_conn.list_rooms()
 

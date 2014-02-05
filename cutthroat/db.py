@@ -237,6 +237,13 @@ class Connection(object):
         api_assert(player, 409,
                    log_message="No user {} exists.".format(player_name))
 
+        api_assert(
+            player_name not in listify_string(str, room['current_players']),
+            409,
+            log_message="Player `{}` already in room `{}`".format(
+                player_name, room_name)
+        )
+
         rtable.update(
             {
                 "name": room_name,
