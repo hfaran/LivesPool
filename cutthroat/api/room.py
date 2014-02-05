@@ -80,11 +80,11 @@ POST the required parameters to create a new room
 class LeaveRoom(APIHandler):
 
     """"""
-    raise NotImplementedError
+    #raise NotImplementedError
 
 
 class RetireRoom(APIHandler):
 
     """"""
     # If owner of the room wants to delete it
-    raise NotImplementedError
+    #raise NotImplementedError

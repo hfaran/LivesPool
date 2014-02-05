@@ -51,7 +51,7 @@ POST the required parameters to create a new game
 * `room_password`: (Required only if room is passworded) Password for the room from which this game is being created
 """
     }
-    raise NotImplementedError
+    #raise NotImplementedError
     # Need to fix this RequestHandler to
     # * get player_names from room
     # * Authenticate the room credentials and delete the room

@@ -1,5 +1,51 @@
 **This documentation is automatically generated.**
 
+# /api/auth/login
+
+    Content-Type: application/json
+
+## POST
+### Input
+```json
+{
+    "required": [
+        "name", 
+        "password"
+    ], 
+    "type": "object", 
+    "properties": {
+        "password": {
+            "type": "string"
+        }, 
+        "name": {
+            "type": "string"
+        }
+    }
+}
+```
+### Output
+```json
+{
+    "type": "object", 
+    "properties": {
+        "name": {
+            "type": "string"
+        }
+    }
+}
+```
+
+
+POST the required credentials to get back a cookie
+
+* `name`: Username
+* `password`: Password
+
+
+
+
+
+
 # /api/game/creategame
 
     Content-Type: application/json

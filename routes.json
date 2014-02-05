@@ -1,0 +1,38 @@
+[
+    [
+        "/api/auth/login", 
+        "{\"py/type\": \"cutthroat.api.auth.Login\"}"
+    ], 
+    [
+        "/api/game/creategame", 
+        "{\"py/type\": \"cutthroat.api.game.CreateGame\"}"
+    ], 
+    [
+        "/api/game/sinkball", 
+        "{\"py/type\": \"cutthroat.api.game.SinkBall\"}"
+    ], 
+    [
+        "/api/player/createplayer", 
+        "{\"py/type\": \"cutthroat.api.player.CreatePlayer\"}"
+    ], 
+    [
+        "/api/room/joinroom", 
+        "{\"py/type\": \"cutthroat.api.room.JoinRoom\"}"
+    ], 
+    [
+        "/api/room/retireroom", 
+        "{\"py/type\": \"cutthroat.api.room.RetireRoom\"}"
+    ], 
+    [
+        "/api/room/createroom", 
+        "{\"py/type\": \"cutthroat.api.room.CreateRoom\"}"
+    ], 
+    [
+        "/api/room/leaveroom", 
+        "{\"py/type\": \"cutthroat.api.room.LeaveRoom\"}"
+    ], 
+    [
+        "/views/auth/login", 
+        "{\"py/type\": \"cutthroat.views.auth.Login\"}"
+    ]
+]
