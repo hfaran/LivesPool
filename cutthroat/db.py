@@ -247,3 +247,11 @@ class Connection(object):
             },
             ['name']
         )
+
+    def list_rooms(self):
+        """List rooms
+
+        :returns: List of all created rooms
+        :rtype: list
+        """
+        return [r["name"] for r in self.db['rooms'].all()]

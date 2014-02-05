@@ -32,6 +32,10 @@
         "{\"py/type\": \"cutthroat.api.room.LeaveRoom\"}"
     ], 
     [
+        "/api/room/listrooms", 
+        "{\"py/type\": \"cutthroat.api.room.ListRooms\"}"
+    ], 
+    [
         "/views/auth/login", 
         "{\"py/type\": \"cutthroat.views.auth.Login\"}"
     ]

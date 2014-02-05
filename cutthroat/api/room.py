@@ -1,4 +1,5 @@
 from tornado_json.utils import io_schema, api_assert
+from tornado.web import authenticated
 
 from cutthroat.handlers import APIHandler
 
@@ -75,6 +76,26 @@ POST the required parameters to create a new room
             player_name=body["player"]
         )
         return {"name": body["name"]}
+
+
+class ListRooms(APIHandler):
+
+    """ListRooms"""
+
+    apid = {}
+    apid["get"] = {
+        "input_schema": None,
+        "output_schema": {
+            "type": "array",
+        },
+        "doc": """
+GET to receive list of rooms
+"""
+    }
+
+    @io_schema
+    def get(self, body):
+        return self.db_conn.list_rooms()
 
 
 class LeaveRoom(APIHandler):

@@ -300,3 +300,27 @@ POST the required parameters to create a new room
 * `player`: Name of player joining the room
 
 
+
+
+
+
+# /api/room/listrooms
+
+    Content-Type: application/json
+
+## GET
+### Input
+```json
+null
+```
+### Output
+```json
+{
+    "type": "array"
+}
+```
+
+
+GET to receive list of rooms
+
+
