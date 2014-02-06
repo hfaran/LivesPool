@@ -244,14 +244,10 @@ GET with following query parameters to retrieve player info
 ```json
 {
     "required": [
-        "name", 
-        "owner"
+        "name"
     ], 
     "type": "object", 
     "properties": {
-        "owner": {
-            "type": "string"
-        }, 
         "password": {
             "type": "string"
         }, 
@@ -280,7 +276,6 @@ POST the required parameters to create a new room
 
 * `name`: Name of the room
 * `password`: (Optional) Password to the room if you wish to keep entry restricted to players who know the password
-* `owner`: Name of the player creating the room
 
 
 
@@ -296,14 +291,10 @@ POST the required parameters to create a new room
 ```json
 {
     "required": [
-        "name", 
-        "player"
+        "name"
     ], 
     "type": "object", 
     "properties": {
-        "player": {
-            "type": "string"
-        }, 
         "password": {
             "type": "string"
         }, 
@@ -332,7 +323,6 @@ POST the required parameters to create a new room
 
 * `name`: Name of the room
 * `password`: (Optional) Password to the room if it has one
-* `player`: Name of player joining the room
 
 
 

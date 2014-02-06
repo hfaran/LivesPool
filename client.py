@@ -53,15 +53,15 @@ class CutthroatAPI(object):
         password = raw_input("(Optional) Password to the room if you "
                              "wish to keep entry restricted to players who "
                              "know the password: ")
-        owner = self.username
 
-        data = dict(name=name, owner=owner)
+        data = dict(name=name)
         if password:
             data["password"] = password
 
         r = requests.post(
             self.base_url + "/api/room/createroom",
-            data=json.dumps(data)
+            data=json.dumps(data),
+            cookies=self.cookies
         )
         logging.info("{}\n{}".format(r, r.json()))
 

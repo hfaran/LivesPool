@@ -16,14 +16,6 @@
         "{\"py/type\": \"cutthroat.api.player.Player\"}"
     ], 
     [
-        "/api/room/joinroom", 
-        "{\"py/type\": \"cutthroat.api.room.JoinRoom\"}"
-    ], 
-    [
-        "/api/room/retireroom", 
-        "{\"py/type\": \"cutthroat.api.room.RetireRoom\"}"
-    ], 
-    [
         "/api/room/createroom", 
         "{\"py/type\": \"cutthroat.api.room.CreateRoom\"}"
     ], 
@@ -32,8 +24,16 @@
         "{\"py/type\": \"cutthroat.api.room.LeaveRoom\"}"
     ], 
     [
+        "/api/room/retireroom", 
+        "{\"py/type\": \"cutthroat.api.room.RetireRoom\"}"
+    ], 
+    [
         "/api/room/listrooms", 
         "{\"py/type\": \"cutthroat.api.room.ListRooms\"}"
+    ], 
+    [
+        "/api/room/joinroom", 
+        "{\"py/type\": \"cutthroat.api.room.JoinRoom\"}"
     ], 
     [
         "/views/auth/login", 

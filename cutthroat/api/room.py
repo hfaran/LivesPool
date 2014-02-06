@@ -4,6 +4,21 @@ from tornado.web import authenticated
 from cutthroat.handlers import APIHandler
 
 
+def assert_non_tenant(rh, body):
+    player_room = rh.db_conn.get_player_room(rh.get_current_user())
+    api_assert(
+        not player_room,
+        409,
+        log_message=(
+            "{} is already in a room: `{}`. Leave current room"
+            " to join a new one.".format(
+                rh.get_current_user(),
+                player_room
+            )
+        )
+    )
+
+
 class CreateRoom(APIHandler):
     apid = {}
     apid["post"] = {
@@ -12,9 +27,8 @@ class CreateRoom(APIHandler):
             "properties": {
                 "name": {"type": "string"},
                 "password": {"type": "string"},
-                "owner": {"type": "string"},
             },
-            "required": ["name", "owner"]
+            "required": ["name"]
         },
         "output_schema": {
             "type": "object",
@@ -27,16 +41,19 @@ POST the required parameters to create a new room
 
 * `name`: Name of the room
 * `password`: (Optional) Password to the room if you wish to keep entry restricted to players who know the password
-* `owner`: Name of the player creating the room
 """
     }
 
     @io_schema
+    @authenticated
     def post(self, body):
+        # player must not already be in a room
+        assert_non_tenant(self, body)
+
         self.db_conn.create_room(
             room_name=body["name"],
             password=body.get("password") if body.get("password") else "",
-            owner=body["owner"]
+            owner=self.get_current_user()
         )
         return {"name": body["name"]}
 
@@ -49,9 +66,8 @@ class JoinRoom(APIHandler):
             "properties": {
                 "name": {"type": "string"},
                 "password": {"type": "string"},
-                "player": {"type": "string"},
             },
-            "required": ["name", "player"]
+            "required": ["name"]
         },
         "output_schema": {
             "type": "object",
@@ -64,7 +80,6 @@ POST the required parameters to create a new room
 
 * `name`: Name of the room
 * `password`: (Optional) Password to the room if it has one
-* `player`: Name of player joining the room
 """
     }
 
@@ -72,23 +87,12 @@ POST the required parameters to create a new room
     @authenticated
     def post(self, body):
         # player must not already be in a room
-        player_room = self.db_conn.get_player_room(body["player"])
-        api_assert(
-            not player_room,
-            409,
-            log_message=(
-                "{} is already in a room: `{}`. Leave current room"
-                " to join a new one.".format(
-                    body["player"],
-                    player_room
-                )
-            )
-        )
+        assert_non_tenant(self, body)
 
         self.db_conn.join_room(
             room_name=body["name"],
             password=body.get("password") if body.get("password") else "",
-            player_name=body["player"]
+            player_name=self.get_current_user()
         )
         return {"name": body["name"]}
 
@@ -117,11 +121,11 @@ GET to receive list of rooms
 class LeaveRoom(APIHandler):
 
     """"""
-    #raise NotImplementedError
+    # raise NotImplementedError
 
 
 class RetireRoom(APIHandler):
 
     """"""
     # If owner of the room wants to delete it
-    #raise NotImplementedError
+    # raise NotImplementedError
