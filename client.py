@@ -104,10 +104,26 @@ class CutthroatAPI(object):
         return r.json()
 
     def get_self_info(self):
-        player_name = self.username
         r = requests.get(
             self.base_url + "/api/player/player",
-            params={"username": player_name},
             cookies=self.cookies
         )
+        return r.json()
+
+    def leave_room(self):
+        r = requests.delete(
+            self.base_url + "/api/room/leaveroom",
+            cookies=self.cookies
+        )
+        if r.status_code == 200:
+            self.room = None
+        return r.json()
+
+    def retire_room(self):
+        r = requests.delete(
+            self.base_url + "/api/room/retireroom",
+            cookies=self.cookies
+        )
+        if r.status_code == 200:
+            self.room = None
         return r.json()

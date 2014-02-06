@@ -226,9 +226,7 @@ null
 
 
 
-GET with following query parameters to retrieve player info
-
-* `username`: Username of the player
+GET to retrieve player info
 
 
 
@@ -329,6 +327,32 @@ POST the required parameters to create a new room
 
 
 
+# /api/room/leaveroom
+
+    Content-Type: application/json
+
+## DELETE
+### Input Schema
+```json
+null
+```
+
+### Output Schema
+```json
+{
+    "type": "string"
+}
+```
+
+
+
+DELETE to leave current room
+
+
+
+
+
+
 # /api/room/listrooms
 
     Content-Type: application/json
@@ -349,5 +373,31 @@ null
 
 
 GET to receive list of rooms
+
+
+
+
+
+
+# /api/room/retireroom
+
+    Content-Type: application/json
+
+## DELETE
+### Input Schema
+```json
+null
+```
+
+### Output Schema
+```json
+{
+    "type": "string"
+}
+```
+
+
+
+DELETE to leave current room
 
 

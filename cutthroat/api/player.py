@@ -34,9 +34,7 @@ POST the required parameters to permanently register a new player
             "type": "object"
         },
         "doc": """
-GET with following query parameters to retrieve player info
-
-* `username`: Username of the player
+GET to retrieve player info
 """
     }
 
@@ -48,14 +46,5 @@ GET with following query parameters to retrieve player info
     @io_schema
     @authenticated
     def get(self, body):
-        player_name = self.get_argument("username")
-        if player_name == self.get_current_user():
-            return self.db_conn.player_info(player_name)
-        else:
-            api_assert(
-                False,
-                403,
-                "Please authenticate as `{0}` to view `{0}`'s info.".format(
-                    player_name
-                )
-            )
+        player_name = self.get_current_user()
+        return self.db_conn.player_info(player_name)

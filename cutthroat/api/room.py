@@ -120,12 +120,45 @@ GET to receive list of rooms
 
 class LeaveRoom(APIHandler):
 
-    """"""
-    # raise NotImplementedError
+    """LeaveRoom"""
+
+    apid = {}
+    apid["delete"] = {
+        "input_schema": None,
+        "output_schema": {
+            "type": "string",
+        },
+        "doc": """
+DELETE to leave current room
+"""
+    }
+
+    @io_schema
+    @authenticated
+    def delete(self, body):
+        player_name = self.get_current_user()
+        room_name = self.db_conn.leave_room(player_name)
+        return "{} successfully left {}".format(player_name, room_name)
 
 
 class RetireRoom(APIHandler):
 
-    """"""
-    # If owner of the room wants to delete it
-    # raise NotImplementedError
+    """RetireRoom"""
+
+    apid = {}
+    apid["delete"] = {
+        "input_schema": None,
+        "output_schema": {
+            "type": "string",
+        },
+        "doc": """
+DELETE to delete current room (if you are the owner)
+"""
+    }
+
+    @io_schema
+    @authenticated
+    def delete(self, body):
+        player_name = self.get_current_user()
+        room_name = self.db_conn.delete_room(player_name)
+        return "{} successfully deleted {}".format(player_name, room_name)
