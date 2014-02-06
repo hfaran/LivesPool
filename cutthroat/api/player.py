@@ -3,7 +3,7 @@ from tornado_json.utils import io_schema, api_assert
 from cutthroat.handlers import APIHandler
 
 
-class CreatePlayer(APIHandler):
+class Player(APIHandler):
     apid = {}
     apid["post"] = {
         "input_schema": {
@@ -32,3 +32,7 @@ POST the required parameters to permanently register a new player
     def post(self, body):
         self.db_conn.create_player(body["name"], body["password"])
         return {"name": body["name"]}
+
+    # @io_schema
+    # @authenticated
+    # def get(self, body):

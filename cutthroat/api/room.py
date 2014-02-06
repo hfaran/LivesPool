@@ -71,6 +71,20 @@ POST the required parameters to create a new room
     @io_schema
     @authenticated
     def post(self, body):
+        # player must not already be in a room
+        player_room = self.db_conn.get_player_room(body["player"])
+        api_assert(
+            not player_room,
+            409,
+            log_message=(
+                "{} is already in a room: `{}`. Leave current room"
+                " to join a new one.".format(
+                    body["player"],
+                    player_room
+                )
+            )
+        )
+
         self.db_conn.join_room(
             room_name=body["name"],
             password=body.get("password") if body.get("password") else "",

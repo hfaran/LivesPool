@@ -93,6 +93,7 @@ class Connection(object):
             {
                 "name": player_name,
                 "current_game_id": "",
+                "current_room": "",
                 "balls": "",
                 "password": password
             }
@@ -254,6 +255,23 @@ class Connection(object):
             },
             ['name']
         )
+
+        ptable.update(
+            {
+                "name": player_name
+                "current_room": room_name
+            },
+            ['name']
+        )
+
+
+    def get_player_room(self, player_name):
+        """:returns: Name of the room `player_name` is in, or None"""
+        rtable = self.db['rooms']
+        for room in rtable.all():
+            if player_name in listify_string(str, room['current_players']):
+                return room["name"]
+        return None
 
     def list_rooms(self):
         """List rooms

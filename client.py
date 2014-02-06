@@ -5,6 +5,7 @@ import getpass
 
 DEBUG = True
 
+
 class AuthenticationError(Exception):
 
     """AuthenticationError"""
@@ -12,7 +13,15 @@ class AuthenticationError(Exception):
 
 class CutthroatAPI(object):
 
-    """CutthroatAPI"""
+    """CutthroatAPI
+
+    >>> from client import CutthroatAPI
+    >>> c = CutthroatAPI()
+    Username: ...
+    Password: ...
+    >>> c.list_rooms()
+    ...
+    """
 
     def __init__(self, base_url="http://localhost:8888", username=None):
         self.base_url = base_url
@@ -20,6 +29,9 @@ class CutthroatAPI(object):
         self.username = username if username else raw_input("Username: ")
         password = getpass.getpass()
         self.cookies = self._authenticate(self.username, password)
+
+        self.room = None
+        self.game = None
 
     def _authenticate(self, username, password):
         """Login with `username` and `password`"""
@@ -30,7 +42,8 @@ class CutthroatAPI(object):
                 "password": password
             })
         )
-        if DEBUG: print("{}\n{}".format(r, r.json()))
+        if DEBUG:
+            print("{}\n{}".format(r, r.json()))
         return r.cookies
 
     def create_room(self):
@@ -38,7 +51,7 @@ class CutthroatAPI(object):
         password = raw_input("(Optional) Password to the room if you "
                              "wish to keep entry restricted to players who "
                              "know the password: ")
-        owner=self.username
+        owner = self.username
 
         data = dict(name=name, owner=owner)
         if password:
@@ -49,6 +62,9 @@ class CutthroatAPI(object):
             data=json.dumps(data)
         )
         logging.info("{}\n{}".format(r, r.json()))
+
+        if r.status_code == 200:
+            self.join_room(name, password)
         return r.json()
 
     def list_rooms(self):
@@ -61,10 +77,14 @@ class CutthroatAPI(object):
         else:
             return r.json()
 
-    def join_room(self):
-        name = raw_input("Name of the room: ")
-        password = raw_input("(Optional) Password to the room if it has one: ")
-        player=self.username
+    def join_room(self, name=None, password=None):
+        if not name:
+            name = raw_input("Name of the room: ")
+        if not password:
+            password = raw_input(
+                "(Optional) Password to the room if it has one: "
+            )
+        player = self.username
 
         data = dict(name=name, player=player)
         if password:
@@ -76,4 +96,7 @@ class CutthroatAPI(object):
             cookies=self.cookies
         )
         logging.info("{}\n{}".format(r, r.json()))
+
+        if r.status_code == 200:
+            self.room = name
         return r.json()

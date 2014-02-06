@@ -14,4 +14,4 @@ class ViewHandler(requesthandlers.ViewHandler):
     """ViewHandler"""
 
     def get_current_user(self):
-        return self.get_cookie("user")
+        return self.get_secure_cookie("user")
