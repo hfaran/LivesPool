@@ -12,8 +12,8 @@
         "{\"py/type\": \"cutthroat.api.game.SinkBall\"}"
     ], 
     [
-        "/api/player/createplayer", 
-        "{\"py/type\": \"cutthroat.api.player.CreatePlayer\"}"
+        "/api/player/player", 
+        "{\"py/type\": \"cutthroat.api.player.Player\"}"
     ], 
     [
         "/api/room/joinroom", 

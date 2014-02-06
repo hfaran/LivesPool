@@ -30,7 +30,9 @@ class CutthroatAPI(object):
         password = getpass.getpass()
         self.cookies = self._authenticate(self.username, password)
 
-        self.room = None
+        info = self.get_self_info()["data"]
+        self.room = info.get("current_room") if \
+            info.get("current_room") else None
         self.game = None
 
     def _authenticate(self, username, password):
@@ -99,4 +101,13 @@ class CutthroatAPI(object):
 
         if r.status_code == 200:
             self.room = name
+        return r.json()
+
+    def get_self_info(self):
+        player_name = self.username
+        r = requests.get(
+            self.base_url + "/api/player/player",
+            params={"username": player_name},
+            cookies=self.cookies
+        )
         return r.json()

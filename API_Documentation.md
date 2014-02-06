@@ -1,11 +1,13 @@
 **This documentation is automatically generated.**
 
+**Output schemas only represent `data` and not the full output; see output examples and the JSend specification.**
+
 # /api/auth/login
 
     Content-Type: application/json
 
 ## POST
-### Input
+### Input Schema
 ```json
 {
     "required": [
@@ -23,7 +25,8 @@
     }
 }
 ```
-### Output
+
+### Output Schema
 ```json
 {
     "type": "object", 
@@ -34,6 +37,7 @@
     }
 }
 ```
+
 
 
 POST the required credentials to get back a cookie
@@ -51,7 +55,7 @@ POST the required credentials to get back a cookie
     Content-Type: application/json
 
 ## POST
-### Input
+### Input Schema
 ```json
 {
     "required": [
@@ -76,7 +80,8 @@ POST the required credentials to get back a cookie
     }
 }
 ```
-### Output
+
+### Output Schema
 ```json
 {
     "type": "object", 
@@ -87,6 +92,7 @@ POST the required credentials to get back a cookie
     }
 }
 ```
+
 
 
 POST the required parameters to create a new game
@@ -106,7 +112,7 @@ POST the required parameters to create a new game
     Content-Type: application/json
 
 ## POST
-### Input
+### Input Schema
 ```json
 {
     "required": [
@@ -128,7 +134,8 @@ POST the required parameters to create a new game
     }
 }
 ```
-### Output
+
+### Output Schema
 ```json
 {
     "required": [
@@ -147,6 +154,7 @@ POST the required parameters to create a new game
 ```
 
 
+
 POST the required parameters to register the pocketing of a ball
 
 * `ball`: The ball that was pocketed
@@ -158,12 +166,12 @@ POST the required parameters to register the pocketing of a ball
 
 
 
-# /api/player/createplayer
+# /api/player/player
 
     Content-Type: application/json
 
 ## POST
-### Input
+### Input Schema
 ```json
 {
     "required": [
@@ -181,7 +189,8 @@ POST the required parameters to register the pocketing of a ball
     }
 }
 ```
-### Output
+
+### Output Schema
 ```json
 {
     "type": "object", 
@@ -194,10 +203,32 @@ POST the required parameters to register the pocketing of a ball
 ```
 
 
+
 POST the required parameters to permanently register a new player
 
 * `name`: Username of the player
 * `password`: Password for future logins
+
+
+
+## GET
+### Input Schema
+```json
+null
+```
+
+### Output Schema
+```json
+{
+    "type": "object"
+}
+```
+
+
+
+GET with following query parameters to retrieve player info
+
+* `username`: Username of the player
 
 
 
@@ -209,7 +240,7 @@ POST the required parameters to permanently register a new player
     Content-Type: application/json
 
 ## POST
-### Input
+### Input Schema
 ```json
 {
     "required": [
@@ -230,7 +261,8 @@ POST the required parameters to permanently register a new player
     }
 }
 ```
-### Output
+
+### Output Schema
 ```json
 {
     "type": "object", 
@@ -241,6 +273,7 @@ POST the required parameters to permanently register a new player
     }
 }
 ```
+
 
 
 POST the required parameters to create a new room
@@ -259,7 +292,7 @@ POST the required parameters to create a new room
     Content-Type: application/json
 
 ## POST
-### Input
+### Input Schema
 ```json
 {
     "required": [
@@ -280,7 +313,8 @@ POST the required parameters to create a new room
     }
 }
 ```
-### Output
+
+### Output Schema
 ```json
 {
     "type": "object", 
@@ -291,6 +325,7 @@ POST the required parameters to create a new room
     }
 }
 ```
+
 
 
 POST the required parameters to create a new room
@@ -309,16 +344,18 @@ POST the required parameters to create a new room
     Content-Type: application/json
 
 ## GET
-### Input
+### Input Schema
 ```json
 null
 ```
-### Output
+
+### Output Schema
 ```json
 {
     "type": "array"
 }
 ```
+
 
 
 GET to receive list of rooms

@@ -216,6 +216,17 @@ class Connection(object):
             }
         )
 
+    def __get_player(self, player_name):
+        ptable = self.db['players']
+        player = ptable.find_one(name=player_name)
+        return ptable, player
+
+    def _get_player(self, player_name):
+        ptable, player = self.__get_player(player_name)
+        api_assert(player, 409,
+                   log_message="No user {} exists.".format(player_name))
+        return ptable, player
+
     def join_room(self, room_name, password, player_name):
         """Join room `room_name`
 
@@ -233,10 +244,7 @@ class Connection(object):
         api_assert(password == room['password'], 403,
                    log_message="Bad password for room `{}`.".format(room_name))
 
-        ptable = self.db['players']
-        player = ptable.find_one(name=player_name)
-        api_assert(player, 409,
-                   log_message="No user {} exists.".format(player_name))
+        ptable, player = self._get_player(player_name)
 
         api_assert(
             player_name not in listify_string(str, room['current_players']),
@@ -258,20 +266,28 @@ class Connection(object):
 
         ptable.update(
             {
-                "name": player_name
+                "name": player_name,
                 "current_room": room_name
             },
             ['name']
         )
 
+    def player_info(self, player_name):
+        ptable, player = self._get_player(player_name)
+        res = dict(player)
+        res.pop("password")  # Redact password
+        return res
 
     def get_player_room(self, player_name):
         """:returns: Name of the room `player_name` is in, or None"""
-        rtable = self.db['rooms']
-        for room in rtable.all():
-            if player_name in listify_string(str, room['current_players']):
-                return room["name"]
-        return None
+        # rtable = self.db['rooms']
+        # for room in rtable.all():
+        #     if player_name in listify_string(str, room['current_players']):
+        #         return room["name"]
+        # return None
+        ptable, player = self._get_player(player_name)
+        player_room = player["current_room"]
+        return player_room if player_room else None
 
     def list_rooms(self):
         """List rooms
