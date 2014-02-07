@@ -9,7 +9,9 @@ cutthroat-server
 ## TODO
 
 * ~~Finish implementing Room routes~~
-* Auth
+* ~~Auth~~
     * ~~Implement basic API authentication and auth-based actions~~ 
-    * Use some kind of hashing/salting
+    * ~~Use some kind of hashing/salting~~
+* Documentation
+    * Document any undocumented functions
 * Front-end
