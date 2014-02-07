@@ -40,7 +40,11 @@ POST the required credentials to get back a cookie
             self.set_secure_cookie("user", player_name)
             return {"name": player_name}
         else:
-            self.fail("Bad username/password combo")
+            api_assert(
+                False,
+                400,
+                log_message="Bad username/password combo"
+            )
 
     def get(self):
         api_assert(

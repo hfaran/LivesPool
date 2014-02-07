@@ -23,11 +23,14 @@ class CutthroatAPI(object):
     ...
     """
 
-    def __init__(self, base_url="http://localhost:8888", username=None):
+    def __init__(self, base_url="http://localhost:8888",
+                 signup=False, username=None):
         self.base_url = base_url
 
         self.username = username if username else raw_input("Username: ")
         password = getpass.getpass()
+        if signup:
+            self._sign_up(self.username, password)
         self.cookies = self._authenticate(self.username, password)
 
         info = self.get_self_info()["data"]
@@ -35,6 +38,20 @@ class CutthroatAPI(object):
             info.get("current_room") else None
         self.game = info.get("current_game_id") if \
             info.get("current_game_id") else None
+
+    def _sign_up(self, username, password):
+        """Sign up with `username` and `password`"""
+        r = requests.post(
+            self.base_url + "/api/player/player",
+            data=json.dumps({
+                "name": username,
+                "password": password
+            })
+        )
+        if r.status_code == 200:
+            return r.json()
+        else:
+            raise AuthenticationError(r.json()["data"])
 
     def _authenticate(self, username, password):
         """Login with `username` and `password`"""
@@ -47,7 +64,10 @@ class CutthroatAPI(object):
         )
         if DEBUG:
             print("{}\n{}".format(r, r.json()))
-        return r.cookies
+        if r.status_code == 200:
+            return r.cookies
+        else:
+            raise AuthenticationError(r.json().get("data"))
 
     def create_room(self):
         name = raw_input("Name of the room: ")
