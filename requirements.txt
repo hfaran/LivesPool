@@ -2,3 +2,6 @@ tornado
 Tornado-JSON
 
 dataset
+MySQL-python
+
+bcrypt

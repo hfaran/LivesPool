@@ -1,3 +1,4 @@
+import bcrypt
 import logging
 from itertools import chain
 
@@ -89,13 +90,16 @@ class Connection(object):
         api_assert(player_name not in all_players, 409,
                    log_message="{} is already registered.".format(player_name))
 
+        salt = bcrypt.gensalt(rounds=12)
+
         ptable.insert(
             {
                 "name": player_name,
                 "current_game_id": "",
                 "current_room": "",
                 "balls": "",
-                "password": password
+                "salt": salt,
+                "password": bcrypt.hashpw(str(password), salt)
             }
         )
 
@@ -166,7 +170,9 @@ class Connection(object):
         player = ptable.find_one(name=player_name)
         api_assert(player, 409,
                    log_message="No user {} exists.".format(player_name))
-        return password == player['password']
+        return bcrypt.hashpw(
+            str(password), player["salt"]
+        ) == player['password']
 
     def mark_stale_games(self):
         """Marks status for stale games as `stale`
@@ -361,6 +367,7 @@ class Connection(object):
         # Return balls as a list
         res["balls"] = listify_string(int, res["balls"])
         res.pop("password")  # Redact password
+        res.pop("salt")  # Redact salt
         res.pop("id")  # Players don't care about this
         return res
 

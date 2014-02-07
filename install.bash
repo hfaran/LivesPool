@@ -4,6 +4,10 @@ LOGDIR="/var/log/cutthroat"
 CONFDIR="/etc/cutthroat"
 ORIGUSER="$USER"
 
+# Install any system packages (Ubuntu/Debian only) that are pre-requisites
+echo -e "\n\nInstalling required system packages . . ."
+sudo apt-get install libffi-dev
+
 # Install all required Python packages
 echo -e "\n\nInstalled required Python packages with pip . . ."
 sudo pip install -r requirements.txt
