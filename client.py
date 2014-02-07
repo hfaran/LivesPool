@@ -33,7 +33,8 @@ class CutthroatAPI(object):
         info = self.get_self_info()["data"]
         self.room = info.get("current_room") if \
             info.get("current_room") else None
-        self.game = None
+        self.game = info.get("current_game_id") if \
+            info.get("current_game_id") else None
 
     def _authenticate(self, username, password):
         """Login with `username` and `password`"""
@@ -125,5 +126,18 @@ class CutthroatAPI(object):
             cookies=self.cookies
         )
         if r.status_code == 200:
+            self.room = None
+        return r.json()
+
+    def start_game(self, nbpp=None):
+        if nbpp is None:
+            nbpp = int(raw_input("Number of balls per player? "))
+        r = requests.post(
+            self.base_url + "/api/game/creategame",
+            data=json.dumps({"nbpp": nbpp}),
+            cookies=self.cookies
+        )
+        if r.status_code == 200:
+            self.game = r.json()["data"]["game_id"]
             self.room = None
         return r.json()

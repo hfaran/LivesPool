@@ -2,6 +2,7 @@ import uuid
 import json
 from random import shuffle
 from itertools import chain
+from tornado.web import authenticated
 
 from tornado_json.utils import io_schema, api_assert
 
@@ -29,12 +30,9 @@ class CreateGame(APIHandler):
         "input_schema": {
             "type": "object",
             "properties": {
-                "room_password": {"type": "string"},
                 "nbpp": {"type": "number"},
-                "password": {"type": "string"},
-                "room_name": {"type": "string"}
             },
-            "required": ["nbpp", "password", "room_name"]
+            "required": ["nbpp"]
         },
         "output_schema": {
             "type": "object",
@@ -43,12 +41,9 @@ class CreateGame(APIHandler):
             }
         },
         "doc": """
-POST the required parameters to create a new game
+POST the required parameter to create a new game; only the owner of a room can make this request
 
 * `nbpp`: Number of balls per player
-* `password`: Password for the game; only the gamemaster should have access to this as it allows updates to the game
-* `room_name`: Room from which this game is being created
-* `room_password`: (Required only if room is passworded) Password for the room from which this game is being created
 """
     }
     #raise NotImplementedError
@@ -57,13 +52,19 @@ POST the required parameters to create a new game
     # * Authenticate the room credentials and delete the room
 
     @io_schema
+    @authenticated
     def post(self, body):
         """POST RequestHandler"""
         game_id = str(uuid.uuid4())
-        player_names = body["player_names"]
+        gamemaster = self.get_current_user()
+        room_name = self.db_conn.get_owned_room(gamemaster)
+
+        api_assert(room_name, 403,
+                   log_message="You must own a room to create a game.")
+
+        player_names = self.db_conn.get_players_in_room(room_name)
         nplayers = len(player_names)
         nbpp = body["nbpp"]
-        password = body["password"]
 
         # Make sure values make sense
         api_assert(nbpp * nplayers < TOTAL_NUM_BALLS, 400,
@@ -85,7 +86,9 @@ POST the required parameters to create a new game
 
         unclaimed_balls = balls[:]
 
-        self.db_conn.create_game(game_id, players, unclaimed_balls, password)
+        # Create game, then delete the room
+        self.db_conn.create_game(game_id, players, unclaimed_balls, gamemaster)
+        self.db_conn.delete_room(gamemaster)
 
         return {"game_id": game_id}
 

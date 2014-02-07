@@ -42,7 +42,7 @@ class Connection(object):
         self.generic_query = conn.generic_query
         self.db = conn._db_dataset
 
-    def create_game(self, game_id, players, unclaimed_balls, password):
+    def create_game(self, game_id, players, unclaimed_balls, gamemaster):
         """Create game with game_id `game_id`
 
         Adds entry for a new game with given parameters to database, and
@@ -61,7 +61,7 @@ class Connection(object):
                 "game_id": game_id,
                 "players": stringify_list(players.keys()),
                 "unclaimed_balls": stringify_list(unclaimed_balls),
-                "password": password,
+                "gamemaster": gamemaster,
                 "status": "active"
             }
         )
@@ -227,6 +227,17 @@ class Connection(object):
                    log_message="No user {} exists.".format(player_name))
         return ptable, player
 
+    def __get_room(self, room_name):
+        rtable = self.db['rooms']
+        room = rtable.find_one(name=room_name)
+        return rtable, room
+
+    def _get_room(self, room_name):
+        rtable, room = self.__get_room(room_name)
+        api_assert(room, 409,
+                   log_message="No room {} exists".format(room_name))
+        return rtable, room
+
     def join_room(self, room_name, password, player_name):
         """Join room `room_name`
 
@@ -368,3 +379,18 @@ class Connection(object):
         :rtype: list
         """
         return [r["name"] for r in self.db['rooms'].all()]
+
+    def get_owned_room(self, player_name):
+        """:returns: name of room owned by `player_name` else None"""
+        rtable = self.db['rooms']
+        room = rtable.find_one(owner=player_name)
+        return room["name"] if room else None
+
+    def get_players_in_room(self, room_name):
+        """
+        :returns: Players participating in game `game_id`
+        :rtype: [str, ...]
+        """
+        rtable, room = self._get_room(room_name)
+        players = listify_string(str, room['current_players'])
+        return players

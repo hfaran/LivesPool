@@ -59,21 +59,10 @@ POST the required credentials to get back a cookie
 ```json
 {
     "required": [
-        "nbpp", 
-        "password", 
-        "room_name"
+        "nbpp"
     ], 
     "type": "object", 
     "properties": {
-        "room_name": {
-            "type": "string"
-        }, 
-        "room_password": {
-            "type": "string"
-        }, 
-        "password": {
-            "type": "string"
-        }, 
         "nbpp": {
             "type": "number"
         }
@@ -95,12 +84,9 @@ POST the required credentials to get back a cookie
 
 
 
-POST the required parameters to create a new game
+POST the required parameter to create a new game; only the owner of a room can make this request
 
 * `nbpp`: Number of balls per player
-* `password`: Password for the game; only the gamemaster should have access to this as it allows updates to the game
-* `room_name`: Room from which this game is being created
-* `room_password`: (Required only if room is passworded) Password for the room from which this game is being created
 
 
 
@@ -398,6 +384,6 @@ null
 
 
 
-DELETE to leave current room
+DELETE to delete current room (if you are the owner)
 
 
