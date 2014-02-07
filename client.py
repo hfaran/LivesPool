@@ -141,3 +141,13 @@ class CutthroatAPI(object):
             self.game = r.json()["data"]["game_id"]
             self.room = None
         return r.json()
+
+    def sink_ball(self, ball=None):
+        if ball is None:
+            ball = int(raw_input("Which ball got sunk? "))
+        r = requests.post(
+            self.base_url + "/api/game/sinkball",
+            data=json.dumps({"ball": ball}),
+            cookies=self.cookies
+        )
+        return r.json()

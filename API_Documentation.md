@@ -102,18 +102,10 @@ POST the required parameter to create a new game; only the owner of a room can m
 ```json
 {
     "required": [
-        "ball", 
-        "password", 
-        "game_id"
+        "ball"
     ], 
     "type": "object", 
     "properties": {
-        "game_id": {
-            "type": "string"
-        }, 
-        "password": {
-            "type": "string"
-        }, 
         "ball": {
             "type": "number"
         }
@@ -144,8 +136,6 @@ POST the required parameter to create a new game; only the owner of a room can m
 POST the required parameters to register the pocketing of a ball
 
 * `ball`: The ball that was pocketed
-* `game_id`: The full game_id of the game for which to register
-* `password`: Password for the game; must be provided in order to update the game
 
 
 

@@ -99,11 +99,9 @@ class SinkBall(APIHandler):
         "input_schema": {
             "type": "object",
             "properties": {
-                "game_id": {"type": "string"},
                 "ball": {"type": "number"},
-                "password": {"type": "string"}
             },
-            "required": ["ball", "password", "game_id"]
+            "required": ["ball"]
         },
         "output_schema": {
             "type": "object",
@@ -117,22 +115,24 @@ class SinkBall(APIHandler):
 POST the required parameters to register the pocketing of a ball
 
 * `ball`: The ball that was pocketed
-* `game_id`: The full game_id of the game for which to register
-* `password`: Password for the game; must be provided in order to update the game
 """
     }
 
     @io_schema
+    @authenticated
     def post(self, body):
-        password = body['password']
+        gamemaster = self.get_current_user()
         ball = body['ball']
-        game_id = body['game_id']
+        game_id = self.db_conn._get_player(gamemaster)[1]["current_game_id"]
 
         res = {"game_id": game_id}
 
         # Authenticate
-        api_assert(self.db_conn.auth_game_update_request(game_id, password),
-                   401, log_message="Bad password: {}".format(password))
+        api_assert(
+            self.db_conn.auth_game_update_request(game_id, gamemaster),
+            401,
+            log_message="You are not the gamemaster of the current game"
+        )
 
         # If ball is already sunk, do nothing
         if ball not in self.db_conn.get_balls_on_table(game_id):
