@@ -1,4 +1,4 @@
-cutthroat-server
+`cutthroat-server`
 ================
 
 ## Getting Started

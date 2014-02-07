@@ -46,10 +46,6 @@ POST the required parameter to create a new game; only the owner of a room can m
 * `nbpp`: Number of balls per player
 """
     }
-    #raise NotImplementedError
-    # Need to fix this RequestHandler to
-    # * get player_names from room
-    # * Authenticate the room credentials and delete the room
 
     @io_schema
     @authenticated
