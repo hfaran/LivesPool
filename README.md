@@ -8,6 +8,8 @@ cutthroat-server
 
 ## TODO
 
-* Finish implementing Room routes
-* Front-end
+* ~~Finish implementing Room routes~~
 * Auth
+    * ~~Implement basic API authentication and auth-based actions~~ 
+    * Use some kind of hashing/salting
+* Front-end
