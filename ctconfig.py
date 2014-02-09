@@ -27,20 +27,8 @@ def define_options():
 
     # Database options
     define(
-        "mysql_host",
-        default="127.0.0.1:3306"
-    )
-    define(
-        "mysql_database",
-        default="cutthroat"
-    )
-    define(
-        "mysql_user",
-        default="cutthroat-dev"
-    )
-    define(
-        "mysql_password",
-        default="pooltable"
+        "sqlite_db",
+        default="cutthroat.db"
     )
 
     # Options for testing

@@ -5,3 +5,5 @@ dataset
 MySQL-python
 
 bcrypt
+jsonpickle
+requests

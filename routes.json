@@ -46,5 +46,9 @@
     [
         "/views/signin/signin", 
         "{\"py/type\": \"cutthroat.views.signin.SignIn\"}"
+    ], 
+    [
+        "/", 
+        "{\"py/type\": \"cutthroat.views.room.Join\"}"
     ]
 ]

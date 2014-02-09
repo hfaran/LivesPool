@@ -75,14 +75,14 @@ def main():
     # Get any commandline options
     tornado.options.parse_command_line()
 
-    routes = get_routes(api) + get_routes(views)
+    routes = get_routes(api) + get_routes(views) + [("/", views.room.Join)]
     settings = dict(
         template_path=os.path.join(
             os.path.dirname(__file__), "templates"),
         static_path=os.path.join(os.path.dirname(__file__), "static"),
         gzip=True,
         cookie_secret=str(uuid.uuid4()),
-        login_url="/api/auth/login"
+        login_url="/views/signin/signin"
     )
 
     # If asked to write routes, do so
