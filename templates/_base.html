@@ -1,18 +1,19 @@
+{% autoescape xhtml_escape %}
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        {% global_meta_tags %}
+        {% raw global_meta_tags %}
         <title>
-            {% block title %}Default title{% end %}
+            {% raw title %}
         </title>
-        {% bootstrap %}
+        {% raw bootstrap %}
         <link rel="stylesheet" type="text/css" href="{{ static_url("base.css") }}">
     </head>
     <body>
-        {% navbar %}
+        {% raw navbar %}
         <div class="container">
-            {% banner_title %}
-            {% body %}
+            {% raw banner_title %}
+            {% raw body %}
         </div>
     </body>
 </html>
