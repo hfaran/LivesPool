@@ -1,7 +1,17 @@
+{% extends "base.html" %}
+
+{% block page_title %}Sign In{% end %}
+{% block banner_title %} Lives Pool {% end %}
+
+{% block body %}
 <div class="row">
     <div class="col-xs-12">
-        <form class="form-signin" role="form">
-            <input type="username" class="form-control" placeholder="Username" required="" autofocus=""> <input type="password" class="form-control" placeholder="Password" required=""> <button class="btn btn-lg btn-primary btn-block" type="submit">Sign Up</button> <button class="btn btn-lg btn-success btn-block" type="submit">Sign in</button>
+        <form id="signinForm" class="form-signin" role="form">
+            <input type="username" name="username" class="form-control" placeholder="Username" required="" autofocus="">
+            <input type="password" name="password" class="form-control" placeholder="Password" required="">
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign Up</button>
+            <button class="btn btn-lg btn-success btn-block" type="submit">Sign in</button>
         </form>
     </div>
 </div>
+{% end %}

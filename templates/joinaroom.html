@@ -1,6 +1,11 @@
+{% extends "base.html" %}
+
+{% block page_title %}Rooms{% end %}
+{% block banner_title %}Join a Room{% end %}
+
+{% block body %}
 <div class="row">
     <div class="col-xs-6">
-        {% raw rooms %}
     </div>
     <div class="col-xs-6">
         <p style="color:green;">Open to all</p>
@@ -10,3 +15,4 @@
         <button class="btn btn-lg btn-warning btn-block" type="submit">Create a New Room</button>
     </div>
 </div>
+{% end %}
