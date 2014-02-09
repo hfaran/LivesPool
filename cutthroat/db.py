@@ -1,5 +1,6 @@
 import bcrypt
 import logging
+import dataset
 from itertools import chain
 
 from tornado.options import options
@@ -34,14 +35,7 @@ class Connection(object):
     """Connection to cutthroat MySQL database"""
 
     def __init__(self):
-        conn = MySQLConnection(
-            host=options.mysql_host,
-            database=options.mysql_database,
-            user=options.mysql_user,
-            password=options.mysql_password,
-        )
-        self.generic_query = conn.generic_query
-        self.db = conn._db_dataset
+        self.db = dataset.connect('sqlite:///{}'.format(options.sqlite_db))
 
     def create_game(self, game_id, players, unclaimed_balls, gamemaster):
         """Create game with game_id `game_id`
@@ -171,7 +165,7 @@ class Connection(object):
         api_assert(player, 409,
                    log_message="No user {} exists.".format(player_name))
         return bcrypt.hashpw(
-            str(password), player["salt"]
+            str(password), str(player["salt"])
         ) == player['password']
 
     def mark_stale_games(self):
