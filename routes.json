@@ -38,5 +38,13 @@
     [
         "/views/auth/login", 
         "{\"py/type\": \"cutthroat.views.auth.Login\"}"
+    ], 
+    [
+        "/views/room/join", 
+        "{\"py/type\": \"cutthroat.views.room.Join\"}"
+    ], 
+    [
+        "/views/signin/signin", 
+        "{\"py/type\": \"cutthroat.views.signin.SignIn\"}"
     ]
 ]

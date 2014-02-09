@@ -4,9 +4,9 @@ from cutthroat.handlers import ViewHandler
 from cutthroat import templates as ct_templates
 
 
-class SignIn(ViewHandler):
+class Join(ViewHandler):
 
-    """SignIn"""
+    """Join"""
 
     def get(self):
         loader = template.Loader("templates")
@@ -15,6 +15,6 @@ class SignIn(ViewHandler):
             title="Sign In",
             bootstrap=ct_templates.load_bootstrap(),
             navbar="",
-            banner_title=ct_templates.banner_title("Lives Pool"),
-            body=loader.load("signin.html").generate()
+            banner_title=ct_templates.banner_title("Join a Room"),
+            body=loader.load("joinaroom.html").generate(rooms="")
         )
