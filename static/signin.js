@@ -11,9 +11,10 @@ $(document).ready(function() {
             success: function() {
                 window.location.href ="/views/room/join";
             },
-            error: function() {
-                //TODO: callback error handling
-                alert("failed to post");
+            error: function (jqXHR, status, error) {
+                if(jqXHR.status == 400) {
+                    alert("Bad username/password combination")
+                }
             }
         });
     });
