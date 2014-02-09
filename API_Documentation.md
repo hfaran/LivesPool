@@ -1,13 +1,11 @@
 **This documentation is automatically generated.**
 
-**Output schemas only represent `data` and not the full output; see output examples and the JSend specification.**
-
 # /api/auth/login
 
     Content-Type: application/json
 
 ## POST
-### Input Schema
+### Input
 ```json
 {
     "required": [
@@ -25,8 +23,7 @@
     }
 }
 ```
-
-### Output Schema
+### Output
 ```json
 {
     "type": "object", 
@@ -37,7 +34,6 @@
     }
 }
 ```
-
 
 
 POST the required credentials to get back a cookie
@@ -55,7 +51,7 @@ POST the required credentials to get back a cookie
     Content-Type: application/json
 
 ## POST
-### Input Schema
+### Input
 ```json
 {
     "required": [
@@ -69,8 +65,7 @@ POST the required credentials to get back a cookie
     }
 }
 ```
-
-### Output Schema
+### Output
 ```json
 {
     "type": "object", 
@@ -81,7 +76,6 @@ POST the required credentials to get back a cookie
     }
 }
 ```
-
 
 
 POST the required parameter to create a new game; only the owner of a room can make this request
@@ -98,7 +92,7 @@ POST the required parameter to create a new game; only the owner of a room can m
     Content-Type: application/json
 
 ## POST
-### Input Schema
+### Input
 ```json
 {
     "required": [
@@ -112,8 +106,7 @@ POST the required parameter to create a new game; only the owner of a room can m
     }
 }
 ```
-
-### Output Schema
+### Output
 ```json
 {
     "required": [
@@ -132,7 +125,6 @@ POST the required parameter to create a new game; only the owner of a room can m
 ```
 
 
-
 POST the required parameters to register the pocketing of a ball
 
 * `ball`: The ball that was pocketed
@@ -147,7 +139,7 @@ POST the required parameters to register the pocketing of a ball
     Content-Type: application/json
 
 ## POST
-### Input Schema
+### Input
 ```json
 {
     "required": [
@@ -165,8 +157,7 @@ POST the required parameters to register the pocketing of a ball
     }
 }
 ```
-
-### Output Schema
+### Output
 ```json
 {
     "type": "object", 
@@ -179,7 +170,6 @@ POST the required parameters to register the pocketing of a ball
 ```
 
 
-
 POST the required parameters to permanently register a new player
 
 * `name`: Username of the player
@@ -188,18 +178,16 @@ POST the required parameters to permanently register a new player
 
 
 ## GET
-### Input Schema
+### Input
 ```json
 null
 ```
-
-### Output Schema
+### Output
 ```json
 {
     "type": "object"
 }
 ```
-
 
 
 GET to retrieve player info
@@ -214,7 +202,7 @@ GET to retrieve player info
     Content-Type: application/json
 
 ## POST
-### Input Schema
+### Input
 ```json
 {
     "required": [
@@ -231,8 +219,7 @@ GET to retrieve player info
     }
 }
 ```
-
-### Output Schema
+### Output
 ```json
 {
     "type": "object", 
@@ -243,7 +230,6 @@ GET to retrieve player info
     }
 }
 ```
-
 
 
 POST the required parameters to create a new room
@@ -261,7 +247,7 @@ POST the required parameters to create a new room
     Content-Type: application/json
 
 ## POST
-### Input Schema
+### Input
 ```json
 {
     "required": [
@@ -278,8 +264,7 @@ POST the required parameters to create a new room
     }
 }
 ```
-
-### Output Schema
+### Output
 ```json
 {
     "type": "object", 
@@ -290,7 +275,6 @@ POST the required parameters to create a new room
     }
 }
 ```
-
 
 
 POST the required parameters to create a new room
@@ -308,18 +292,16 @@ POST the required parameters to create a new room
     Content-Type: application/json
 
 ## DELETE
-### Input Schema
+### Input
 ```json
 null
 ```
-
-### Output Schema
+### Output
 ```json
 {
     "type": "string"
 }
 ```
-
 
 
 DELETE to leave current room
@@ -334,18 +316,16 @@ DELETE to leave current room
     Content-Type: application/json
 
 ## GET
-### Input Schema
+### Input
 ```json
 null
 ```
-
-### Output Schema
+### Output
 ```json
 {
     "type": "array"
 }
 ```
-
 
 
 GET to receive list of rooms
@@ -360,18 +340,16 @@ GET to receive list of rooms
     Content-Type: application/json
 
 ## DELETE
-### Input Schema
+### Input
 ```json
 null
 ```
-
-### Output Schema
+### Output
 ```json
 {
     "type": "string"
 }
 ```
-
 
 
 DELETE to delete current room (if you are the owner)

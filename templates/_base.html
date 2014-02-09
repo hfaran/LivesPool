@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        {% global_meta_tags %}
+        <title>
+            {% block title %}Default title{% end %}
+        </title>
+        {% bootstrap %}
+        <link rel="stylesheet" type="text/css" href="{{ static_url("base.css") }}">
+    </head>
+    <body>
+        {% navbar %}
+        <div class="container">
+            {% banner_title %}
+            {% body %}
+        </div>
+    </body>
+</html>
