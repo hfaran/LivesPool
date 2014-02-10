@@ -1,4 +1,4 @@
-`cutthroat-server`
+`Lives Pool`
 ================
 
 ## Getting Started
