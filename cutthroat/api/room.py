@@ -107,6 +107,10 @@ class ListRooms(APIHandler):
         "output_schema": {
             "type": "array",
         },
+        "output_example": [
+            {"name": "Curve", "pwd_req": True},
+            {"name": "Cue", "pwd_req": False}
+        ],
         "doc": """
 GET to receive list of rooms
 """
