@@ -36,17 +36,32 @@ class NotFoundError(Exception)
     """NotFoundError"""
 
 
-class Player(MutableMapping):
+class DBObjectMapping(MutableMapping):
 
-    def __init__(self, db, attr_key="player_name", attr_val=None):
+    """Base class for objects mapping to the database
+
+    All classes subclassing from this should:
+    - Define an initialize method; it doesn't have to do anything
+    - Define an __inv_transform method
+    - Define an __transform method
+    - Be named the CapWords singular noun version of the DB table they access
+    """
+
+    def __init__(self, db, attr_key, attr_val):
         self.attr_key = attr_key
         self.attr_val = attr_val
         self.__find_d = {attr_key: self.__transform(attr_key, attr_val)}
         self.__db = db
+        self.initialize()
+
+    @property
+    def __table_name(self):
+        return "{}s".format(self.__class__.__name__.lower())
 
     @property
     def __store(self):
-        p = self.__db["players"].find_one(**self.__find_d)
+        p = self.__db[self.__table_name].find_one(
+            **self.__find_d)
         if not p:
             raise NotFoundError
         p = {k: self.__inv_transform(k, v) for k, v in p.iteritems()}
@@ -55,18 +70,19 @@ class Player(MutableMapping):
     def __getitem__(self, key):
         return self.__store[key]
 
+    def initialize(self):
+        raise NotImplementedError
+
     def __inv_transform(self, key, value):
-        if key in ["balls"]:
-            value = listify_string(int, p["balls"])
-        return value
+        """Transforms value based on key for reading from the DB"""
+        raise NotImplementedError
 
     def __transform(self, key, value):
-        if key in ["balls"]:
-            value = stringify_list(value)
-        return value
+        """Transforms value based on key for writing to the DB"""
+        raise NotImplementedError
 
     def __setitem__(self, key, value):
-        self.__db["players"].update(
+        self.__db[self.__table_name].update(
             {
                 self.attr_key: self.__transform(self.attr_key, self.attr_val),
                 key: self.__transform(key, value)
@@ -79,6 +95,22 @@ class Player(MutableMapping):
 
     def __len__(self):
         return len(self.__store)
+
+
+class Player(DBObjectMapping):
+
+    def initialize(self):
+        pass
+
+    def __inv_transform(self, key, value):
+        if key in ["balls"]:
+            value = listify_string(int, p["balls"])
+        return value
+
+    def __transform(self, key, value):
+        if key in ["balls"]:
+            value = stringify_list(value)
+        return value
 
 
 class Connection(object):
