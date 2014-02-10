@@ -1,6 +1,7 @@
 import bcrypt
 import logging
 import dataset
+from collections import MutableMapping
 from itertools import chain
 from random import choice
 
@@ -28,6 +29,56 @@ def listify_string(func, s):
         return []
     else:
         return map(func, s.split(","))
+
+
+class NotFoundError(Exception)
+
+    """NotFoundError"""
+
+
+class Player(MutableMapping):
+
+    def __init__(self, db, attr_key="player_name", attr_val=None):
+        self.attr_key = attr_key
+        self.attr_val = attr_val
+        self.__find_d = {attr_key: self.__transform(attr_key, attr_val)}
+        self.__db = db
+
+    @property
+    def __store(self):
+        p = self.__db["players"].find_one(**self.__find_d)
+        if not p:
+            raise NotFoundError
+        p = {k: self.__inv_transform(k, v) for k, v in p.iteritems()}
+        return p
+
+    def __getitem__(self, key):
+        return self.__store[key]
+
+    def __inv_transform(self, key, value):
+        if key in ["balls"]:
+            value = listify_string(int, p["balls"])
+        return value
+
+    def __transform(self, key, value):
+        if key in ["balls"]:
+            value = stringify_list(value)
+        return value
+
+    def __setitem__(self, key, value):
+        self.__db["players"].update(
+            {
+                self.attr_key: self.__transform(self.attr_key, self.attr_val),
+                key: self.__transform(key, value)
+            },
+            [attr_key]
+        )
+
+    def __iter__(self):
+        return iter(self.__store)
+
+    def __len__(self):
+        return len(self.__store)
 
 
 class Connection(object):
@@ -163,7 +214,7 @@ class Connection(object):
         ptable = self.db['players']
         player = ptable.find_one(name=player_name)
         api_assert(player, 400,
-                log_message="No user {} exists.".format(player_name))
+                   log_message="No user {} exists.".format(player_name))
         return bcrypt.hashpw(
             str(password), str(player["salt"])
         ) == player['password']
