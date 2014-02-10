@@ -64,8 +64,7 @@ class DBObjectMapping(MutableMapping):
             **self.__find_d)
         if not p:
             raise NotFoundError
-        p = {k: self.__inv_transform(k, v) for k, v in p.iteritems()}
-        return p
+        return {k: self.__inv_transform(k, v) for k, v in p.iteritems()}
 
     def __getitem__(self, key):
         return self.__store[key]
@@ -109,6 +108,38 @@ class Player(DBObjectMapping):
 
     def __transform(self, key, value):
         if key in ["balls"]:
+            value = stringify_list(value)
+        return value
+
+
+class Room(DBObjectMapping):
+
+    def initialize(self):
+        pass
+
+    def __inv_transform(self, key, value):
+        if key in ["current_players"]:
+            value = listify_string(int, value)
+        return value
+
+    def __transform(self, key, value):
+        if key in ["current_players"]:
+            value = stringify_list(value)
+        return value
+
+
+class Game(DBObjectMapping):
+
+    def initialize(self):
+        pass
+
+    def __inv_transform(self, key, value):
+        if key in ["unclaimed_balls", "players"]:
+            value = listify_string(int, value)
+        return value
+
+    def __transform(self, key, value):
+        if key in ["unclaimed_balls", "players"]:
             value = stringify_list(value)
         return value
 
