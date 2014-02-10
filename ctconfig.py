@@ -31,10 +31,9 @@ def define_options():
         default="cutthroat.db"
     )
 
-    # Options for testing
     define(
         "output_routes",
-        default=False,
+        default=True,
         type=bool,
         help="If enabled, outputs all application routes to `routes.json`"
     )
