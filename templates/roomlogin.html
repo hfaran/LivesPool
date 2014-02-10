@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block page_title %}Room Login{% end %}
+{% block banner_title %}Doors of Durin{% end %}
+
+{% block body %}
+<h4 style="font-style: italic; text-align: center;">Are you a <i>mellon</i> of Curve?</h4>
+<div class="contain-300px">
+	<div class="row">
+	    <div class="col-xs-12">
+	        <form id="signinForm" class="form-signin" role="form">
+	            <input type="password" name="password" class="form-control form-spacing" placeholder="Password" required="">
+	            <br />
+	            <div style="max-width: 150px; margin: auto">
+		            <button class="btn btn-default btn-primary btn-block" type="submit">Step in to <i>Moria</i></button>
+		        </div>
+	        </form>
+	    </div>
+	</div>
+</div>	
+{% end %}
