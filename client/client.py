@@ -44,7 +44,7 @@ class CutthroatAPI(object):
         r = requests.post(
             self.base_url + "/api/player/player",
             data=json.dumps({
-                "name": username,
+                "username": username,
                 "password": password
             })
         )
@@ -58,7 +58,7 @@ class CutthroatAPI(object):
         r = requests.post(
             self.base_url + "/api/auth/login",
             data=json.dumps({
-                "name": username,
+                "username": username,
                 "password": password
             })
         )

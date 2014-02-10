@@ -7,6 +7,7 @@ import signal
 import json
 import jsonpickle
 import uuid
+from itertools import chain
 
 import tornado.httpserver
 import tornado.ioloop
@@ -53,6 +54,19 @@ def shutdown():
     stop_loop()
 
 
+def assemble_routes():
+    """Assembles all routes and returns"""
+    # TODO: Change "/" to point to signin.Landing requesthandler once
+    #   game view is implemented
+    custom_routes = [("/", views.room.Join)]
+    api_routes = get_routes(api)
+    view_routes = map(
+        lambda r: (r[0].replace("/views", "", 1), r[1]),
+        get_routes(views)  # View routes with /views removed
+    )
+    return api_routes + view_routes + custom_routes
+
+
 def main():
     """
     - Get options from config file
@@ -75,16 +89,14 @@ def main():
     # Get any commandline options
     tornado.options.parse_command_line()
 
-    # TODO: Change "/" to point to signin.Landing requesthandler once
-    #   game view is implemented
-    routes = get_routes(api) + get_routes(views) + [("/", views.room.Join)]
+    routes = assemble_routes()
     settings = dict(
         template_path=os.path.join(
             os.path.dirname(__file__), "templates"),
         static_path=os.path.join(os.path.dirname(__file__), "static"),
         gzip=True,
         cookie_secret=str(uuid.uuid4()),
-        login_url="/views/signin/signin"
+        login_url="/signin/signin"
     )
 
     # If asked to write routes, do so
