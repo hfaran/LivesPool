@@ -1,29 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="utf-8" />
+        <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
         <title>
             {% block page_title %}{% end %}
         </title>
-        <link rel="stylesheet" type="text/css" media="screen" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.0/css/bootstrap.min.css" />
-        <link rel="stylesheet" type="text/css" media="screen" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.0/css/bootstrap-theme.min.css" />
+
+        <link rel="stylesheet" media="screen" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" />
         <link rel="stylesheet" type="text/css" href="{{ static_url("base.css") }}" />
-        <script type= "text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
         {% block scripts %}{% end %}
     </head>
     <body>
-        <div class="container">
+        <div class="navbar navbar-blue navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle navbar-toggle-blue" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a href="#" class="navbar-brand">Cut-throat Pool</a>
+                </div>
+
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Rooms</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="">
             <div class="row">
-                <div class="col-xs-12">
+                <div class="col-xs-12 nopadding">
                     <h1>
                         {% block banner_title %}{% end %}
                     </h1>
                 </div>
             </div>
-
             {% block body %}{% end %}
         </div>
     </body>
