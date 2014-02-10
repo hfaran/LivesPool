@@ -346,6 +346,20 @@ null
 }
 ```
 
+### Output Example
+```json
+[
+    {
+        "pwd_req": true, 
+        "name": "Curve"
+    }, 
+    {
+        "pwd_req": false, 
+        "name": "Cue"
+    }
+]
+```
+
 
 
 GET to receive list of rooms

@@ -382,7 +382,12 @@ class Connection(object):
         :returns: List of all created rooms
         :rtype: list
         """
-        return [r["name"] for r in self.db['rooms'].all()]
+        return [
+            {
+                "name": r["name"],
+                "pwd_req": bool(r["password"])
+            } for r in self.db['rooms'].all()
+        ]
 
     def get_owned_room(self, player_name):
         """:returns: name of room owned by `player_name` else None"""
