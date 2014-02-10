@@ -15,6 +15,7 @@
 * Documentation
     * Document any undocumented functions
 * Front-end
+    * [Wireframe draft](http://sdrv.ms/NiHL7a)
 * Tests
     * Back-end unittests
     * API functional tests
