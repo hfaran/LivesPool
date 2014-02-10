@@ -10,21 +10,21 @@ class Player(APIHandler):
         "input_schema": {
             "type": "object",
             "properties": {
-                "name": {"type": "string"},
+                "username": {"type": "string"},
                 "password": {"type": "string"},
             },
-            "required": ["name", "password"]
+            "required": ["username", "password"]
         },
         "output_schema": {
             "type": "object",
             "properties": {
-                "name": {"type": "string"}
+                "username": {"type": "string"}
             }
         },
         "doc": """
 POST the required parameters to permanently register a new player
 
-* `name`: Username of the player
+* `username`: Username of the player
 * `password`: Password for future logins
 """
     }
@@ -40,8 +40,8 @@ GET to retrieve player info
 
     @io_schema
     def post(self, body):
-        self.db_conn.create_player(body["name"], body["password"])
-        return {"name": body["name"]}
+        self.db_conn.create_player(body["username"], body["password"])
+        return {"username": body["username"]}
 
     @io_schema
     @authenticated

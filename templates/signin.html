@@ -3,14 +3,19 @@
 {% block page_title %}Sign In{% end %}
 {% block banner_title %} Lives Pool {% end %}
 
+{% block scripts %}
+<script type="text/javascript" src="{{ static_url("json_utils.js") }}"></script>
+<script type="text/javascript" src="{{ static_url("signin.js") }}"></script>
+{% end %}
+
 {% block body %}
 <div class="row">
     <div class="col-xs-12">
-        <form id="signinForm" class="form-signin" role="form">
+        <form id="signinForm" class="form-signin">
             <input type="username" name="username" class="form-control" placeholder="Username" required="" autofocus="">
             <input type="password" name="password" class="form-control" placeholder="Password" required="">
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign Up</button>
-            <button class="btn btn-lg btn-success btn-block" type="submit">Sign in</button>
+            <button id="signupButton" class="btn btn-lg btn-primary btn-block" type="submit">Sign Up</button>
+            <button id="signinButton" class="btn btn-lg btn-success btn-block" type="submit">Sign In</button>
         </form>
     </div>
 </div>

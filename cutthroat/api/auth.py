@@ -10,35 +10,35 @@ class Login(APIHandler):
     apid = {}
     apid["post"] = {
         "input_schema": {
-            "required": ["name", "password"],
+            "required": ["username", "password"],
             "type": "object",
             "properties": {
-                "name": {"type": "string"},
+                "username": {"type": "string"},
                 "password": {"type": "string"},
             },
         },
         "output_schema": {
             "type": "object",
             "properties": {
-                "name": {"type": "string"}
+                "username": {"type": "string"}
             }
         },
         "doc": """
 POST the required credentials to get back a cookie
 
-* `name`: Username
+* `username`: Username
 * `password`: Password
 """
     }
 
     @io_schema
     def post(self, body):
-        player_name = body["name"]
+        player_name = body["username"]
         password = body["password"]
 
         if self.db_conn.auth_user(player_name, password):
             self.set_secure_cookie("user", player_name)
-            return {"name": player_name}
+            return {"username": player_name}
         else:
             api_assert(
                 False,

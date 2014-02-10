@@ -162,8 +162,8 @@ class Connection(object):
     def auth_user(self, player_name, password):
         ptable = self.db['players']
         player = ptable.find_one(name=player_name)
-        api_assert(player, 409,
-                   log_message="No user {} exists.".format(player_name))
+        api_assert(player, 400,
+                log_message="No user {} exists.".format(player_name))
         return bcrypt.hashpw(
             str(password), str(player["salt"])
         ) == player['password']

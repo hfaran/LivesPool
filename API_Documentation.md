@@ -11,15 +11,15 @@
 ```json
 {
     "required": [
-        "name", 
+        "username", 
         "password"
     ], 
     "type": "object", 
     "properties": {
-        "password": {
+        "username": {
             "type": "string"
         }, 
-        "name": {
+        "password": {
             "type": "string"
         }
     }
@@ -31,7 +31,7 @@
 {
     "type": "object", 
     "properties": {
-        "name": {
+        "username": {
             "type": "string"
         }
     }
@@ -42,7 +42,7 @@
 
 POST the required credentials to get back a cookie
 
-* `name`: Username
+* `username`: Username
 * `password`: Password
 
 
@@ -185,15 +185,15 @@ POST the required parameters to register the pocketing of a ball
 ```json
 {
     "required": [
-        "name", 
+        "username", 
         "password"
     ], 
     "type": "object", 
     "properties": {
-        "password": {
+        "username": {
             "type": "string"
         }, 
-        "name": {
+        "password": {
             "type": "string"
         }
     }
@@ -205,7 +205,7 @@ POST the required parameters to register the pocketing of a ball
 {
     "type": "object", 
     "properties": {
-        "name": {
+        "username": {
             "type": "string"
         }
     }
@@ -216,7 +216,7 @@ POST the required parameters to register the pocketing of a ball
 
 POST the required parameters to permanently register a new player
 
-* `name`: Username of the player
+* `username`: Username of the player
 * `password`: Password for future logins
 
 
