@@ -162,6 +162,15 @@ class CutthroatAPI(object):
             self.room = None
         return r.json()
 
+    def leave_game(self):
+        r = requests.delete(
+            self.base_url + "/api/game/leavegame",
+            cookies=self.cookies
+        )
+        if r.status_code == 200:
+            self.game = None
+        return r.json()
+
     def sink_ball(self, ball=None):
         if ball is None:
             ball = int(raw_input("Which ball got sunk? "))
