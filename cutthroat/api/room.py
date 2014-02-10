@@ -25,15 +25,15 @@ class CreateRoom(APIHandler):
         "input_schema": {
             "type": "object",
             "properties": {
-                "name": {"type": "string"},
+                "roomname": {"type": "string"},
                 "password": {"type": "string"},
             },
-            "required": ["name"]
+            "required": ["roomname"]
         },
         "output_schema": {
             "type": "object",
             "properties": {
-                "name": {"type": "string"}
+                "roomname": {"type": "string"}
             }
         },
         "doc": """
@@ -51,11 +51,11 @@ POST the required parameters to create a new room
         assert_non_tenant(self, body)
 
         self.db_conn.create_room(
-            room_name=body["name"],
+            room_name=body["roomname"],
             password=body.get("password") if body.get("password") else "",
             owner=self.get_current_user()
         )
-        return {"name": body["name"]}
+        return {"roomname": body["roomname"]}
 
 
 class JoinRoom(APIHandler):

@@ -252,14 +252,14 @@ GET to retrieve player info
 ```json
 {
     "required": [
-        "name"
+        "roomname"
     ], 
     "type": "object", 
     "properties": {
-        "password": {
+        "roomname": {
             "type": "string"
         }, 
-        "name": {
+        "password": {
             "type": "string"
         }
     }
@@ -271,7 +271,7 @@ GET to retrieve player info
 {
     "type": "object", 
     "properties": {
-        "name": {
+        "roomname": {
             "type": "string"
         }
     }
