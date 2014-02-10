@@ -93,6 +93,40 @@ POST the required parameter to create a new game; only the owner of a room can m
 
 
 
+# /api/game/leavegame
+
+    Content-Type: application/json
+
+## DELETE
+### Input Schema
+```json
+null
+```
+
+### Output Schema
+```json
+{
+    "required": [
+        "game_id"
+    ], 
+    "type": "object", 
+    "properties": {
+        "game_id": {
+            "type": "string"
+        }
+    }
+}
+```
+
+
+
+DELETE to remove yourself from current game
+
+
+
+
+
+
 # /api/game/sinkball
 
     Content-Type: application/json

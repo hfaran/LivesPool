@@ -89,6 +89,28 @@ POST the required parameter to create a new game; only the owner of a room can m
         return {"game_id": game_id}
 
 
+class LeaveGame(APIHandler):
+    apid = {}
+    apid["delete"] = {
+        "input_schema": None,
+        "output_schema": {
+            "type": "object",
+            "properties": {
+                "game_id": {"type": "string"}
+            },
+            "required": ["game_id"]
+        },
+        "doc": """
+DELETE to remove yourself from current game
+"""
+    }
+
+    @io_schema
+    @authenticated
+    def delete(self, body):
+        return {"game_id": self.db_conn.leave_game(self.get_current_user())}
+
+
 class SinkBall(APIHandler):
     apid = {}
     apid["post"] = {
