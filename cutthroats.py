@@ -75,6 +75,8 @@ def main():
     # Get any commandline options
     tornado.options.parse_command_line()
 
+    # TODO: Change "/" to point to signin.Landing requesthandler once
+    #   game view is implemented
     routes = get_routes(api) + get_routes(views) + [("/", views.room.Join)]
     settings = dict(
         template_path=os.path.join(
