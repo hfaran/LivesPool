@@ -110,7 +110,7 @@ DELETE to remove yourself from current game
     @authenticated
     def delete(self, body):
         return {"game_id": self.db_conn.leave_game(self.get_current_user())}
-        # player = Player(self.db_conn, "player_name", self.get_current_user())
+        # player = Player(self.db_conn, "name", self.get_current_user())
         # game_id = player["current_game_id"]
         # api_assert(game_id, 409,
         #            log_message="You are not currently in a game.")
