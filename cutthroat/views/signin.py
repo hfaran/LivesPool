@@ -22,5 +22,8 @@ class Landing(ViewHandler):
         if player["current_game_id"]:
             raise NotImplementedError
             # self.redirect("<Insert URL to game view here>")
+        elif player["current_room"]:
+            raise NotImplementedError
+            # self.redirect("<Insert URL to room page here>")
         else:
             self.redirect("/views/room/join")
