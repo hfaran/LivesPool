@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block page_title %} Create a Room {% end %}
+{% block banner_title %} Create a Room {% end %}
+
+{% block scripts %}
+<script type="text/javascript" src="{{ static_url("json_utils.js") }}"></script>
+<script type="text/javascript" src="{{ static_url("createaroom.js") }}"></script>
+{% end %}
+
+{% block body %}
+<div class="row">
+    <div class="col-xs-12">
+        <form id="createroomForm" class="form-signin">
+            <input type="text" name="roomname" class="form-control" placeholder="Room Name" required="required" autofocus="" />
+            <input type="text" name="password" class="form-control" placeholder="Room Password (Optional)" />
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Create new Room</button>
+        </form>
+    </div>
+</div>
+{% end %}

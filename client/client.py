@@ -70,12 +70,12 @@ class CutthroatAPI(object):
             raise AuthenticationError(r.json().get("data"))
 
     def create_room(self):
-        name = raw_input("Name of the room: ")
+        roomname = raw_input("Name of the room: ")
         password = raw_input("(Optional) Password to the room if you "
                              "wish to keep entry restricted to players who "
                              "know the password: ")
 
-        data = dict(name=name)
+        data = dict(roomname=roomname)
         if password:
             data["password"] = password
 
@@ -87,7 +87,7 @@ class CutthroatAPI(object):
         logging.info("{}\n{}".format(r, r.json()))
 
         if r.status_code == 200:
-            self.join_room(name, password)
+            self.join_room(roomname, password)
         return r.json()
 
     def list_rooms(self):

@@ -40,6 +40,10 @@
         "{\"py/type\": \"cutthroat.api.room.JoinRoom\"}"
     ], 
     [
+        "/room/create", 
+        "{\"py/type\": \"cutthroat.views.room.Create\"}"
+    ], 
+    [
         "/room/join", 
         "{\"py/type\": \"cutthroat.views.room.Join\"}"
     ], 
