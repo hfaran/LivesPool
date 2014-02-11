@@ -16,6 +16,7 @@
     * Document any undocumented functions
 * Front-end
     * [Wireframe draft](http://sdrv.ms/NiHL7a)
+* Write new database module; refactor API to use it
 * Tests
     * Back-end unittests
     * API functional tests
