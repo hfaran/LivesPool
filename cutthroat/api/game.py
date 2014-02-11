@@ -1,12 +1,11 @@
 import uuid
-import json
-from random import shuffle
-from itertools import chain
+from random import shuffle, choice
 from tornado.web import authenticated
 
 from tornado_json.utils import io_schema, api_assert
 
 from cutthroat.handlers import APIHandler
+from cutthroat.db2 import Player, Room, Game, NotFoundError
 
 
 TOTAL_NUM_BALLS = 15
@@ -108,7 +107,39 @@ DELETE to remove yourself from current game
     @io_schema
     @authenticated
     def delete(self, body):
-        return {"game_id": self.db_conn.leave_game(self.get_current_user())}
+        # Shorthand since we need to reference this multiple times
+        db = self.db_conn.db
+
+        # Get player and the game_id he's in
+        player_name = self.get_current_user()
+        player = Player(db, "name", player_name)
+        game_id = player["current_game_id"]
+        api_assert(game_id, 409,
+                   log_message="You are not currently in a game.")
+
+        # Get game
+        game = Game(db, "game_id", game_id)
+
+        # Get remaining set of players
+        rem_players = list(set(game["players"]) - {player_name})
+
+        # Set new gamemaster
+        if not rem_players:
+            game["gamemaster"] = None
+        # If gamemaster is leaving, assign to a random player
+        elif game["gamemaster"] == player_name:
+            game["gamemaster"] = choice(rem_players)
+
+        # Set remaining players in game and add players' balls to game's
+        #   unclaimed set
+        game["players"] = rem_players
+        game["unclaimed_balls"] = game["unclaimed_balls"] + player["balls"]
+
+        # Set the player's game_id to None and his list of balls to empty
+        player["current_game_id"] = None
+        player["balls"] = []
+
+        return {"game_id": game_id}
 
 
 class SinkBall(APIHandler):
