@@ -115,7 +115,25 @@ DELETE to remove yourself from current game
         # api_assert(game_id, 409,
         #            log_message="You are not currently in a game.")
 
+        # game = Game(self.db_conn, "game_id", game_id)
 
+        # # Get remaining set of players
+        # rem_players = list(set(game["players"]) - set([player_name]))
+
+        # # Set new gamemaster
+        # if not rem_players:
+        #     game["gamemaster"] = None
+        # # If gamemaster is leaving, assign to a random player
+        # elif game["gamemaster"] == player_name:
+        #     game["gamemaster"] = choice(rem_players)
+
+        # game["players"] = rem_players
+        # game["unclaimed_balls"] = game["unclaimed_balls"] + player["balls"]
+
+        # player["current_game_id"] = None
+        # player["balls"] = []
+
+        # return game_id
 
 
 class SinkBall(APIHandler):

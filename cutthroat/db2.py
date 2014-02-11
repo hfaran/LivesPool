@@ -111,7 +111,7 @@ class Room(DBObjectMapping):
 
     def __inv_transform(self, key, value):
         if key in ["current_players"]:
-            value = listify_string(int, value)
+            value = listify_string(str, value)
         return value
 
     def __transform(self, key, value):
@@ -126,8 +126,10 @@ class Game(DBObjectMapping):
         pass
 
     def __inv_transform(self, key, value):
-        if key in ["unclaimed_balls", "players"]:
+        if key in ["unclaimed_balls"]:
             value = listify_string(int, value)
+        elif key in ["players"]:
+            value = listify_string(str, value)
         return value
 
     def __transform(self, key, value):
