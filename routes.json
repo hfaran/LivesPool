@@ -12,6 +12,10 @@
         "{\"py/type\": \"cutthroat.api.game.SinkBall\"}"
     ], 
     [
+        "/api/game/leavegame", 
+        "{\"py/type\": \"cutthroat.api.game.LeaveGame\"}"
+    ], 
+    [
         "/api/player/player", 
         "{\"py/type\": \"cutthroat.api.player.Player\"}"
     ], 
@@ -36,16 +40,16 @@
         "{\"py/type\": \"cutthroat.api.room.JoinRoom\"}"
     ], 
     [
-        "/views/auth/login", 
-        "{\"py/type\": \"cutthroat.views.auth.Login\"}"
-    ], 
-    [
-        "/views/room/join", 
+        "/room/join", 
         "{\"py/type\": \"cutthroat.views.room.Join\"}"
     ], 
     [
-        "/views/signin/signin", 
+        "/signin/signin", 
         "{\"py/type\": \"cutthroat.views.signin.SignIn\"}"
+    ], 
+    [
+        "/signin/landing", 
+        "{\"py/type\": \"cutthroat.views.signin.Landing\"}"
     ], 
     [
         "/", 
