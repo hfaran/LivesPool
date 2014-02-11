@@ -1,4 +1,4 @@
-# CLI Client for `cutthroat-server`
+# CLI Client for `LivesPool`
 
 ## Getting Started
     $ ipython
