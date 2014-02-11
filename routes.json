@@ -53,6 +53,6 @@
     ], 
     [
         "/", 
-        "{\"py/type\": \"cutthroat.views.room.Join\"}"
+        "{\"py/type\": \"cutthroat.views.signin.Landing\"}"
     ]
 ]

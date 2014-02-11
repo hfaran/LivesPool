@@ -26,4 +26,4 @@ class Landing(ViewHandler):
             raise NotImplementedError
             # self.redirect("<Insert URL to room page here>")
         else:
-            self.redirect("/views/room/join")
+            self.redirect("/room/join")

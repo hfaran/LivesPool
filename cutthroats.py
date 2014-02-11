@@ -58,7 +58,7 @@ def assemble_routes():
     """Assembles all routes and returns"""
     # TODO: Change "/" to point to signin.Landing requesthandler once
     #   game view is implemented
-    custom_routes = [("/", views.room.Join)]
+    custom_routes = [("/", views.signin.Landing)]
     api_routes = get_routes(api)
     view_routes = map(
         lambda r: (r[0].replace("/views", "", 1), r[1]),
