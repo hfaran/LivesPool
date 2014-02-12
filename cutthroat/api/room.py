@@ -1,7 +1,8 @@
-from tornado_json.utils import io_schema, api_assert
+from tornado_json.utils import io_schema, api_assert, APIError
 from tornado.web import authenticated
 
 from cutthroat.handlers import APIHandler
+from cutthroat.db2 import Player, Room, Game, NotFoundError
 
 
 def assert_non_tenant(rh, body):
@@ -120,6 +121,49 @@ GET to receive list of rooms
     @authenticated
     def get(self, body):
         return self.db_conn.list_rooms()
+
+
+class ListPlayers(APIHandler):
+
+    """List players in room"""
+
+    apid = {}
+    apid["get"] = {
+        "input_schema": None,
+        "output_schema": {
+            "type": "object",
+            "properties": {
+                "owner": {"type": "string"},
+                "players": {"type": "array"},
+            },
+            "required": ["owner", "players"],
+        },
+        "doc": """
+GET to receive list of players in current room
+
+* `players` array includes ALL players (including owner)
+* `owner` field is useful for highlighting the room owner in the UI
+"""
+    }
+
+    @io_schema
+    @authenticated
+    def get(self, body):
+        db = self.db_conn.db
+
+        # Get player
+        player_name = self.get_current_user()
+        player = Player(db, "name", player_name)
+        room_name = player["current_room"]
+        api_assert(room_name, 400, log_message="You are not currently in"
+                   " a room.")
+
+        # Get room
+        room = Room(db, "name", room_name)
+        return {
+            "players": room["current_players"],
+            "owner": room["owner"]
+        }
 
 
 class LeaveRoom(APIHandler):

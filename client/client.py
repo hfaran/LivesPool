@@ -124,6 +124,13 @@ class CutthroatAPI(object):
             self.room = name
         return r.json()
 
+    def list_room_players(self):
+        r = requests.get(
+            self.base_url + "/api/room/listplayers",
+            cookies=self.cookies
+        )
+        return r.json()
+
     def get_self_info(self):
         r = requests.get(
             self.base_url + "/api/player/player",

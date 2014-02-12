@@ -363,6 +363,47 @@ DELETE to leave current room
 
 
 
+# /api/room/listplayers
+
+    Content-Type: application/json
+
+## GET
+### Input Schema
+```json
+null
+```
+
+### Output Schema
+```json
+{
+    "required": [
+        "owner", 
+        "players"
+    ], 
+    "type": "object", 
+    "properties": {
+        "owner": {
+            "type": "string"
+        }, 
+        "players": {
+            "type": "array"
+        }
+    }
+}
+```
+
+
+
+GET to receive list of players in current room
+
+* `players` array includes ALL players (including owner)
+* `owner` field is useful for highlighting the room owner in the UI
+
+
+
+
+
+
 # /api/room/listrooms
 
     Content-Type: application/json
