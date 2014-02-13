@@ -1,4 +1,4 @@
-from tornado_json.utils import io_schema, api_assert
+from tornado_json.utils import io_schema, APIError
 
 from cutthroat.handlers import APIHandler
 
@@ -40,15 +40,13 @@ POST the required credentials to get back a cookie
             self.set_secure_cookie("user", player_name)
             return {"username": player_name}
         else:
-            api_assert(
-                False,
+            raise APIError(
                 400,
                 log_message="Bad username/password combo"
             )
 
     def get(self):
-        api_assert(
-            False,
+        raise APIError(
             403,
             log_message="Please post to {} to get a cookie".format(
                 self.get_login_url())
