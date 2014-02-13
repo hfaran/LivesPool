@@ -9,20 +9,14 @@
 {% end %}
 
 {% block body %}
-<h4 style="font-style: italic; text-align: center;">A billiards game of lives.</h4>
-<div class="contain-300px">
-    <div class="row">
-        <div class="col-xs-12">
-            <form id="signinForm" class="form-signin">
-                <input type="text" name="username" class="form-control form-spacing" placeholder="Username" required="" autofocus="" />
-                <input type="password" name="password" class="form-control form-spacing" placeholder="Password" required="" />
-                <br />
-                <div style="max-width: 150px; margin: auto">
-                    <button id="signupButton" class="btn btn-default btn-primary btn-block" type="submit">Sign Up</button>
-                    <button id="signinButton" class="btn btn-default btn-success btn-block" type="submit">Sign In</button>
-                </div>
-            </form>
-        </div>
+<h4 style="font-style: italic; text-align: center;">An elimination game of billiards.</h4>
+<form id="signinForm" class="form-signin">
+    <input type="text" name="username" class="form-control form-spacing" placeholder="Username" required="" autofocus="" />
+    <input type="password" name="password" class="form-control form-spacing" placeholder="Password" required="" />
+    <br />
+    <div style="max-width: 150px; margin: auto">
+        <button id="signupButton" class="btn btn-default btn-primary btn-block" type="submit">Sign Up</button>
+        <button id="signinButton" class="btn btn-default btn-success btn-block" type="submit">Sign In</button>
     </div>
-</div>
+</form>
 {% end %}
