@@ -12,6 +12,10 @@
         "{\"py/type\": \"cutthroat.api.game.SinkBall\"}"
     ], 
     [
+        "/api/game/ballsontable", 
+        "{\"py/type\": \"cutthroat.api.game.BallsOnTable\"}"
+    ], 
+    [
         "/api/game/leavegame", 
         "{\"py/type\": \"cutthroat.api.game.LeaveGame\"}"
     ], 

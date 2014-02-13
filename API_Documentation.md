@@ -50,6 +50,42 @@ POST the required credentials to get back a cookie
 
 
 
+# /api/game/ballsontable
+
+    Content-Type: application/json
+
+## GET
+### Input Schema
+```json
+null
+```
+
+### Output Schema
+```json
+{
+    "type": "array"
+}
+```
+
+### Output Example
+```json
+[
+    2, 
+    5, 
+    9, 
+    6
+]
+```
+
+
+
+GET to receive list of balls on the table in current game
+
+
+
+
+
+
 # /api/game/creategame
 
     Content-Type: application/json
