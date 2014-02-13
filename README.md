@@ -18,7 +18,7 @@
     * Document any undocumented functions
 * Front-end
     * ~~[Wireframe draft](http://sdrv.ms/NiHL7a)~~
-    * Sign-in views
+    * ~~Sign-in views~~
     * Room views
     * Game views
 * Write new database module; refactor API to use it
