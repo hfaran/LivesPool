@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block page_title %}Sign In{% end %}
-{% block banner_title %} Lives Pool {% end %}
+{% block banner_title %}LIVES POOL{% end %}
 
 {% block scripts %}
 <script type="text/javascript" src="{{ static_url("json_utils.js") }}"></script>
@@ -9,14 +9,20 @@
 {% end %}
 
 {% block body %}
-<div class="row">
-    <div class="col-xs-12">
-        <form id="signinForm" class="form-signin">
-            <input type="text" name="username" class="form-control" placeholder="Username" required="" autofocus="" />
-            <input type="password" name="password" class="form-control" placeholder="Password" required="" />
-            <button id="signupButton" class="btn btn-lg btn-primary btn-block" type="submit">Sign Up</button>
-            <button id="signinButton" class="btn btn-lg btn-success btn-block" type="submit">Sign In</button>
-        </form>
+<h4 style="font-style: italic; text-align: center;">A billiards game of lives.</h4>
+<div class="contain-300px">
+    <div class="row">
+        <div class="col-xs-12">
+            <form id="signinForm" class="form-signin">
+                <input type="text" name="username" class="form-control form-spacing" placeholder="Username" required="" autofocus="" />
+                <input type="password" name="password" class="form-control form-spacing" placeholder="Password" required="" />
+                <br />
+                <div style="max-width: 150px; margin: auto">
+                    <button id="signupButton" class="btn btn-default btn-primary btn-block" type="submit">Sign Up</button>
+                    <button id="signupButton" class="btn btn-default btn-success btn-block" type="submit">Sign In</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 {% end %}
