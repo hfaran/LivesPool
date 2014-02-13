@@ -196,3 +196,35 @@ POST the required parameters to register the pocketing of a ball
             self.db_conn.remove_ball_from_unclaimed(game_id, ball)
 
         return res
+
+
+class BallsOnTable(APIHandler):
+
+    """Balls on table for current game"""
+
+    apid = {}
+    apid["get"] = {
+        "input_schema": None,
+        "output_schema": {
+            "type": "array",
+        },
+        "output_example": [
+            2, 5, 9, 6
+        ],
+        "doc": """
+GET to receive list of balls on the table in current game
+"""
+    }
+
+    @io_schema
+    @authenticated
+    def get(self, body):
+        db = self.db_conn.db
+
+        player_name = self.get_current_user()
+        player = Player(db, "name", player_name)
+        game_id = player["current_game_id"]
+        api_assert(game_id, 400, log_message="You are not currently in"
+                   " a game.")
+
+        return self.db_conn.get_balls_on_table(game_id)
