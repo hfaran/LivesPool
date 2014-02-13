@@ -52,6 +52,10 @@
         "{\"py/type\": \"cutthroat.views.room.Join\"}"
     ], 
     [
+        "/roomlogin/roomlogin", 
+        "{\"py/type\": \"cutthroat.views.roomlogin.RoomLogin\"}"
+    ], 
+    [
         "/signin/signin", 
         "{\"py/type\": \"cutthroat.views.signin.SignIn\"}"
     ], 
