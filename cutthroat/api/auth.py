@@ -30,6 +30,13 @@ POST the required credentials to get back a cookie
 * `password`: Password
 """
     }
+    apid["get"] = {
+        "input_schema": None,
+        "output_schema": {"type": "string"},
+        "doc": """
+GET to check if authenticated. Should be obvious from status code (403 vs. 200).
+"""
+    }
 
     @io_schema
     def post(self, body):
@@ -45,9 +52,13 @@ POST the required credentials to get back a cookie
                 log_message="Bad username/password combo"
             )
 
-    def get(self):
-        raise APIError(
-            403,
-            log_message="Please post to {} to get a cookie".format(
-                self.get_login_url())
-        )
+    @io_schema
+    def get(self, body):
+        if not self.get_current_user():
+            raise APIError(
+                403,
+                log_message="Please post to {} to get a cookie".format(
+                    "/api/auth/login")
+            )
+        else:
+            return "You are already logged in."

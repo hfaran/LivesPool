@@ -47,6 +47,25 @@ POST the required credentials to get back a cookie
 
 
 
+## GET
+### Input Schema
+```json
+null
+```
+
+### Output Schema
+```json
+{
+    "type": "string"
+}
+```
+
+
+
+GET to check if authenticated. Should be obvious from status code (403 vs. 200).
+
+
+
 
 
 
