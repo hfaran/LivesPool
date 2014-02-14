@@ -20,3 +20,12 @@ class Create(ViewHandler):
     @authenticated
     def get(self):
         self.render("createaroom.html")
+
+class Room(ViewHandler):
+
+    """Room"""
+
+    @authenticated
+    def get(self):
+        self.render("room.html")
+
