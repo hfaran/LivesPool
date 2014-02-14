@@ -69,6 +69,32 @@ GET to check if authenticated. Should be obvious from status code (403 vs. 200).
 
 
 
+# /api/auth/logout
+
+    Content-Type: application/json
+
+## DELETE
+### Input Schema
+```json
+null
+```
+
+### Output Schema
+```json
+{
+    "type": "string"
+}
+```
+
+
+
+DELETE to clear cookie for current user.
+
+
+
+
+
+
 # /api/game/ballsontable
 
     Content-Type: application/json

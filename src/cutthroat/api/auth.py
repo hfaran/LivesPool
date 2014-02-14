@@ -1,3 +1,4 @@
+from tornado.web import authenticated
 from tornado_json.utils import io_schema, APIError
 
 from cutthroat.handlers import APIHandler
@@ -62,3 +63,32 @@ GET to check if authenticated. Should be obvious from status code (403 vs. 200).
             )
         else:
             return "You are already logged in."
+
+
+class Logout(APIHandler):
+
+    """Logout"""
+
+    apid = {}
+    apid["delete"] = {
+        "input_schema": None,
+        "output_schema": {"type": "string"},
+    "doc": """
+DELETE to clear cookie for current user.
+"""
+    }
+
+    @io_schema
+    @authenticated
+    def delete(self, body):
+        # TODO: So this doesn't actually with the CLI client...
+        #  can still authenticate with old cookie. Maybe we'll have
+        #  better luck with browser?
+        # Apparently if you set `expires_days` to None, it becomes
+        #  a session cookie which will be gone when the player closes
+        #  their browser, so if all else fails, we can just have an implicit
+        #  logout which occurs by closing the window. In some ways,
+        #  that's a much better way to log out that to have an explicit
+        #  button anyways.
+        self.clear_cookie("user")
+        return "Logout was successful."
