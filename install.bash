@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# This script is meant to set up LivesPool quickly with a default config.
+# It would probably be a good idea to explore some config option changes
+#   before deploying.
+
+
 LOGDIR="/var/log/cutthroat"
 CONFDIR="/etc/cutthroat"
 ORIGUSER="$USER"
@@ -20,6 +25,7 @@ sudo mkdir -p $CONFDIR
 sudo setfacl -m user:$ORIGUSER:rwx $CONFDIR
 # Copy config file over to $CONFDIR
 cp --no-clobber "cutthroat.conf" "$CONFDIR/cutthroat.conf"
-
+# For a quickstart; ideally the DB should be placed elsewhere
+cp --no-clobber "starter.db" "cutthroat.db"
 
 echo -e "\n\nBootstrapping complete."
