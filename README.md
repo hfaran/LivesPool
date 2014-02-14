@@ -4,7 +4,7 @@
 ## Getting Started
 ```bash
 ./install.bash
-./cutthroats.py
+src/cutthroats.py
 # Visit localhost:8888
 ```
 
@@ -12,7 +12,7 @@
 
 * ~~Finish implementing Room routes~~
 * ~~Auth~~
-    * ~~Implement basic API authentication and auth-based actions~~ 
+    * ~~Implement basic API authentication and auth-based actions~~
     * ~~Use some kind of hashing/salting~~
 * Documentation
     * Document any undocumented functions
