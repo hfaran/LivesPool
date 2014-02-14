@@ -4,6 +4,10 @@
         "{\"py/type\": \"cutthroat.api.auth.Login\"}"
     ], 
     [
+        "/api/auth/logout", 
+        "{\"py/type\": \"cutthroat.api.auth.Logout\"}"
+    ], 
+    [
         "/api/game/creategame", 
         "{\"py/type\": \"cutthroat.api.game.CreateGame\"}"
     ], 
