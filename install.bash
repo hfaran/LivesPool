@@ -24,7 +24,7 @@ sudo setfacl -m user:$ORIGUSER:rwx $LOGDIR
 sudo mkdir -p $CONFDIR
 sudo setfacl -m user:$ORIGUSER:rwx $CONFDIR
 # Copy config file over to $CONFDIR
-cp --no-clobber "cutthroat.conf" "$CONFDIR/cutthroat.conf"
+cp --no-clobber "config/cutthroat.conf" "$CONFDIR/cutthroat.conf"
 # For a quickstart; ideally the DB should be placed elsewhere
 cp --no-clobber "starter.db" "cutthroat.db"
 

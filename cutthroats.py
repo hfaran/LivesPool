@@ -19,7 +19,7 @@ from tornado_json.application import Application
 from tornado_json.routes import get_routes
 
 import cutthroat
-import ctconfig
+from cutthroat import ctconfig
 from cutthroat import api
 from cutthroat import views
 
