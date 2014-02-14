@@ -37,3 +37,8 @@ def define_options():
         type=bool,
         help="If enabled, outputs all application routes to `routes.json`"
     )
+
+    define(
+        "session_timeout",
+        default=1
+    )

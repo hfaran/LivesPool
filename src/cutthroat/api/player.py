@@ -1,3 +1,4 @@
+from tornado.options import options
 from tornado.web import authenticated
 from tornado_json.utils import io_schema, api_assert
 
@@ -41,7 +42,7 @@ GET to retrieve player info
     @io_schema
     def post(self, body):
         self.db_conn.create_player(body["username"], body["password"])
-        self.set_secure_cookie("user", body["username"])
+        self.set_secure_cookie("user", body["username"], options.session_timeout)
 
         return {"username": body["username"]}
 
