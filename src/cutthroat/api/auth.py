@@ -1,3 +1,4 @@
+from tornado.options import options
 from tornado.web import authenticated
 from tornado_json.utils import io_schema, APIError
 
@@ -45,7 +46,7 @@ GET to check if authenticated. Should be obvious from status code (403 vs. 200).
         password = body["password"]
 
         if self.db_conn.auth_user(player_name, password):
-            self.set_secure_cookie("user", player_name)
+            self.set_secure_cookie("user", player_name, options.session_timeout)
             return {"username": player_name}
         else:
             raise APIError(

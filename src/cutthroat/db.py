@@ -80,14 +80,13 @@ class Connection(object):
         :raises APIError: If a player with `player_name` is already
             registered.
         """
-        ptable = self.db['players']
-        all_players = [p['name'] for p in ptable]
-        api_assert(player_name not in all_players, 409,
+        player_exists = self.db['players'].find_one(name=player_name)
+        api_assert(not player_exists, 409,
                    log_message="{} is already registered.".format(player_name))
 
         salt = bcrypt.gensalt(rounds=12)
 
-        ptable.insert(
+        self.db['players'].insert(
             {
                 "name": player_name,
                 "current_game_id": "",
