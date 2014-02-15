@@ -39,6 +39,18 @@ def define_options():
     )
 
     define(
-        "session_timeout",
-        default=1
+        "session_timeout_days",
+        default=1,
+        help=("Cookie expiration time in days; can also be set to `None` "
+              "for session cookies, i.e., cookies that expire when "
+              "browser window is closed.")
+    )
+
+    define(
+        "cookie_secret",
+        default="",
+        type=str,
+        help=("Set this to an empty string to generate a new cookie secret "
+              "each time the server is restarted, or to any string which is "
+              "the cookie secret.")
     )
