@@ -42,7 +42,11 @@ GET to retrieve player info
     @io_schema
     def post(self, body):
         self.db_conn.create_player(body["username"], body["password"])
-        self.set_secure_cookie("user", body["username"], options.session_timeout)
+        self.set_secure_cookie(
+            "user",
+            body["username"],
+            options.session_timeout_days
+        )
 
         return {"username": body["username"]}
 
