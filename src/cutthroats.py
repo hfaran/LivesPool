@@ -7,21 +7,17 @@ import signal
 import json
 import jsonpickle
 import uuid
-from itertools import chain
 
 import tornado.httpserver
 import tornado.ioloop
 import tornado.options
-from tornado import web
-from tornado.options import define, options
+from tornado.options import options
 
 from tornado_json.application import Application
-from tornado_json.routes import get_routes
 
 import cutthroat
 from cutthroat import ctconfig
-from cutthroat import api
-from cutthroat import views
+from cutthroat import routes as mod_routes
 
 
 MAX_WAIT_SECONDS_BEFORE_SHUTDOWN = 3
@@ -54,19 +50,6 @@ def shutdown():
     stop_loop()
 
 
-def assemble_routes():
-    """Assembles all routes and returns"""
-    # TODO: Change "/" to point to signin.Landing requesthandler once
-    #   game view is implemented
-    custom_routes = [("/", views.signin.Landing)]
-    api_routes = get_routes(api)
-    view_routes = map(
-        lambda r: (r[0].replace("/views", "", 1), r[1]),
-        get_routes(views)  # View routes with /views removed
-    )
-    return api_routes + view_routes + custom_routes
-
-
 def main():
     """
     - Get options from config file
@@ -89,7 +72,7 @@ def main():
     # Get any commandline options
     tornado.options.parse_command_line()
 
-    routes = assemble_routes()
+    routes = mod_routes.assemble_routes()
     settings = dict(
         template_path=os.path.join(
             os.path.dirname(__file__), "templates"),
