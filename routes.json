@@ -60,6 +60,10 @@
         "{\"py/type\": \"cutthroat.views.room.Join\"}"
     ], 
     [
+        "/room/room", 
+        "{\"py/type\": \"cutthroat.views.room.Room\"}"
+    ], 
+    [
         "/roomlogin/roomlogin", 
         "{\"py/type\": \"cutthroat.views.roomlogin.RoomLogin\"}"
     ], 

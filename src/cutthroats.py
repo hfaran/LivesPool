@@ -95,7 +95,8 @@ def main():
             os.path.dirname(__file__), "templates"),
         static_path=os.path.join(os.path.dirname(__file__), "static"),
         gzip=True,
-        cookie_secret=str(uuid.uuid4()),
+        cookie_secret=options.cookie_secret if options.cookie_secret
+        else uuid.uuid4().hex,
         login_url="/signin/signin"
     )
 
