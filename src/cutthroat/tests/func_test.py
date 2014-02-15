@@ -12,6 +12,10 @@ def jd(obj):
     return json.dumps(obj)
 
 
+def jl(s):
+    return json.loads(s)
+
+
 class APIFunctionalTest(AsyncHTTPSTestCase):
 
     def get_app(self):
@@ -39,6 +43,22 @@ class APIFunctionalTest(AsyncHTTPSTestCase):
             body=jd({"username": username, "password": password})
         )
 
+    def _check_auth(self, cookies=None):
+        headers = {"Cookie": cookies} if cookies else {}
+        return self.fetch(
+            "/api/auth/login",
+            method="GET",
+            headers=headers
+        )
+
+    def _logout(self, cookies=None):
+        headers = {"Cookie": cookies} if cookies else {}
+        return self.fetch(
+            "/api/auth/logout",
+            method="DELETE",
+            headers=headers
+        )
+
     def _create_room(self, cookies, room_name, password=None):
         data = dict(roomname=room_name)
         if password:
@@ -46,7 +66,7 @@ class APIFunctionalTest(AsyncHTTPSTestCase):
         return self.fetch(
             "/api/room/createroom",
             method="POST",
-            data=jd(data),
+            body=jd(data),
             headers={"Cookie": cookies}
         )
 
@@ -64,7 +84,7 @@ class APIFunctionalTest(AsyncHTTPSTestCase):
 
         return self.fetch(
             "/api/room/joinroom",
-            data=jd(data),
+            body=jd(data),
             method="POST",
             headers={"Cookie": cookies}
         )
@@ -100,7 +120,7 @@ class APIFunctionalTest(AsyncHTTPSTestCase):
     def _start_game(self, cookies, nbpp):
         return self.fetch(
             "/api/game/creategame",
-            data=jd(dict(nbpp=nbpp)),
+            body=jd(dict(nbpp=nbpp)),
             method="POST",
             headers={"Cookie": cookies}
         )
@@ -115,7 +135,7 @@ class APIFunctionalTest(AsyncHTTPSTestCase):
     def _sink_ball(self, cookies, ball):
         return self.fetch(
             "/api/game/sinkball",
-            data=jd(dict(ball=ball)),
+            body=jd(dict(ball=ball)),
             method="POST",
             headers={"Cookie": cookies}
         )
@@ -141,4 +161,31 @@ class APIFunctionalTest(AsyncHTTPSTestCase):
 
         # Test creation of existing player
         r = self._sign_up(username="alpha", password="alpha")
+        self.assertEqual(r.code, 409)
+        # Test bad authentication
+        r = self._authenticate(username="alpha", password="beta")
+        self.assertEqual(r.code, 400)
+        # Test GET /api/auth/login
+        r = self._check_auth()
+        self.assertEqual(r.code, 403)
+        r = self._check_auth(cookies["alpha"])
+        self.assertEqual(r.code, 200)
+        # Test DELETE /api/auth/logout
+        r = self._logout(cookies["alpha"])
+        self.assertEqual(r.code, 200)
+        # TODO: This endpoint, for whatever reason, doesn't actually kill
+        #   the cookies it's supposed to. The following lines should pass
+        #   when it actually does.
+        # r = self._check_auth(cookies["alpha"])
+        # self.assertEqual(r.code, 403)
+
+        # Test api.room
+        r = self._create_room(cookies["alpha"], "Moria", "mellon")
+        self.assertEqual(r.code, 200)
+        # Test non-tenancy assertion
+        r = self._create_room(cookies["alpha"], "Moria", "mellon")
+        self.assertEqual(r.code, 409)
+        self.assertTrue("already in a room" in jl(r.body)["data"])
+        # Attempt to create existing room
+        r = self._create_room(cookies["beta"], "Moria", "mellon")
         self.assertEqual(r.code, 409)

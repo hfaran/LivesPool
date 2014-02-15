@@ -56,6 +56,11 @@ POST the required parameters to create a new room
             password=body.get("password") if body.get("password") else "",
             owner=self.get_current_user()
         )
+        self.db_conn.join_room(
+            room_name=body["roomname"],
+            password=body.get("password") if body.get("password") else "",
+            player_name=self.get_current_user()
+        )
         return {"roomname": body["roomname"]}
 
 

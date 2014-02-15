@@ -6,3 +6,6 @@ dataset>=0.5.0
 bcrypt>=1.0.2
 jsonpickle>=0.6.1
 requests>=2.2.1
+
+nose
+nose-cov
