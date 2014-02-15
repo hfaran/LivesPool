@@ -114,7 +114,7 @@ def main():
         Application(
             routes=routes,
             settings=settings,
-            db_conn=cutthroat.db.Connection(),
+            db_conn=cutthroat.db.Connection(options.sqlite_db),
         )
     )
 

@@ -35,8 +35,8 @@ class Connection(object):
 
     """Connection to cutthroat MySQL database"""
 
-    def __init__(self):
-        self.db = dataset.connect('sqlite:///{}'.format(options.sqlite_db))
+    def __init__(self, db_path):
+        self.db = dataset.connect('sqlite:///{}'.format(db_path))
 
     def create_game(self, game_id, players, unclaimed_balls, gamemaster):
         """Create game with game_id `game_id`
