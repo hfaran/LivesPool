@@ -11,6 +11,7 @@ $(document).ready(function() {
             success: function() {
                 //TODO: redirect to room page.
                 //window.location.href ="";
+                alert("room created")
             },
             error: function (jqXHR, status, error) {
                 if(jqXHR.status == 409) {

@@ -3,11 +3,13 @@
 {% block page_title %}Join a Room{% end %}
 {% block banner_title %}JOIN A ROOM{% end %}
 
+{% block scripts %}
+<script type="text/javascript" src="{{ static_url("joinaroom.js") }}"></script>
+{% end %}
+
 {% block body %}
 
-<div style="max-width: 200px; margin: auto; padding-top: 10px;">
-    <button id="room1" class="btn btn-info btn-primary btn-block" type="submit">Room #1</button>
-    <button id="room2" class="btn btn-danger btn-success btn-block" type="submit">Room #2</button>
+<div id="room_container" style="max-width: 200px; margin: auto; padding-top: 10px;">
 </div>
 
 {% end %}
