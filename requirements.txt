@@ -1,7 +1,8 @@
 tornado>=3.2.0
 Tornado-JSON>=0.08
 
-dataset>=0.5.0
+# Pin to 0.4.0 momentarily due to this issue: https://github.com/pudo/dataset/issues/77
+dataset==0.4.0
 
 bcrypt>=1.0.2
 jsonpickle>=0.6.1
