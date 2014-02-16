@@ -34,7 +34,7 @@ src/cutthroats.py
     * Refactor code out of `db` into `db2` and the RequestHandlers
 * Tests
     * Back-end unittests
-    * ~~API functional tests~~; 90%+ coverage;
+    * ~~API functional tests; 90%+ coverage;~~
     * Front-end tests
 * Keep history
     * Currently, a lot of fields have a `current_` prefix; we should be storing data for completed games etc. for...;

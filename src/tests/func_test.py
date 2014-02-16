@@ -1,10 +1,12 @@
 import json
+from random import choice
 
 from tornado.testing import AsyncHTTPSTestCase
 from tornado_json.application import Application
 
 from cutthroat import routes as mod_routes
 from cutthroat import db
+from cutthroat import db2
 from cutthroat import ctconfig
 
 
@@ -20,13 +22,15 @@ class APIFunctionalTest(AsyncHTTPSTestCase):
 
     def get_app(self):
         ctconfig.define_options()
+        db_conn = db.Connection("cutthroat_test.db")
+        self.db = db_conn.db
         settings = dict(
             cookie_secret="I am a secret cookie.",
         )
         return Application(
             routes=mod_routes.assemble_routes(),
             settings=settings,
-            db_conn=db.Connection("cutthroat_test.db")
+            db_conn=db_conn
         )
 
     def _sign_up(self, username, password):
@@ -263,6 +267,7 @@ class APIFunctionalTest(AsyncHTTPSTestCase):
         # Successfully create game
         r = self._start_game(cookies["alpha"], 5)
         self.assertEqual(r.code, 200)
+        game_id = jl(r.body)["data"]["game_id"]
 
         # Attempt to sinkball as not the gamemaster
         r = self._sink_ball(cookies["beta"], 10)
@@ -286,5 +291,41 @@ class APIFunctionalTest(AsyncHTTPSTestCase):
         self.assertEqual(r.code, 200)
         self.assertEqual(
             sorted(jl(r.body)["data"]),
-            filter(lambda a: a not in [10], xrange(1,16))
+            filter(lambda a: a not in [10], xrange(1, 16))
         )
+
+        # Attempt to leave game when not in a game
+        r = self._leave_game(cookies["delta"])
+        self.assertEqual(r.code, 409)
+        self.assertEqual(
+            jl(r.body)["data"],
+            "You are not currently in a game."
+        )
+        # Regular player leave game
+        g = db2.Game(self.db, "game_id", game_id)
+        p = db2.Player(self.db, "name", "gamma")
+        gamma_balls = list(p["balls"])
+        r = self._leave_game(cookies["gamma"])
+        self.assertEqual(r.code, 200)
+        self.assertTrue("gamma" not in g["players"])
+        self.assertFalse(p["current_game_id"])
+        self.assertEqual(g["gamemaster"], "alpha")
+        self.assertEqual(g["unclaimed_balls"], gamma_balls)
+        # Sink ball from unclaimed
+        unc_ball = choice(gamma_balls)
+        gamma_balls.remove(unc_ball)
+        r = self._sink_ball(cookies["alpha"], unc_ball)
+        self.assertEqual(r.code, 200)
+        # Gamemaster leave game
+        p = db2.Player(self.db, "name", "alpha")
+        alpha_balls = list(p["balls"])
+        r = self._leave_game(cookies["alpha"])
+        self.assertEqual(r.code, 200)
+        self.assertTrue("alpha" not in g["players"])
+        self.assertFalse(p["current_game_id"])
+        self.assertEqual(g["gamemaster"], "beta")
+        self.assertEqual(g["unclaimed_balls"], gamma_balls + alpha_balls)
+        # Last player in game, leave
+        r = self._leave_game(cookies["beta"])
+        self.assertEqual(r.code, 200)
+        self.assertEqual(g["gamemaster"], None)
