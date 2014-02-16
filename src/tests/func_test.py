@@ -1,11 +1,11 @@
 import json
 
 from tornado.testing import AsyncHTTPSTestCase
-from tornado.options import define
 from tornado_json.application import Application
 
 from cutthroat import routes as mod_routes
 from cutthroat import db
+from cutthroat import ctconfig
 
 
 def jd(obj):
@@ -19,7 +19,7 @@ def jl(s):
 class APIFunctionalTest(AsyncHTTPSTestCase):
 
     def get_app(self):
-        define("session_timeout_days", 1)
+        ctconfig.define_options()
         settings = dict(
             cookie_secret="I am a secret cookie.",
         )
@@ -178,6 +178,11 @@ class APIFunctionalTest(AsyncHTTPSTestCase):
         #   when it actually does.
         # r = self._check_auth(cookies["alpha"])
         # self.assertEqual(r.code, 403)
+
+        # Test /api/player/player
+        r = self._get_self_info(cookies["alpha"])
+        self.assertEqual(r.code, 200)
+        self.assertEqual(jl(r.body)["data"]["name"], "alpha")
 
         # Test api.room
         r = self._create_room(cookies["alpha"], "Moria", "mellon")
