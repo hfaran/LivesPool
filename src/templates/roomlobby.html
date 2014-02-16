@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block page_title %}Room Lobby{% end %}
+{% block banner_title %}ROOM LOBBY{% end %}
+
+{% block scripts %}
+<script type="text/javascript" src="{{ static_url("roomlobby.js") }}"></script>
+{% end %}
+
+{% block body %}
+<div id="lobby_container"></div>
+<div style="max-width: 200px; margin: auto">
+	<br />
+	<form id="numBallsForm" role="form">
+		<div class="form-group">
+			<label id="ballsPerPlayerLabel" for="inputNumBalls">Balls per player:</label>
+			<div class="form-group">
+				<input id="inputNumBalls" class="form-control form-spacing numBalls" type="number" name="numBalls" required="" max="5" min="1" />
+			</div>
+		</div>
+	</form>
+	<div class="contain-buttons">
+		<button type="button" class="btn btn-info btn-block" type="submit">Start</button>
+		<button type="button" class="btn btn-danger btn-block" type="submit">Leave</button>
+	</div>
+</div>
+{% end %}
