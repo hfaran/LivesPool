@@ -2,7 +2,7 @@
 
 **Output schemas only represent `data` and not the full output; see output examples and the JSend specification.**
 
-# /api/auth/login
+# `/api/auth/login`
 
     Content-Type: application/json
 
@@ -69,7 +69,7 @@ GET to check if authenticated. Should be obvious from status code (403 vs. 200).
 
 
 
-# /api/auth/logout
+# `/api/auth/logout`
 
     Content-Type: application/json
 
@@ -95,7 +95,7 @@ DELETE to clear cookie for current user.
 
 
 
-# /api/game/ballsontable
+# `/api/game/ballsontable`
 
     Content-Type: application/json
 
@@ -131,7 +131,7 @@ GET to receive list of balls on the table in current game
 
 
 
-# /api/game/creategame
+# `/api/game/creategame`
 
     Content-Type: application/json
 
@@ -174,7 +174,7 @@ POST the required parameter to create a new game; only the owner of a room can m
 
 
 
-# /api/game/leavegame
+# `/api/game/leavegame`
 
     Content-Type: application/json
 
@@ -208,7 +208,7 @@ DELETE to remove yourself from current game
 
 
 
-# /api/game/sinkball
+# `/api/game/sinkball`
 
     Content-Type: application/json
 
@@ -257,7 +257,7 @@ POST the required parameters to register the pocketing of a ball
 
 
 
-# /api/player/player
+# `/api/player/player`
 
     Content-Type: application/json
 
@@ -324,7 +324,7 @@ GET to retrieve player info
 
 
 
-# /api/room/createroom
+# `/api/room/createroom`
 
     Content-Type: application/json
 
@@ -371,7 +371,7 @@ POST the required parameters to create a new room
 
 
 
-# /api/room/joinroom
+# `/api/room/joinroom`
 
     Content-Type: application/json
 
@@ -418,7 +418,7 @@ POST the required parameters to create a new room
 
 
 
-# /api/room/leaveroom
+# `/api/room/leaveroom`
 
     Content-Type: application/json
 
@@ -444,7 +444,7 @@ DELETE to leave current room
 
 
 
-# /api/room/listplayers
+# `/api/room/listplayers`
 
     Content-Type: application/json
 
@@ -499,7 +499,7 @@ GET to receive list of players in current room
 
 
 
-# /api/room/listrooms
+# `/api/room/listrooms`
 
     Content-Type: application/json
 
@@ -539,7 +539,7 @@ GET to receive list of rooms
 
 
 
-# /api/room/retireroom
+# `/api/room/retireroom`
 
     Content-Type: application/json
 

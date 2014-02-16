@@ -1,7 +1,7 @@
 tornado>=3.2.0
-Tornado-JSON>=0.08
+Tornado-JSON>=0.11
 
-dataset>=0.5.0
+dataset>=0.5.1
 
 bcrypt>=1.0.2
 jsonpickle>=0.6.1

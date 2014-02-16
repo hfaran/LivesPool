@@ -40,18 +40,18 @@ GET to retrieve player info
     }
 
     @io_schema
-    def post(self, body):
-        self.db_conn.create_player(body["username"], body["password"])
+    def post(self):
+        self.db_conn.create_player(self.body["username"], self.body["password"])
         self.set_secure_cookie(
             "user",
-            body["username"],
+            self.body["username"],
             options.session_timeout_days
         )
 
-        return {"username": body["username"]}
+        return {"username": self.body["username"]}
 
     @io_schema
     @authenticated
-    def get(self, body):
+    def get(self):
         player_name = self.get_current_user()
         return self.db_conn.player_info(player_name)

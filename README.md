@@ -1,7 +1,7 @@
 `Lives Pool`
 ================
 [![Build Status](https://travis-ci.org/hfaran/LivesPool.png)](https://travis-ci.org/hfaran/LivesPool)
-[![Coverage Status](https://coveralls.io/repos/hfaran/LivesPool/badge.png)](https://coveralls.io/r/hfaran/LivesPool)
+[![Coverage Status](http://coveralls.io/repos/hfaran/LivesPool/badge.png?branch=master)](https://coveralls.io/r/hfaran/LivesPool?branch=master)
 
 
 ## Getting Started
@@ -27,7 +27,7 @@ src/cutthroats.py
 * Front-end
     * ~~[Wireframe draft](http://sdrv.ms/NiHL7a)~~
     * ~~Sign-in views~~
-    * Room views
+    * ~~Room views~~
     * Game views
 * Write new database module; refactor API to use it
     * ~~DBObjectMapping~~
@@ -36,6 +36,8 @@ src/cutthroats.py
     * Back-end unittests
     * ~~API functional tests; 90%+ coverage;~~
     * Front-end tests
+
+### Future TODO
 * Keep history
     * Currently, a lot of fields have a `current_` prefix; we should be storing data for completed games etc. for...;
     * A `Player` page where users can see past played games/stats/info etc.
