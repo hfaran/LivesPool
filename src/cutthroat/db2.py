@@ -1,3 +1,4 @@
+import logging
 from collections import MutableMapping
 
 
@@ -63,7 +64,8 @@ class DBObjectMapping(MutableMapping):
             **self.__find_d)
         if not p:
             raise NotFoundError
-        return {k: self.r_transform(k, v) for k, v in p.iteritems()}
+        logging.debug(p.items())
+        return {k: self.r_transform(k, v) for k, v in p.items()}
 
     def __getitem__(self, key):
         return self.__store[key]
