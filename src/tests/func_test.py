@@ -260,3 +260,31 @@ class APIFunctionalTest(AsyncHTTPSTestCase):
         self.assertEqual(r.code, 400)
         r = self._start_game(cookies["alpha"], 6)
         self.assertEqual(r.code, 400)
+        # Successfully create game
+        r = self._start_game(cookies["alpha"], 5)
+        self.assertEqual(r.code, 200)
+
+        # Attempt to sinkball as not the gamemaster
+        r = self._sink_ball(cookies["beta"], 10)
+        self.assertEqual(r.code, 401)
+        # Sink a ball
+        r = self._sink_ball(cookies["alpha"], 10)
+        self.assertEqual(r.code, 200)
+        # Sink an already sunk ball
+        r = self._sink_ball(cookies["alpha"], 10)
+        self.assertEqual(r.code, 200)
+        self.assertEqual(
+            jl(r.body)["data"]["message"],
+            "Ball 10 was not on the table."
+        )
+
+        # Attempt to get balls on table when not in game
+        r = self._balls_on_table(cookies["delta"])
+        self.assertEqual(r.code, 400)
+        # Test balls on table
+        r = self._balls_on_table(cookies["beta"])
+        self.assertEqual(r.code, 200)
+        self.assertEqual(
+            sorted(jl(r.body)["data"]),
+            filter(lambda a: a not in [10], xrange(1,16))
+        )
