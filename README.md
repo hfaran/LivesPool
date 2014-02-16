@@ -1,6 +1,7 @@
 `Lives Pool`
 ================
-**`cutthroat` package**: [![Build Status](https://travis-ci.org/hfaran/LivesPool.png?branch=dev)](https://travis-ci.org/hfaran/LivesPool) [![Coverage Status](https://coveralls.io/repos/hfaran/LivesPool/badge.png?branch=dev)](https://coveralls.io/r/hfaran/LivesPool?branch=dev)
+[![Build Status](https://travis-ci.org/hfaran/LivesPool.png)](https://travis-ci.org/hfaran/LivesPool)
+[![Coverage Status](https://coveralls.io/repos/hfaran/LivesPool/badge.png?branch=dev)](https://coveralls.io/r/hfaran/LivesPool?branch=dev)
 
 
 ## Getting Started
