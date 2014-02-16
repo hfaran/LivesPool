@@ -102,3 +102,35 @@ h1 {
 .navbar-blue .navbar-link:hover {
   color: #ccc;
 }
+
+.numBalls {
+  width: 50px;
+}
+
+ul#playerlist {
+  text-align: center;
+  margin: auto;
+}
+
+li.owner {
+  background-color: #000;
+  color: #fff;
+  font-weight: 800;
+}
+
+label#ballsPerPlayerLabel {
+  display: block;
+  text-align: center;
+  margin: 0 auto;
+  font-size: 10px;
+  padding-bottom: 3px;
+}
+
+input#inputNumBalls {
+  margin: 0 auto;
+}
+
+.contain-buttons {
+  max-width: 150px; 
+  margin: auto;
+}

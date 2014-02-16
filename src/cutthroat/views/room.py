@@ -29,3 +29,10 @@ class Room(ViewHandler):
     def get(self):
         self.render("room.html")
 
+class Lobby(ViewHandler):
+
+    """Lobby"""
+
+    @authenticated
+    def get(self):
+        self.render("roomlobby.html")
