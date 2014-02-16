@@ -4,7 +4,7 @@ function load_players() {
 		success: function(data) {
 			$("#lobby_container").empty();
 			$("#lobby_container").append('<ul id="playerlist" class="list-group"></ul>');
-			
+
 			var firstItem = true;
             $.each(data["data"]["players"], function(key, value) {
             	
