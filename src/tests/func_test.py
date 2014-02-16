@@ -154,7 +154,7 @@ class APIFunctionalTest(AsyncHTTPSTestCase):
     def test_full_game_run(self):
         # Create three new players
         cookies = {}
-        for p in ["alpha", "beta", "gamma"]:
+        for p in ["alpha", "beta", "gamma", "delta"]:
             self.sign_up(p, p)
             cookies[p] = self._authenticate(p, p).headers['set-cookie']
         self.assertTrue('user="' in cookie for cookie in cookies)
@@ -239,3 +239,24 @@ class APIFunctionalTest(AsyncHTTPSTestCase):
         # Test retiring room
         r = self._retire_room(cookies["alpha"])
         self.assertEqual(r.code, 200)
+
+        # Create and join room for the purposes of testing api.game
+        r = self._create_room(cookies["alpha"], "Rivendell")
+        self.assertEqual(r.code, 200)
+        r = self._join_room(cookies["beta"], "Rivendell")
+        self.assertEqual(r.code, 200)
+        r = self._join_room(cookies["gamma"], "Rivendell")
+        self.assertEqual(r.code, 200)
+
+        # Attempt to create a game w/o owning a room
+        r = self._start_game(cookies["delta"], 5)
+        self.assertEqual(r.code, 403)
+        r = self._start_game(cookies["gamma"], 5)
+        self.assertEqual(r.code, 403)
+        # Attempt to start game with malformed nbpp values
+        r = self._start_game(cookies["alpha"], -20000)
+        self.assertEqual(r.code, 400)
+        r = self._start_game(cookies["alpha"], 0)
+        self.assertEqual(r.code, 400)
+        r = self._start_game(cookies["alpha"], 6)
+        self.assertEqual(r.code, 400)
