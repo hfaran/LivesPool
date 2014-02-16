@@ -168,6 +168,7 @@ class Connection(object):
             str(password), str(player["salt"])
         ) == player['password']
 
+    # TODO: re-evaluate what this function will actually do
     def mark_stale_games(self):
         """Marks status for stale games as `stale`
 

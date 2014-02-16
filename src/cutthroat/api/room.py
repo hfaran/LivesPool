@@ -143,6 +143,10 @@ class ListPlayers(APIHandler):
             },
             "required": ["owner", "players"],
         },
+        "output_example": {
+            "owner": "Stark",
+            "players": ["Stark", "Stannis", "Baratheon", "Tyrell", "Lannister"]
+        },
         "doc": """
 GET to receive list of players in current room
 
