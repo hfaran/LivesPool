@@ -194,3 +194,27 @@ class APIFunctionalTest(AsyncHTTPSTestCase):
         # Attempt to create existing room
         r = self._create_room(cookies["beta"], "Moria", "mellon")
         self.assertEqual(r.code, 409)
+
+        # Attempt to join non-existant room
+        r = self._join_room(cookies["beta"], "Lothlorien")
+        self.assertEqual(r.code, 409)
+        # Attempt to join room with incorrect password
+        r = self._join_room(cookies["beta"], "Moria", "enemy")
+        self.assertEqual(r.code, 403)
+        # Join room
+        r = self._join_room(cookies["beta"], "Moria", "mellon")
+        self.assertEqual(r.code, 200)
+        # Retrieve list of rooms
+        r = self._list_rooms(cookies["beta"])
+        self.assertEqual(r.code, 200)
+        self.assertEqual(
+            jl(r.body)["data"],
+            [{"pwd_req": True, "name": "Moria"}]
+        )
+        # List players in room
+        r = self._list_room_players(cookies["beta"])
+        self.assertEqual(r.code, 200)
+        self.assertEqual(
+            sorted(jl(r.body)["data"]["players"]),
+            ["alpha", "beta"]
+        )
