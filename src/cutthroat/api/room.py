@@ -47,21 +47,21 @@ POST the required parameters to create a new room
 
     @io_schema
     @authenticated
-    def post(self, body):
+    def post(self):
         # player must not already be in a room
-        assert_non_tenant(self, body)
+        assert_non_tenant(self, self.body)
 
         self.db_conn.create_room(
-            room_name=body["roomname"],
-            password=body.get("password") if body.get("password") else "",
+            room_name=self.body["roomname"],
+            password=self.body.get("password") if self.body.get("password") else "",
             owner=self.get_current_user()
         )
         self.db_conn.join_room(
-            room_name=body["roomname"],
-            password=body.get("password") if body.get("password") else "",
+            room_name=self.body["roomname"],
+            password=self.body.get("password") if self.body.get("password") else "",
             player_name=self.get_current_user()
         )
-        return {"roomname": body["roomname"]}
+        return {"roomname": self.body["roomname"]}
 
 
 class JoinRoom(APIHandler):
@@ -91,16 +91,16 @@ POST the required parameters to create a new room
 
     @io_schema
     @authenticated
-    def post(self, body):
+    def post(self):
         # player must not already be in a room
-        assert_non_tenant(self, body)
+        assert_non_tenant(self, self.body)
 
         self.db_conn.join_room(
-            room_name=body["name"],
-            password=body.get("password") if body.get("password") else "",
+            room_name=self.body["name"],
+            password=self.body.get("password") if self.body.get("password") else "",
             player_name=self.get_current_user()
         )
-        return {"name": body["name"]}
+        return {"name": self.body["name"]}
 
 
 class ListRooms(APIHandler):
@@ -124,7 +124,7 @@ GET to receive list of rooms
 
     @io_schema
     @authenticated
-    def get(self, body):
+    def get(self):
         return self.db_conn.list_rooms()
 
 
@@ -157,7 +157,7 @@ GET to receive list of players in current room
 
     @io_schema
     @authenticated
-    def get(self, body):
+    def get(self):
         db = self.db_conn.db
 
         # Get player
@@ -192,7 +192,7 @@ DELETE to leave current room
 
     @io_schema
     @authenticated
-    def delete(self, body):
+    def delete(self):
         player_name = self.get_current_user()
         room_name = self.db_conn.leave_room(player_name)
         return "{} successfully left {}".format(player_name, room_name)
@@ -215,7 +215,7 @@ DELETE to delete current room (if you are the owner)
 
     @io_schema
     @authenticated
-    def delete(self, body):
+    def delete(self):
         player_name = self.get_current_user()
         room_name = self.db_conn.delete_room(player_name)
         return "{} successfully deleted {}".format(player_name, room_name)
