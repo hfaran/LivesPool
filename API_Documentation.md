@@ -473,6 +473,20 @@ null
 }
 ```
 
+### Output Example
+```json
+{
+    "owner": "Stark", 
+    "players": [
+        "Stark", 
+        "Stannis", 
+        "Baratheon", 
+        "Tyrell", 
+        "Lannister"
+    ]
+}
+```
+
 
 
 GET to receive list of players in current room
