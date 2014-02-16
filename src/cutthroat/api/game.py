@@ -48,7 +48,7 @@ POST the required parameter to create a new game; only the owner of a room can m
 
     @io_schema
     @authenticated
-    def post(self, body):
+    def post(self):
         """POST RequestHandler"""
         game_id = str(uuid.uuid4())
         gamemaster = self.get_current_user()
@@ -59,7 +59,7 @@ POST the required parameter to create a new game; only the owner of a room can m
 
         player_names = self.db_conn.get_players_in_room(room_name)
         nplayers = len(player_names)
-        nbpp = body["nbpp"]
+        nbpp = self.body["nbpp"]
 
         # Make sure values make sense
         api_assert(1 <= nbpp * nplayers <= TOTAL_NUM_BALLS, 400,
@@ -108,7 +108,7 @@ DELETE to remove yourself from current game
 
     @io_schema
     @authenticated
-    def delete(self, body):
+    def delete(self):
         # Shorthand since we need to reference this multiple times
         db = self.db_conn.db
 
@@ -171,9 +171,9 @@ POST the required parameters to register the pocketing of a ball
 
     @io_schema
     @authenticated
-    def post(self, body):
+    def post(self):
         gamemaster = self.get_current_user()
-        ball = body['ball']
+        ball = self.body['ball']
         game_id = self.db_conn._get_player(gamemaster)[1]["current_game_id"]
 
         res = {"game_id": game_id}
@@ -220,7 +220,7 @@ GET to receive list of balls on the table in current game
 
     @io_schema
     @authenticated
-    def get(self, body):
+    def get(self):
         db = self.db_conn.db
 
         player_name = self.get_current_user()

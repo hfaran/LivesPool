@@ -1,5 +1,5 @@
 tornado>=3.2.0
-Tornado-JSON>=0.08
+Tornado-JSON>=0.10
 
 # Pin to 0.4.0 momentarily due to this issue: https://github.com/pudo/dataset/issues/77
 dataset==0.4.0

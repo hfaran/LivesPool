@@ -41,9 +41,9 @@ GET to check if authenticated. Should be obvious from status code (403 vs. 200).
     }
 
     @io_schema
-    def post(self, body):
-        player_name = body["username"]
-        password = body["password"]
+    def post(self):
+        player_name = self.body["username"]
+        password = self.body["password"]
 
         if self.db_conn.auth_user(player_name, password):
             self.set_secure_cookie(
@@ -57,7 +57,7 @@ GET to check if authenticated. Should be obvious from status code (403 vs. 200).
             )
 
     @io_schema
-    def get(self, body):
+    def get(self):
         if not self.get_current_user():
             raise APIError(
                 403,
@@ -83,7 +83,7 @@ DELETE to clear cookie for current user.
 
     @io_schema
     @authenticated
-    def delete(self, body):
+    def delete(self):
         # TODO: So this doesn't actually with the CLI client...
         #  can still authenticate with old cookie. Maybe we'll have
         #  better luck with browser?
