@@ -8,6 +8,11 @@ src/cutthroats.py
 # Visit localhost:8888
 ```
 
+## Running Tests
+```bash
+./runtests.bash
+```
+
 ## TODO
 
 * ~~Finish implementing Room routes~~
