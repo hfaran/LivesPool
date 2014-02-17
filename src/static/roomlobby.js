@@ -1,3 +1,7 @@
+// TODO: implement proper action for errors in API calls
+// TODO: functionality for balls per player value
+// TODO: disable form for number of balls if user isn't owner of room
+
 function load_players() {
 	$.ajax({
 		url: "/api/room/listplayers",
@@ -31,6 +35,7 @@ function leave_room() {
 			},
 			error: function() {
 				alert("Owners cannot leave room. You must retire the room.");
+				// TODO: wait for refactoring involved in Issue #63 
 			}
 		});
 	});
@@ -39,11 +44,13 @@ function leave_room() {
 function create_game() {
 	$('#numBallsForm').submit(function(event) {
 		event.preventDefault();
-
+		
+		var num = parseInt($("#inputNumBalls").val());
+		
 		$.ajax({
 			type: "POST",
 			url: "/api/game/creategame",
-			data: JSON.stringify($("numBallsForm").serializeObject()),
+			data: JSON.stringify({nbpp: num}),
 			content_type: "application/json; charset=utf-8",
 			dataType: "json",
 			success: function() {
@@ -58,11 +65,6 @@ function create_game() {
 
 $(document).ready(function() {
 	load_players();
-	
-	// TODO: POST results in 404
 	create_game();
 	leave_room();
-
-	// TODO: functionality for balls per player value
-	// TODO: disable form for number of balls if user isn't owner of room
 });
