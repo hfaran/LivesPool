@@ -36,3 +36,12 @@ class Lobby(ViewHandler):
     @authenticated
     def get(self):
         self.render("roomlobby.html")
+
+class Game(ViewHandler):
+
+    """Game"""
+
+    @authenticated
+    def get(self):
+        self.render("game.html")
+        

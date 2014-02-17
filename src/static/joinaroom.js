@@ -4,7 +4,7 @@ function join_room(name) {
         url: "/api/room/joinroom",
         data: '{"name":"' + name + '"}',
         success: function () {
-            window.location.href ="/room/room";
+            window.location.href ="/room/lobby";
         },
         error: function() {
             alert("failed to join room");

@@ -21,10 +21,48 @@ function load_players() {
 	});
 }
 
+function leave_room() {
+	$('#leaveroombutton').click(function() {
+		$.ajax({
+			url: "/api/room/leaveroom",
+			type: "DELETE",
+			success: function() {
+				window.location.href = "/room/join";
+			},
+			error: function() {
+				alert("Owners cannot leave room. You must retire the room.");
+			}
+		});
+	});
+}
+
+function create_game() {
+	$('#numBallsForm').submit(function(event) {
+		event.preventDefault();
+
+		$.ajax({
+			type: "POST",
+			url: "/api/room/creategame",
+			data: JSON.stringify($("numBallsForm").serializeObject()),
+			content_type: "application/json; charset=utf-8",
+			dataType: "json",
+			success: function() {
+				window.location.href = "/room/game"
+			},
+			error: function(jqXHR, status, error) {
+				// TODO: implement
+			}
+		});
+	});
+}
+
 $(document).ready(function() {
 	load_players();
-	// TODO: functionality for Start Game
-	// TODO: functionality for Leave Game
+	
+	// TODO: POST results in 404
+	create_game();
+	leave_room();
+
 	// TODO: functionality for balls per player value
 	// TODO: disable form for number of balls if user isn't owner of room
 });

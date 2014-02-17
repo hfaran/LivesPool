@@ -10,7 +10,6 @@ $(document).ready(function() {
             dataType: "json",
             success: function() {
                 window.location.href ="/room/lobby";
-                alert("room created")
             },
             error: function (jqXHR, status, error) {
                 if(jqXHR.status == 409) {

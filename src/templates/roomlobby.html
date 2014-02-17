@@ -5,6 +5,7 @@
 
 {% block scripts %}
 <script type="text/javascript" src="{{ static_url("roomlobby.js") }}"></script>
+<script type="text/javascript" src="{{ static_url("json_utils.js") }}"></script>
 {% end %}
 
 {% block body %}
@@ -15,13 +16,13 @@
 		<div class="form-group">
 			<label id="ballsPerPlayerLabel" for="inputNumBalls">Balls per player:</label>
 			<div class="form-group">
-				<input id="inputNumBalls" class="form-control form-spacing numBalls" type="number" name="numBalls" required="" max="5" min="1" />
+				<input id="inputNumBalls" name="nbpp" class="form-control form-spacing numBalls" type="number" required="" max="5" min="1" />
 			</div>
 		</div>
+		<div class="contain-buttons">
+			<button id="startgamebutton" type="submit" class="btn btn-info btn-block">Start</button>
+			<button id="leaveroombutton" type="button" class="btn btn-danger btn-block">Leave</button>
+		</div>
 	</form>
-	<div class="contain-buttons">
-		<button type="button" class="btn btn-info btn-block" type="submit">Start</button>
-		<button type="button" class="btn btn-danger btn-block" type="submit">Leave</button>
-	</div>
 </div>
 {% end %}

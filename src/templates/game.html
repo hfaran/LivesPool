@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block page_title %}Game In Play{% end %}
+{% block banner_title %}GAME IN PLAY{% end %}
+
+{% block scripts %}
+<script type="text/javascript" src="{{ static_url("roomlobby.js") }}"></script>
+<script type="text/javascript" src="{{ static_url("json_utils.js") }}"></script>
+{% end %}
+
+{% block body %}
+<div id="roominplay_container"></div>
+{% end %}
