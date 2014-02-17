@@ -42,7 +42,7 @@ function create_game() {
 
 		$.ajax({
 			type: "POST",
-			url: "/api/room/creategame",
+			url: "/api/game/creategame",
 			data: JSON.stringify($("numBallsForm").serializeObject()),
 			content_type: "application/json; charset=utf-8",
 			dataType: "json",
