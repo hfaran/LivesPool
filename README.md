@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/hfaran/LivesPool.png?label=ready)](https://waffle.io/hfaran/LivesPool)
 `Lives Pool`
 ================
 [![Build Status](https://travis-ci.org/hfaran/LivesPool.png)](https://travis-ci.org/hfaran/LivesPool)
