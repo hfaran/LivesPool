@@ -9,9 +9,7 @@ $(document).ready(function() {
             content_type: "application/json; charset=utf-8",
             dataType: "json",
             success: function() {
-                //TODO: redirect to room page.
-                //window.location.href ="";
-                alert("room created")
+                window.location.href ="/room/lobby";
             },
             error: function (jqXHR, status, error) {
                 if(jqXHR.status == 409) {
