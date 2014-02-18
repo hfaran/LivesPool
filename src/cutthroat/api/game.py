@@ -62,7 +62,7 @@ POST the required parameter to create a new game; only the owner of a room can m
         nbpp = self.body["nbpp"]
 
         # Make sure values make sense
-        api_assert(1 <= nbpp * nplayers <= TOTAL_NUM_BALLS, 400,
+        api_assert(nplayers <= nbpp * nplayers <= TOTAL_NUM_BALLS, 400,
                    log_message=("Your math seems to be a little off; "
                                 "please pick a `number of balls per player` "
                                 "such that each player has at least one ball "
