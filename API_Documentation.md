@@ -208,7 +208,7 @@ DELETE to remove yourself from current game
 
 
 
-# `/api/game/sinkball`
+# `/api/game/toggleball`
 
     Content-Type: application/json
 
@@ -248,9 +248,9 @@ DELETE to remove yourself from current game
 
 
 
-POST the required parameters to register the pocketing of a ball
+POST the required parameters to register the pocketing/unpocketing of a ball
 
-* `ball`: The ball that was pocketed
+* `ball`: The ball that was pocketed/unpocketed
 
 
 

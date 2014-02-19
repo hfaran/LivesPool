@@ -144,7 +144,7 @@ DELETE to remove yourself from current game
         return {"game_id": game_id}
 
 
-class SinkBall(APIHandler):
+class ToggleBall(APIHandler):
     apid = {}
     apid["post"] = {
         "input_schema": {
@@ -163,15 +163,17 @@ class SinkBall(APIHandler):
             "required": ["game_id"]
         },
         "doc": """
-POST the required parameters to register the pocketing of a ball
+POST the required parameters to register the pocketing/unpocketing of a ball
 
-* `ball`: The ball that was pocketed
+* `ball`: The ball that was pocketed/unpocketed
 """
     }
 
     @io_schema
     @authenticated
     def post(self):
+        db = self.db_conn.db
+
         gamemaster = self.get_current_user()
         ball = self.body['ball']
         game_id = self.db_conn._get_player(gamemaster)[1]["current_game_id"]
@@ -185,18 +187,28 @@ POST the required parameters to register the pocketing of a ball
             log_message="You are not the gamemaster of the current game"
         )
 
-        # If ball is already sunk, do nothing
+        # If ball is already sunk, retable it
         if ball not in self.db_conn.get_balls_on_table(game_id):
-            res['message'] = "Ball {} was not on the table.".format(ball)
+            game = Game(db, "game_id", game_id)
+            if ball in game["orig_unclaimed_balls"]:
+                game["unclaimed_balls"] = game["unclaimed_balls"] + [ball]
+            else:
+                for pname in game["players"]:
+                    p = Player(db, "name", pname)
+                    if ball in p["orig_balls"]:
+                        p["balls"] = p["balls"] + [ball]
+                        break
+            res['message'] = "Ball {} was retabled.".format(ball)
             return res
 
+        # Otherwise, sink the ball
         for p in self.db_conn.get_players_for_game(game_id):
             if ball in self.db_conn.get_balls_for_player(p):
                 self.db_conn.remove_ball_for_player(p, ball)
                 break
         else:
             self.db_conn.remove_ball_from_unclaimed(game_id, ball)
-
+        res["message"] = "Ball {} was sunk.".format(ball)
         return res
 
 
