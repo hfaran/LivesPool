@@ -57,6 +57,7 @@ class Connection(object):
                 "game_id": game_id,
                 "players": stringify_list(players.keys()),
                 "unclaimed_balls": stringify_list(unclaimed_balls),
+                "orig_unclaimed_balls": stringify_list(unclaimed_balls),
                 "gamemaster": gamemaster,
                 "status": "active"
             }
@@ -69,6 +70,7 @@ class Connection(object):
                     "name": name,
                     "current_game_id": game_id,
                     "balls": stringify_list(balls),
+                    "orig_balls": stringify_list(balls)
                 },
                 ['name']
             )

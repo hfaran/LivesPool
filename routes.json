@@ -12,8 +12,8 @@
         "{\"py/type\": \"cutthroat.api.game.CreateGame\"}"
     ], 
     [
-        "/api/game/sinkball", 
-        "{\"py/type\": \"cutthroat.api.game.SinkBall\"}"
+        "/api/game/toggleball", 
+        "{\"py/type\": \"cutthroat.api.game.ToggleBall\"}"
     ], 
     [
         "/api/game/ballsontable", 

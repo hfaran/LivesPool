@@ -129,9 +129,9 @@ class APIFunctionalTest(AsyncHTTPSTestCase):
             headers={"Cookie": cookies}
         )
 
-    def _sink_ball(self, cookies, ball):
+    def _toggle_ball(self, cookies, ball):
         return self.fetch(
-            "/api/game/sinkball",
+            "/api/game/toggleball",
             body=jd(dict(ball=ball)),
             method="POST",
             headers={"Cookie": cookies}
@@ -192,7 +192,7 @@ class APIFunctionalTest(AsyncHTTPSTestCase):
         r = self._create_room(cookies["beta"], "Moria", "mellon")
         self.assertEqual(r.code, 409)
 
-        # Attempt to join non-existant room
+        # Attempt to join non-existent room
         r = self._join_room(cookies["beta"], "Lothlorien")
         self.assertEqual(r.code, 409)
         # Attempt to join room with incorrect password
@@ -253,18 +253,21 @@ class APIFunctionalTest(AsyncHTTPSTestCase):
         game_id = jl(r.body)["data"]["game_id"]
 
         # Attempt to sinkball as not the gamemaster
-        r = self._sink_ball(cookies["beta"], 10)
+        r = self._toggle_ball(cookies["beta"], 9)
         self.assertEqual(r.code, 401)
         # Sink a ball
-        r = self._sink_ball(cookies["alpha"], 10)
+        r = self._toggle_ball(cookies["alpha"], 9)
         self.assertEqual(r.code, 200)
-        # Sink an already sunk ball
-        r = self._sink_ball(cookies["alpha"], 10)
+        # Retable an already sunk ball
+        r = self._toggle_ball(cookies["alpha"], 9)
         self.assertEqual(r.code, 200)
         self.assertEqual(
             jl(r.body)["data"]["message"],
-            "Ball 10 was not on the table."
+            "Ball 9 was retabled."
         )
+        # Sink a different ball
+        r = self._toggle_ball(cookies["alpha"], 10)
+        self.assertEqual(r.code, 200)
 
         # Attempt to get balls on table when not in game
         r = self._balls_on_table(cookies["delta"])
@@ -297,7 +300,7 @@ class APIFunctionalTest(AsyncHTTPSTestCase):
         # Sink ball from unclaimed
         unc_ball = choice(gamma_balls)
         gamma_balls.remove(unc_ball)
-        r = self._sink_ball(cookies["alpha"], unc_ball)
+        r = self._toggle_ball(cookies["alpha"], unc_ball)
         self.assertEqual(r.code, 200)
         # Gamemaster leave game
         p = db2.Player(self.db, "name", "alpha")
