@@ -69,8 +69,6 @@ def main():
         errmsg = ("{} doesn't exist or couldn't be opened. Using defaults."
                   .format(options.conf_file_path))
         logging.error(errmsg)
-    # Get any commandline options
-    tornado.options.parse_command_line()
 
     routes = mod_routes.assemble_routes()
     settings = dict(
