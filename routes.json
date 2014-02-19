@@ -28,8 +28,16 @@
         "{\"py/type\": \"cutthroat.api.player.Player\"}"
     ], 
     [
+        "/api/room/createroom", 
+        "{\"py/type\": \"cutthroat.api.room.CreateRoom\"}"
+    ], 
+    [
         "/api/room/leaveroom", 
         "{\"py/type\": \"cutthroat.api.room.LeaveRoom\"}"
+    ], 
+    [
+        "/api/room/listrooms", 
+        "{\"py/type\": \"cutthroat.api.room.ListRooms\"}"
     ], 
     [
         "/api/room/listplayers", 
@@ -40,24 +48,20 @@
         "{\"py/type\": \"cutthroat.api.room.JoinRoom\"}"
     ], 
     [
-        "/api/room/listrooms", 
-        "{\"py/type\": \"cutthroat.api.room.ListRooms\"}"
+        "/room/lobby", 
+        "{\"py/type\": \"cutthroat.views.room.Lobby\"}"
     ], 
     [
-        "/api/room/retireroom", 
-        "{\"py/type\": \"cutthroat.api.room.RetireRoom\"}"
-    ], 
-    [
-        "/api/room/createroom", 
-        "{\"py/type\": \"cutthroat.api.room.CreateRoom\"}"
-    ], 
-    [
-        "/room/create", 
-        "{\"py/type\": \"cutthroat.views.room.Create\"}"
+        "/room/game", 
+        "{\"py/type\": \"cutthroat.views.room.Game\"}"
     ], 
     [
         "/room/join", 
         "{\"py/type\": \"cutthroat.views.room.Join\"}"
+    ], 
+    [
+        "/room/create", 
+        "{\"py/type\": \"cutthroat.views.room.Create\"}"
     ], 
     [
         "/room/room", 

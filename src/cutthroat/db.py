@@ -284,48 +284,6 @@ class Connection(object):
             ['name']
         )
 
-    def leave_room(self, player_name):
-        ptable, player = self._get_player(player_name)
-        room_name = player["current_room"]
-        api_assert(
-            room_name, 409,
-            "`{}` is currently not in a room.".format(player_name)
-        )
-
-        rtable = self.db['rooms']
-        room = rtable.find_one(name=room_name)
-
-        api_assert(
-            room["owner"] != player_name,
-            409,
-            log_message=(
-                "Owners cannot leave their rooms (you are the owner"
-                " of this room). Please retire the room if you wish to leave"
-                " it."
-            )
-        )
-
-        ptable.update(
-            {
-                "name": player_name,
-                "current_room": None
-            },
-            ['name']
-        )
-
-        rtable.update(
-            {
-                "name": room_name,
-                "current_players": stringify_list(
-                    list(set(listify_string(str, room['current_players'])) -
-                         set([player_name]))
-                )
-            },
-            ['name']
-        )
-
-        return room_name
-
     def delete_room(self, player_name):
         ptable, player = self._get_player(player_name)
         room_name = player["current_room"]

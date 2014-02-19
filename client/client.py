@@ -147,15 +147,6 @@ class CutthroatAPI(object):
             self.room = None
         return r.json()
 
-    def retire_room(self):
-        r = requests.delete(
-            self.base_url + "/api/room/retireroom",
-            cookies=self.cookies
-        )
-        if r.status_code == 200:
-            self.room = None
-        return r.json()
-
     def start_game(self, nbpp=None):
         if nbpp is None:
             nbpp = int(raw_input("Number of balls per player? "))

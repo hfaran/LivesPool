@@ -114,13 +114,6 @@ class APIFunctionalTest(AsyncHTTPSTestCase):
             headers={"Cookie": cookies}
         )
 
-    def _retire_room(self, cookies):
-        return self.fetch(
-            "/api/room/retireroom",
-            method="DELETE",
-            headers={"Cookie": cookies}
-        )
-
     def _start_game(self, cookies, nbpp):
         return self.fetch(
             "/api/game/creategame",
@@ -223,16 +216,6 @@ class APIFunctionalTest(AsyncHTTPSTestCase):
             ["alpha", "beta"]
         )
 
-        # Test attempting to leave room if owner
-        r = self._leave_room(cookies["alpha"])
-        self.assertEqual(r.code, 409)
-        # Test attempting to retire room if not owner
-        r = self._retire_room(cookies["beta"])
-        self.assertEqual(r.code, 403)
-        # Test attempting to retire room if not in room
-        r = self._retire_room(cookies["gamma"])
-        self.assertEqual(r.code, 409)
-        self.assertTrue("not in a room" in jl(r.body)["data"])
         # Test attempting to leave room if not in room
         r = self._leave_room(cookies["gamma"])
         self.assertEqual(r.code, 409)
@@ -241,7 +224,7 @@ class APIFunctionalTest(AsyncHTTPSTestCase):
         r = self._leave_room(cookies["beta"])
         self.assertEqual(r.code, 200)
         # Test retiring room
-        r = self._retire_room(cookies["alpha"])
+        r = self._leave_room(cookies["alpha"])
         self.assertEqual(r.code, 200)
 
         # Create and join room for the purposes of testing api.game
