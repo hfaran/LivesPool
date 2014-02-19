@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
-{% block page_title %}Room Lobby{% end %}
-{% block banner_title %}ROOM LOBBY{% end %}
+{% block page_title %}{{ room_name }}{% end %}
+{% block banner_title %}{{ room_name.upper() }}{% end %}
 
 {% block scripts %}
 <script type="text/javascript" src="{{ static_url("roomlobby.js") }}"></script>
