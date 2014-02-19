@@ -186,36 +186,33 @@ class LeaveRoom(APIHandler):
             "type": "string",
         },
         "doc": """
-DELETE to leave current room
+DELETE to leave current room. If the room owner leaves, the room will be deleted.
 """
     }
 
     @io_schema
     @authenticated
     def delete(self):
+        db = self.db_conn.db
+
         player_name = self.get_current_user()
-        room_name = self.db_conn.leave_room(player_name)
-        return "{} successfully left {}".format(player_name, room_name)
+        player = Player(db, "name", player_name)
+        room_name = player["current_room"]
+        if room_name:
+            room = Room(db, "name", room_name)
+        else:
+            raise APIError(409, log_message="You are currently not in a room.")
 
-
-class RetireRoom(APIHandler):
-
-    """RetireRoom"""
-
-    apid = {}
-    apid["delete"] = {
-        "input_schema": None,
-        "output_schema": {
-            "type": "string",
-        },
-        "doc": """
-DELETE to delete current room (if you are the owner)
-"""
-    }
-
-    @io_schema
-    @authenticated
-    def delete(self):
-        player_name = self.get_current_user()
-        room_name = self.db_conn.delete_room(player_name)
-        return "{} successfully deleted {}".format(player_name, room_name)
+        if room["owner"] == player_name:
+            # Set all players' current_room to None
+            for pname in room["current_players"]:
+                p = Player(db, "name", pname)
+                p["current_room"] = None
+            # Delete the room
+            db["rooms"].delete(name=room_name)
+            return "{} successfully deleted {}".format(player_name, room_name)
+        else:
+            # Set player's current_room to None and remove from room's current_players list
+            player["current_room"] = None
+            room["current_players"] = [p for p in room["current_players"] if p != player_name]
+            return "{} successfully left {}".format(player_name, room_name)

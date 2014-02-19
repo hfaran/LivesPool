@@ -437,7 +437,7 @@ null
 
 
 
-DELETE to leave current room
+DELETE to leave current room. If the room owner leaves, the room will be deleted.
 
 
 
@@ -533,31 +533,5 @@ null
 
 
 GET to receive list of rooms
-
-
-
-
-
-
-# `/api/room/retireroom`
-
-    Content-Type: application/json
-
-## DELETE
-### Input Schema
-```json
-null
-```
-
-### Output Schema
-```json
-{
-    "type": "string"
-}
-```
-
-
-
-DELETE to delete current room (if you are the owner)
 
 
