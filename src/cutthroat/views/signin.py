@@ -20,10 +20,8 @@ class Landing(ViewHandler):
     def get(self):
         _, player = self.db_conn._get_player(self.get_current_user())
         if player["current_game_id"]:
-            raise NotImplementedError
-            # self.redirect("<Insert URL to game view here>")
+            self.redirect("/room/game")
         elif player["current_room"]:
-            raise NotImplementedError
-            # self.redirect("<Insert URL to room page here>")
+            self.redirect("/room/lobby")
         else:
             self.redirect("/room/join")

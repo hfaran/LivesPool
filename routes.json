@@ -48,24 +48,20 @@
         "{\"py/type\": \"cutthroat.api.room.JoinRoom\"}"
     ], 
     [
-        "/room/lobby", 
-        "{\"py/type\": \"cutthroat.views.room.Lobby\"}"
-    ], 
-    [
-        "/room/game", 
-        "{\"py/type\": \"cutthroat.views.room.Game\"}"
+        "/room/create", 
+        "{\"py/type\": \"cutthroat.views.room.Create\"}"
     ], 
     [
         "/room/join", 
         "{\"py/type\": \"cutthroat.views.room.Join\"}"
     ], 
     [
-        "/room/create", 
-        "{\"py/type\": \"cutthroat.views.room.Create\"}"
+        "/room/lobby", 
+        "{\"py/type\": \"cutthroat.views.room.Lobby\"}"
     ], 
     [
-        "/room/room", 
-        "{\"py/type\": \"cutthroat.views.room.Room\"}"
+        "/room/game", 
+        "{\"py/type\": \"cutthroat.views.room.Game\"}"
     ], 
     [
         "/roomlogin/roomlogin", 

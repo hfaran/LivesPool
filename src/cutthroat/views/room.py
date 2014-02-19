@@ -21,14 +21,6 @@ class Create(ViewHandler):
     def get(self):
         self.render("createaroom.html")
 
-class Room(ViewHandler):
-
-    """Room"""
-
-    @authenticated
-    def get(self):
-        self.render("room.html")
-
 class Lobby(ViewHandler):
 
     """Lobby"""
@@ -44,4 +36,4 @@ class Game(ViewHandler):
     @authenticated
     def get(self):
         self.render("game.html")
-        
+

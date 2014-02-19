@@ -9,7 +9,7 @@ $(document).ready(function() {
             content_type: "application/json; charset=utf-8",
             dataType: "json",
             success: function() {
-                window.location.href ="/room/join";
+                window.location.href ="/";
             },
             error: function (jqXHR, status, error) {
                 if(jqXHR.status == 400) {
