@@ -1,4 +1,3 @@
-
 `Lives Pool`
 ================
 [![Build Status](https://travis-ci.org/hfaran/LivesPool.png)](https://travis-ci.org/hfaran/LivesPool)
@@ -17,27 +16,6 @@ src/cutthroats.py
 ```bash
 ./runtests.bash
 ```
-
-## TODO
-
-* ~~Finish implementing Room routes~~
-* ~~Auth~~
-    * ~~Implement basic API authentication and auth-based actions~~
-    * ~~Use some kind of hashing/salting~~
-* Documentation
-    * Document any undocumented functions
-* Front-end
-    * ~~[Wireframe draft](http://sdrv.ms/NiHL7a)~~
-    * ~~Sign-in views~~
-    * ~~Room views~~
-    * Game views
-* Write new database module; refactor API to use it
-    * ~~DBObjectMapping~~
-    * Refactor code out of `db` into `db2` and the RequestHandlers
-* Tests
-    * Back-end unittests
-    * ~~API functional tests; 90%+ coverage;~~
-    * Front-end tests
 
 ### Future TODO
 * Keep history
