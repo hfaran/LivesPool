@@ -2,12 +2,12 @@
 // TODO: functionality for balls per player value
 // TODO: disable form for number of balls if user isn't owner of room
 
-function load_players() {
+function load_players(container) {
 	$.ajax({
 		url: "/api/room/listplayers",
 		success: function(data) {
-			$("#lobby_container").empty();
-			$("#lobby_container").append('<ul id="playerlist" class="list-group"></ul>');
+			$(container).empty();
+			$(container).append('<ul id="playerlist" class="list-group"></ul>');
 
 			var firstItem = true;
             $.each(data["data"]["players"], function(key, value) {
@@ -64,7 +64,7 @@ function create_game() {
 }
 
 $(document).ready(function() {
-	load_players();
+	load_players("#lobby_container");
 	create_game();
 	leave_room();
 });

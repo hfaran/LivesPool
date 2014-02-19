@@ -6,6 +6,7 @@
 
 {% block scripts %}
 <script type="text/javascript" src="{{ static_url("game.js") }}"></script>
+<script type="text/javascript" src="{{ static_url("roomlobby.js") }}"></script>
 <script type="text/javascript" src="{{ static_url("json_utils.js") }}"></script>
 {% end %}
 
@@ -36,5 +37,7 @@
     	<div id="ball-fourteen" class="poolball green">14</div>
     	<div id="ball-fifteen" class="poolball maroon">15</div>
     </div>
+    <br />
+    <div id="game_list"></div>
 </div>
 {% end %}
