@@ -19,12 +19,12 @@ $(document).ready(function() {
 		"ball-twelve" : false,
 		"ball-thirteen" : false,
 		"ball-fourteen" : false,
-		"ball-fifteeh" : false
+		"ball-fifteen" : false
 	};
 
 	getPlayerBalls();
 
-	$('div.poolball').dblclick(function() {
+	$('div.poolball').click(function() {
 		var id = $(this).attr('id');
 		if(!ballRemoved[id]) {
 			$(this).fadeTo(700, 0.3);
