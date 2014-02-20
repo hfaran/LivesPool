@@ -226,7 +226,12 @@ POST the required parameters to register the pocketing/unpocketing of a ball
                 p["balls"] = list(set(p["balls"]) - {ball})
                 break
         else:
-            self.db_conn.remove_ball_from_unclaimed(game_id, ball)
+            # Remove ball from unclaimed
+            g = Game(self.db_conn.db, "game_id", game_id)
+            uballs = list(game["unclaimed_balls"])
+            uballs.remove(ball)
+            game["unclaimed_balls"] = uballs
+
         res["message"] = "Ball {} was sunk.".format(ball)
         return res
 

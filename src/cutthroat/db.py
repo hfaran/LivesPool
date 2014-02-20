@@ -33,17 +33,6 @@ class Connection(object):
     def __init__(self, db_path):
         self.db = dataset.connect('sqlite:///{}'.format(db_path))
 
-    def remove_ball_from_unclaimed(self, game_id, ball):
-        """Remove `ball` from `game_id`'s list of unclaimed_balls"""
-        table = self.db['games']
-        game = table.find_one(game_id=game_id)
-        unclaimed_balls = listify_string(int, game['unclaimed_balls'])
-        unclaimed_balls.remove(ball)
-        table.update(dict(game_id=game_id, unclaimed_balls=stringify_list(
-            unclaimed_balls)),
-            ['game_id']
-        )
-
     # TODO: re-evaluate what this function will actually do
     def mark_stale_games(self):
         """Marks status for stale games as `stale`
