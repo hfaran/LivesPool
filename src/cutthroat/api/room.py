@@ -93,8 +93,8 @@ POST the required parameters to create a new room
 """
     }
 
-    @io_schema
     @authenticated
+    @io_schema
     def post(self):
         # player must not already be in a room
         assert_non_tenant(self.db_conn.db, self.get_current_user())
@@ -141,8 +141,8 @@ POST the required parameters to create a new room
 """
     }
 
-    @io_schema
     @authenticated
+    @io_schema
     def post(self):
         # player must not already be in a room
         assert_non_tenant(self.db_conn.db, self.get_current_user())
@@ -176,8 +176,8 @@ GET to receive list of rooms
 """
     }
 
-    @io_schema
     @authenticated
+    @io_schema
     def get(self):
         return [
             {
@@ -214,8 +214,8 @@ GET to receive list of players in current room
 """
     }
 
-    @io_schema
     @authenticated
+    @io_schema
     def get(self):
         db = self.db_conn.db
 
@@ -249,8 +249,8 @@ DELETE to leave current room. If the room owner leaves, the room will be deleted
 """
     }
 
-    @io_schema
     @authenticated
+    @io_schema
     def delete(self):
         db = self.db_conn.db
 

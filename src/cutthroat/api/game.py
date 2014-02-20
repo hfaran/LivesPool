@@ -40,8 +40,8 @@ POST the required parameter to create a new game; only the owner of a room can m
 """
     }
 
-    @io_schema
     @authenticated
+    @io_schema
     def post(self):
         """POST RequestHandler"""
         game_id = uuid.uuid4().hex
@@ -116,8 +116,8 @@ DELETE to remove yourself from current game
 """
     }
 
-    @io_schema
     @authenticated
+    @io_schema
     def delete(self):
         # Shorthand since we need to reference this multiple times
         db = self.db_conn.db
@@ -179,8 +179,8 @@ POST the required parameters to register the pocketing/unpocketing of a ball
 """
     }
 
-    @io_schema
     @authenticated
+    @io_schema
     def post(self):
         db = self.db_conn.db
 
@@ -247,8 +247,8 @@ GET to receive list of balls on the table in current game
 """
     }
 
-    @io_schema
     @authenticated
+    @io_schema
     def get(self):
         db = self.db_conn.db
 
@@ -288,8 +288,8 @@ GET to receive list of players in current game
 """
     }
 
-    @io_schema
     @authenticated
+    @io_schema
     def get(self):
         db = self.db_conn.db
 

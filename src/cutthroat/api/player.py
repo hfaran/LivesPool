@@ -72,8 +72,8 @@ GET to retrieve player info
 
         return {"username": player_name}
 
-    @io_schema
     @authenticated
+    @io_schema
     def get(self):
         player_name = self.get_current_user()
 

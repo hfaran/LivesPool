@@ -2,6 +2,7 @@ from tornado import template
 from tornado.web import authenticated
 
 from cutthroat.handlers import ViewHandler
+from cutthroat.common import get_player
 
 
 class SignIn(ViewHandler):
@@ -18,7 +19,7 @@ class Landing(ViewHandler):
 
     @authenticated
     def get(self):
-        _, player = self.db_conn._get_player(self.get_current_user())
+        player = get_player(self.db_conn.db, self.get_current_user())
         if player["current_game_id"]:
             self.redirect("/room/game")
         elif player["current_room"]:

@@ -96,8 +96,8 @@ DELETE to clear cookie for current user.
 """
     }
 
-    @io_schema
     @authenticated
+    @io_schema
     def delete(self):
         # TODO: So this doesn't actually with the CLI client...
         #  can still authenticate with old cookie. Maybe we'll have
