@@ -6,8 +6,8 @@ from cutthroat.db2 import Player, Room, Game, NotFoundError
 from cutthroat.common import get_player, get_room
 
 
-def assert_non_tenant(rh, body):
-    player = get_player(rh.db_conn.db, rh.get_current_user())
+def assert_non_tenant(db, player_name):
+    player = get_player(db, player_name)
     player_room = player["current_room"]
     api_assert(
         not player_room,
@@ -15,7 +15,7 @@ def assert_non_tenant(rh, body):
         log_message=(
             "{} is already in a room: `{}`. Leave current room"
             " to join a new one.".format(
-                rh.get_current_user(),
+                player_name,
                 player_room
             )
         )
@@ -97,7 +97,7 @@ POST the required parameters to create a new room
     @authenticated
     def post(self):
         # player must not already be in a room
-        assert_non_tenant(self, self.body)
+        assert_non_tenant(self.db_conn.db, self.get_current_user())
 
         create_room(
             self.db_conn.db,
@@ -145,7 +145,7 @@ POST the required parameters to create a new room
     @authenticated
     def post(self):
         # player must not already be in a room
-        assert_non_tenant(self, self.body)
+        assert_non_tenant(self.db_conn.db, self.get_current_user())
 
         join_room(
             db=self.db_conn.db,
