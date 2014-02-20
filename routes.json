@@ -20,6 +20,10 @@
         "{\"py/type\": \"cutthroat.api.game.BallsOnTable\"}"
     ], 
     [
+        "/api/game/listplayers", 
+        "{\"py/type\": \"cutthroat.api.game.ListPlayers\"}"
+    ], 
+    [
         "/api/game/leavegame", 
         "{\"py/type\": \"cutthroat.api.game.LeaveGame\"}"
     ], 

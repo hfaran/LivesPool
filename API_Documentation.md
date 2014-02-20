@@ -208,6 +208,61 @@ DELETE to remove yourself from current game
 
 
 
+# `/api/game/listplayers`
+
+    Content-Type: application/json
+
+## GET
+### Input Schema
+```json
+null
+```
+
+### Output Schema
+```json
+{
+    "required": [
+        "gamemaster", 
+        "players"
+    ], 
+    "type": "object", 
+    "properties": {
+        "players": {
+            "type": "array"
+        }, 
+        "gamemaster": {
+            "type": "string"
+        }
+    }
+}
+```
+
+### Output Example
+```json
+{
+    "players": [
+        "Stark", 
+        "Stannis", 
+        "Baratheon", 
+        "Tyrell", 
+        "Lannister"
+    ], 
+    "gamemaster": "Stark"
+}
+```
+
+
+
+GET to receive list of players in current game
+
+* `players` array includes ALL players (including gamemaster)
+* `gamemaster` field is useful for highlighting the gamemaster in the UI
+
+
+
+
+
+
 # `/api/game/toggleball`
 
     Content-Type: application/json
