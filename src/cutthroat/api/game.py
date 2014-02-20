@@ -6,7 +6,7 @@ from tornado_json.utils import io_schema, api_assert
 
 from cutthroat.handlers import APIHandler
 from cutthroat.db2 import Player, Room, Game, NotFoundError, stringify_list
-from cutthroat.common import get_player, get_room
+from cutthroat.common import get_player, get_room, get_balls_on_table
 
 
 TOTAL_NUM_BALLS = 15
@@ -206,7 +206,7 @@ POST the required parameters to register the pocketing/unpocketing of a ball
         )
 
         # If ball is already sunk, retable it
-        if ball not in self.db_conn.get_balls_on_table(game_id):
+        if ball not in get_balls_on_table(self.db_conn.db, game_id):
             game = Game(db, "game_id", game_id)
             if ball in game["orig_unclaimed_balls"]:
                 game["unclaimed_balls"] = game["unclaimed_balls"] + [ball]
@@ -259,7 +259,7 @@ GET to receive list of balls on the table in current game
         api_assert(game_id, 400, log_message="You are not currently in"
                    " a game.")
 
-        return self.db_conn.get_balls_on_table(game_id)
+        return get_balls_on_table(db, game_id)
 
 
 class ListPlayers(APIHandler):

@@ -1,6 +1,5 @@
 import logging
 import dataset
-from itertools import chain
 
 from tornado_json.utils import api_assert
 
@@ -72,19 +71,7 @@ class Connection(object):
         players = listify_string(str, game['players'])
         return players
 
-    def get_balls_on_table(self, game_id):
-        """
-        :returns: Balls currently on the table for game `game_id`
-        :rtype: [int, ...]
-        """
-        table = self.db['games']
-        game = table.find_one(game_id=game_id)
-        players = listify_string(str, game['players'])
-        unclaimed_balls = listify_string(int, game['unclaimed_balls'])
 
-        return list(
-            chain(*[self.get_balls_for_player(p) for p in players])
-        ) + unclaimed_balls
 
     # TODO: re-evaluate what this function will actually do
     def mark_stale_games(self):
