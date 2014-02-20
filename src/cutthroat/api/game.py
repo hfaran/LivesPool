@@ -242,3 +242,48 @@ GET to receive list of balls on the table in current game
                    " a game.")
 
         return self.db_conn.get_balls_on_table(game_id)
+
+
+class ListPlayers(APIHandler):
+
+    """List players in game"""
+
+    apid = {}
+    apid["get"] = {
+        "input_schema": None,
+        "output_schema": {
+            "type": "object",
+            "properties": {
+                "gamemaster": {"type": "string"},
+                "players": {"type": "array"},
+            },
+            "required": ["gamemaster", "players"],
+        },
+        "output_example": {
+            "gamemaster": "Stark",
+            "players": ["Stark", "Stannis", "Baratheon", "Tyrell", "Lannister"]
+        },
+        "doc": """
+GET to receive list of players in current game
+
+* `players` array includes ALL players (including gamemaster)
+* `gamemaster` field is useful for highlighting the gamemaster in the UI
+"""
+    }
+
+    @io_schema
+    @authenticated
+    def get(self):
+        db = self.db_conn.db
+
+        player_name = self.get_current_user()
+        player = Player(db, "name", player_name)
+        game_id = player["current_game_id"]
+        api_assert(game_id, 400, log_message="You are not currently in"
+                   " a game.")
+
+        game = Game(db, "game_id", game_id)
+        return {
+            "players": game["players"],
+            "gamemaster": game["gamemaster"]
+        }

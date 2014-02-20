@@ -114,6 +114,13 @@ class APIFunctionalTest(AsyncHTTPSTestCase):
             headers={"Cookie": cookies}
         )
 
+    def _list_game_players(self, cookies):
+        return self.fetch(
+            "/api/game/listplayers",
+            method="GET",
+            headers={"Cookie": cookies}
+        )
+
     def _start_game(self, cookies, nbpp):
         return self.fetch(
             "/api/game/creategame",
@@ -251,6 +258,18 @@ class APIFunctionalTest(AsyncHTTPSTestCase):
         r = self._start_game(cookies["alpha"], 5)
         self.assertEqual(r.code, 200)
         game_id = jl(r.body)["data"]["game_id"]
+
+        # List players in game
+        r = self._list_game_players(cookies["beta"])
+        self.assertEqual(r.code, 200)
+        self.assertEqual(
+            sorted(jl(r.body)["data"]["players"]),
+            ["alpha", "beta", "gamma"]
+        )
+        self.assertEqual(
+            jl(r.body)["data"]["gamemaster"],
+            'alpha'
+        )
 
         # Attempt to sinkball as not the gamemaster
         r = self._toggle_ball(cookies["beta"], 9)

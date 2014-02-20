@@ -16,6 +16,7 @@ from tornado.options import options
 from tornado_json.application import Application
 
 import cutthroat
+from cutthroat import db
 from cutthroat import ctconfig
 from cutthroat import routes as mod_routes
 
@@ -95,7 +96,7 @@ def main():
         Application(
             routes=routes,
             settings=settings,
-            db_conn=cutthroat.db.Connection(options.sqlite_db),
+            db_conn=db.Connection(options.sqlite_db),
         )
     )
 
