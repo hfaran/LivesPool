@@ -193,13 +193,14 @@ POST the required parameters to register the pocketing/unpocketing of a ball
 
         gamemaster = self.get_current_user()
         ball = self.body['ball']
-        game_id = self.db_conn._get_player(gamemaster)[1]["current_game_id"]
+        game_id = get_player(self.db_conn.db, gamemaster)["current_game_id"]
+        game = Game(self.db_conn.db, "game_id", game_id)
 
         res = {"game_id": game_id}
 
         # Authenticate
         api_assert(
-            self.db_conn.auth_game_update_request(game_id, gamemaster),
+            game["gamemaster"] == gamemaster,
             401,
             log_message="You are not the gamemaster of the current game"
         )

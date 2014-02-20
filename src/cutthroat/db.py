@@ -86,16 +86,6 @@ class Connection(object):
             chain(*[self.get_balls_for_player(p) for p in players])
         ) + unclaimed_balls
 
-    def auth_game_update_request(self, game_id, gamemaster):
-        """
-        :returns: Boolean indicating whether `gamemaster` matches the gamemaster-
-            entry in the database for `game_id`
-        :rtype: bool
-        """
-        table = self.db['games']
-        game = table.find_one(game_id=game_id)
-        return game['gamemaster'] == gamemaster
-
     # TODO: re-evaluate what this function will actually do
     def mark_stale_games(self):
         """Marks status for stale games as `stale`
