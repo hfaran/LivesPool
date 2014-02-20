@@ -1,8 +1,11 @@
+import bcrypt
+
 from tornado.options import options
 from tornado.web import authenticated
 from tornado_json.utils import io_schema, APIError
 
 from cutthroat.handlers import APIHandler
+from cutthroat.db2 import Player, NotFoundError
 
 
 class Login(APIHandler):
@@ -42,10 +45,22 @@ GET to check if authenticated. Should be obvious from status code (403 vs. 200).
 
     @io_schema
     def post(self):
+        db = self.db_conn.db
+
         player_name = self.body["username"]
         password = self.body["password"]
+        try:
+            player = Player(db, "name", player_name)
+        except NotFoundError:
+            raise APIError(
+                400,
+                log_message="No user {} exists.".format(player_name)
+            )
+        password_match = bcrypt.hashpw(
+            str(password), str(player["salt"])
+        ) == player['password']
 
-        if self.db_conn.auth_user(player_name, password):
+        if password_match:
             self.set_secure_cookie(
                 "user", player_name, options.session_timeout_days
             )

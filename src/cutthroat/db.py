@@ -161,15 +161,6 @@ class Connection(object):
         game = table.find_one(game_id=game_id)
         return game['gamemaster'] == gamemaster
 
-    def auth_user(self, player_name, password):
-        ptable = self.db['players']
-        player = ptable.find_one(name=player_name)
-        api_assert(player, 400,
-                   log_message="No user {} exists.".format(player_name))
-        return bcrypt.hashpw(
-            str(password), str(player["salt"])
-        ) == player['password']
-
     # TODO: re-evaluate what this function will actually do
     def mark_stale_games(self):
         """Marks status for stale games as `stale`
