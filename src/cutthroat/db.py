@@ -161,26 +161,7 @@ class Connection(object):
             #   stale, we would do this:
             # games.delete(game_id=game_id)
 
-    def create_room(self, room_name, password, owner):
-        """Create a new room `room_name`
 
-        Adds entry for room `room_name` to the database.
-        :raises APIError: If a room with `room_name` has already
-            been created.
-        """
-        rtable = self.db['rooms']
-        api_assert(not rtable.find_one(name=room_name), 409,
-                   log_message="Room with name `{}` already exists.".format(
-                       room_name))
-
-        rtable.insert(
-            {
-                "name": room_name,
-                "password": password,
-                "owner": owner,
-                "current_players": ""
-            }
-        )
 
     def __get_player(self, player_name):
         ptable = self.db['players']

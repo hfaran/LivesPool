@@ -21,6 +21,25 @@ def assert_non_tenant(rh, body):
         )
     )
 
+def create_room(db, room_name, password, owner):
+    """Create a new room `room_name`
+
+    Adds entry for room `room_name` to the database.
+    :raises APIError: If a room with `room_name` has already
+        been created.
+    """
+    api_assert(not db["rooms"].find_one(name=room_name), 409,
+               log_message="Room with name `{}` already exists.".format(
+                   room_name))
+
+    db["rooms"].insert(
+        {
+            "name": room_name,
+            "password": password,
+            "owner": owner,
+            "current_players": ""
+        }
+    )
 
 class CreateRoom(APIHandler):
     apid = {}
@@ -53,7 +72,8 @@ POST the required parameters to create a new room
         # player must not already be in a room
         assert_non_tenant(self, self.body)
 
-        self.db_conn.create_room(
+        create_room(
+            self.db_conn.db,
             room_name=self.body["roomname"],
             password=self.body.get("password") if self.body.get("password") else "",
             owner=self.get_current_user()
