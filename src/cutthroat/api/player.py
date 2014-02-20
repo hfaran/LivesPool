@@ -1,8 +1,13 @@
+import bcrypt
+import logging
+
 from tornado.options import options
 from tornado.web import authenticated
-from tornado_json.utils import io_schema, api_assert
+from tornado_json.utils import io_schema, api_assert, APIError
 
 from cutthroat.handlers import APIHandler
+from cutthroat.db2 import NotFoundError
+from cutthroat.db2 import Player as db2_Player
 
 
 class Player(APIHandler):
@@ -41,17 +46,47 @@ GET to retrieve player info
 
     @io_schema
     def post(self):
-        self.db_conn.create_player(self.body["username"], self.body["password"])
+        player_name = self.body["username"]
+        password = self.body["password"]
+        # Create player
+        player_exists = self.db_conn.db['players'].find_one(name=player_name)
+        api_assert(not player_exists, 409,
+                   log_message="{} is already registered.".format(player_name))
+        salt = bcrypt.gensalt(rounds=12)
+        self.db_conn.db['players'].insert(
+            {
+                "name": player_name,
+                "current_game_id": "",
+                "current_room": "",
+                "balls": "",
+                "salt": salt,
+                "password": bcrypt.hashpw(str(password), salt)
+            }
+        )
+
         self.set_secure_cookie(
             "user",
-            self.body["username"],
+            player_name,
             options.session_timeout_days
         )
 
-        return {"username": self.body["username"]}
+        return {"username": player_name}
 
     @io_schema
     @authenticated
     def get(self):
         player_name = self.get_current_user()
-        return self.db_conn.player_info(player_name)
+
+        try:
+            player = db2_Player(self.db_conn.db, "name", player_name)
+        except NotFoundError:
+            raise APIError(
+                409,
+                log_message="No user {} exists.".format(player_name)
+            )
+
+        res = dict(player)
+        res.pop("password")  # Redact password
+        res.pop("salt")  # Redact salt
+        res.pop("id")  # Players don't care about this
+        return res

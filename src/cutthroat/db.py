@@ -1,11 +1,7 @@
-import bcrypt
 import logging
 import dataset
-from collections import MutableMapping
 from itertools import chain
-from random import choice
 
-from tornado.options import options
 from tornado_json.utils import api_assert
 
 
@@ -74,30 +70,6 @@ class Connection(object):
                 },
                 ['name']
             )
-
-    def create_player(self, player_name, password):
-        """Register new player `player_name`
-
-        Adds entry for player `player_name` to the database.
-        :raises APIError: If a player with `player_name` is already
-            registered.
-        """
-        player_exists = self.db['players'].find_one(name=player_name)
-        api_assert(not player_exists, 409,
-                   log_message="{} is already registered.".format(player_name))
-
-        salt = bcrypt.gensalt(rounds=12)
-
-        self.db['players'].insert(
-            {
-                "name": player_name,
-                "current_game_id": "",
-                "current_room": "",
-                "balls": "",
-                "salt": salt,
-                "password": bcrypt.hashpw(str(password), salt)
-            }
-        )
 
     def get_balls_for_player(self, player_name):
         """
@@ -306,16 +278,6 @@ class Connection(object):
         rtable.delete(name=room_name)
 
         return room_name
-
-    def player_info(self, player_name):
-        ptable, player = self._get_player(player_name)
-        res = dict(player)
-        # Return balls as a list
-        res["balls"] = listify_string(int, res["balls"])
-        res.pop("password")  # Redact password
-        res.pop("salt")  # Redact salt
-        res.pop("id")  # Players don't care about this
-        return res
 
     def get_player_room(self, player_name):
         """:returns: Name of the room `player_name` is in, or None"""
