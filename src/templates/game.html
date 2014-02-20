@@ -3,11 +3,41 @@
 {% block page_title %}Game In Play{% end %}
 {% block banner_title %}GAME IN PLAY{% end %}
 
+
 {% block scripts %}
+<script type="text/javascript" src="{{ static_url("game.js") }}"></script>
 <script type="text/javascript" src="{{ static_url("roomlobby.js") }}"></script>
 <script type="text/javascript" src="{{ static_url("json_utils.js") }}"></script>
 {% end %}
 
 {% block body %}
-<div id="roominplay_container"></div>
+<div id="game_container">
+    <div id="game_row">
+    	<div id="ball-one" class="poolball yellow">1</div>
+    </div>
+    <div id="game_row">
+	    <div id="ball-two" class="poolball blue">2</div>
+	    <div id="ball-three" class="poolball red">3</div>
+	</div>
+    <div id="game_row">
+        <div id="ball-four" class="poolball purple">4</div>
+	    <div id="ball-five" class="poolball orange">5</div>
+	    <div id="ball-six" class="poolball green">6</div>
+	</div>
+    <div id="game_row">
+	    <div id="ball-seven" class="poolball maroon">7</div>
+	    <div id="ball-eight" class="poolball black">8</div>
+	    <div id="ball-nine" class="poolball yellow">9</div>
+	    <div id="ball-ten" class="poolball blue">10</div>
+    </div>
+    <div id="game_row">
+    	<div id="ball-eleven" class="poolball red">11</div>
+    	<div id="ball-twelve" class="poolball purple">12</div>
+    	<div id="ball-thirteen" class="poolball orange">13</div>
+    	<div id="ball-fourteen" class="poolball green">14</div>
+    	<div id="ball-fifteen" class="poolball maroon">15</div>
+    </div>
+    <br />
+    <div id="game_list"></div>
+</div>
 {% end %}

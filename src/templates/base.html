@@ -14,6 +14,8 @@
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
         <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="{{ static_url("logout.js") }}"></script>
+
         {% block scripts %}{% end %}
     </head>
     <body>
@@ -33,7 +35,7 @@
                         <li><a href="#">About</a></li>
                         <li><a href="/room/join">Join Room</a></li>
                         <li><a href="/room/create">Create Room</a></li>
-                        <li><a href="#">FAQ</a></li>
+                        <li id="afterLogoutItem"><a href="#">FAQ</a></li>
                     </ul>
                 </div>
 
