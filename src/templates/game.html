@@ -6,7 +6,6 @@
 
 {% block scripts %}
 <script type="text/javascript" src="{{ static_url("game.js") }}"></script>
-<script type="text/javascript" src="{{ static_url("roomlobby.js") }}"></script>
 <script type="text/javascript" src="{{ static_url("json_utils.js") }}"></script>
 {% end %}
 
@@ -38,6 +37,11 @@
     	<div id="ball-fifteen" class="poolball maroon">15</div>
     </div>
     <br />
-    <div id="game_list"></div>
+    <div class="row">
+        <div id="game_list" class="col-sm-6"></div>
+        <div class="col-sm-6">
+            <button id="leavegamebutton" type="button" class="btn btn-danger btn-block">Leave</button>
+        </div>
+    </div>
 </div>
 {% end %}

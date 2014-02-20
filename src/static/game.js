@@ -106,8 +106,43 @@ function on_click_ball(ballsInPlay) {
 	});
 }
 
+function load_players() {
+	$.ajax({
+		url: "/api/game/listplayers",
+		success: function(data) {
+			$("#game_list").empty();
+			$("#game_list").append('<ul id="playerlist" class="list-group"></ul>');
+
+			var firstItem = true;
+            $.each(data["data"]["players"], function(key, value) {
+            	
+            	if(firstItem) {
+        			$("ul#playerlist").append('<li class="list-group-item owner">' + value + '</li>');
+            		firstItem = false;
+            	}
+            	else {
+            		$("ul#playerlist").append('<li class="list-group-item">' + value + '</li>');
+            	}
+            });
+		}
+	});
+}
+
+function leave_game() {
+	$('#leavegamebutton').click(function() {
+		$.ajax({
+			url: "/api/game/leavegame",
+			type: "DELETE",
+			success: function() {
+				window.location.href = "/room/join";
+			}
+		});
+	});
+}
+
 $(document).ready(function() {
 	var ballsInPlay = load_balls();
 	on_click_ball(ballsInPlay);
-	//load_players("#game_list");
+	load_players(); 	// TODO: fix player list layout
+	leave_game();
 });

@@ -1,13 +1,9 @@
-// TODO: implement proper action for errors in API calls
-// TODO: functionality for balls per player value
-// TODO: disable form for number of balls if user isn't owner of room
-
-function load_players(container) {
+function load_players() {
 	$.ajax({
 		url: "/api/room/listplayers",
 		success: function(data) {
-			$(container).empty();
-			$(container).append('<ul id="playerlist" class="list-group"></ul>');
+			$("#lobby_container").empty();
+			$("#lobby_container").append('<ul id="playerlist" class="list-group"></ul>');
 
 			var firstItem = true;
             $.each(data["data"]["players"], function(key, value) {
@@ -23,6 +19,8 @@ function load_players(container) {
             });
 		}
 	});
+
+	setTimeout(load_players, 5000);
 }
 
 function leave_room() {
@@ -32,10 +30,6 @@ function leave_room() {
 			type: "DELETE",
 			success: function() {
 				window.location.href = "/room/join";
-			},
-			error: function() {
-				alert("Owners cannot leave room. You must retire the room.");
-				// TODO: wait for refactoring involved in Issue #63 
 			}
 		});
 	});
@@ -64,7 +58,7 @@ function create_game() {
 }
 
 $(document).ready(function() {
-	load_players("#lobby_container");
+	load_players();
 	create_game();
 	leave_room();
 });
