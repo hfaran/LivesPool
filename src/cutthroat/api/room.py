@@ -3,10 +3,12 @@ from tornado.web import authenticated
 
 from cutthroat.handlers import APIHandler
 from cutthroat.db2 import Player, Room, Game, NotFoundError
+from cutthroat.common import get_player
 
 
 def assert_non_tenant(rh, body):
-    player_room = rh.db_conn.get_player_room(rh.get_current_user())
+    player = get_player(rh.db_conn.db, rh.get_current_user())
+    player_room = player["current_room"]
     api_assert(
         not player_room,
         409,
