@@ -50,7 +50,7 @@ POST the required parameter to create a new game; only the owner of a room can m
     @authenticated
     def post(self):
         """POST RequestHandler"""
-        game_id = str(uuid.uuid4())
+        game_id = uuid.uuid4().hex
         gamemaster = self.get_current_user()
         room_name = self.db_conn.get_owned_room(gamemaster)
 
