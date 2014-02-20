@@ -1,10 +1,13 @@
 import bcrypt
+import logging
 
 from tornado.options import options
 from tornado.web import authenticated
-from tornado_json.utils import io_schema, api_assert
+from tornado_json.utils import io_schema, api_assert, APIError
 
 from cutthroat.handlers import APIHandler
+from cutthroat.db2 import NotFoundError
+from cutthroat.db2 import Player as db2_Player
 
 
 class Player(APIHandler):
@@ -73,4 +76,17 @@ GET to retrieve player info
     @authenticated
     def get(self):
         player_name = self.get_current_user()
-        return self.db_conn.player_info(player_name)
+
+        try:
+            player = db2_Player(self.db_conn.db, "name", player_name)
+        except NotFoundError:
+            raise APIError(
+                409,
+                log_message="No user {} exists.".format(player_name)
+            )
+
+        res = dict(player)
+        res.pop("password")  # Redact password
+        res.pop("salt")  # Redact salt
+        res.pop("id")  # Players don't care about this
+        return res

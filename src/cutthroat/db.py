@@ -279,16 +279,6 @@ class Connection(object):
 
         return room_name
 
-    def player_info(self, player_name):
-        ptable, player = self._get_player(player_name)
-        res = dict(player)
-        # Return balls as a list
-        res["balls"] = listify_string(int, res["balls"])
-        res.pop("password")  # Redact password
-        res.pop("salt")  # Redact salt
-        res.pop("id")  # Players don't care about this
-        return res
-
     def get_player_room(self, player_name):
         """:returns: Name of the room `player_name` is in, or None"""
         # rtable = self.db['rooms']
