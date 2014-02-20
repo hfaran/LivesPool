@@ -220,7 +220,7 @@ POST the required parameters to register the pocketing/unpocketing of a ball
             return res
 
         # Otherwise, sink the ball
-        for p in self.db_conn.get_players_for_game(game_id):
+        for p in Game(self.db_conn.db, "game_id", game_id)["players"]:
             if ball in self.db_conn.get_balls_for_player(p):
                 self.db_conn.remove_ball_for_player(p, ball)
                 break

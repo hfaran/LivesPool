@@ -61,18 +61,6 @@ class Connection(object):
             ['game_id']
         )
 
-    def get_players_for_game(self, game_id):
-        """
-        :returns: Players participating in game `game_id`
-        :rtype: [str, ...]
-        """
-        table = self.db['games']
-        game = table.find_one(game_id=game_id)
-        players = listify_string(str, game['players'])
-        return players
-
-
-
     # TODO: re-evaluate what this function will actually do
     def mark_stale_games(self):
         """Marks status for stale games as `stale`
