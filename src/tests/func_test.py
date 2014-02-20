@@ -169,6 +169,10 @@ class APIFunctionalTest(AsyncHTTPSTestCase):
         # Test bad authentication
         r = self._authenticate(username="alpha", password="beta")
         self.assertEqual(r.code, 400)
+        # Test authentication of non-existent player
+        r = self._authenticate(username="zeta", password="zeta")
+        self.assertEqual(r.code, 400)
+        self.assertEqual(jl(r.body)["data"], "No user zeta exists.")
         # Test GET /api/auth/login
         r = self._check_auth()
         self.assertEqual(r.code, 403)
