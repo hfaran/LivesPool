@@ -1,3 +1,5 @@
+import bcrypt
+
 from tornado.options import options
 from tornado.web import authenticated
 from tornado_json.utils import io_schema, api_assert
@@ -41,14 +43,31 @@ GET to retrieve player info
 
     @io_schema
     def post(self):
-        self.db_conn.create_player(self.body["username"], self.body["password"])
+        player_name = self.body["username"]
+        password = self.body["password"]
+        # Create player
+        player_exists = self.db_conn.db['players'].find_one(name=player_name)
+        api_assert(not player_exists, 409,
+                   log_message="{} is already registered.".format(player_name))
+        salt = bcrypt.gensalt(rounds=12)
+        self.db_conn.db['players'].insert(
+            {
+                "name": player_name,
+                "current_game_id": "",
+                "current_room": "",
+                "balls": "",
+                "salt": salt,
+                "password": bcrypt.hashpw(str(password), salt)
+            }
+        )
+
         self.set_secure_cookie(
             "user",
-            self.body["username"],
+            player_name,
             options.session_timeout_days
         )
 
-        return {"username": self.body["username"]}
+        return {"username": player_name}
 
     @io_schema
     @authenticated
