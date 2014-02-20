@@ -248,7 +248,7 @@ class APIFunctionalTest(AsyncHTTPSTestCase):
 
         # Attempt to create a game w/o owning a room
         r = self._start_game(cookies["delta"], 5)
-        self.assertEqual(r.code, 403)
+        self.assertEqual(r.code, 409)
         r = self._start_game(cookies["gamma"], 5)
         self.assertEqual(r.code, 403)
         # Attempt to start game with malformed nbpp values

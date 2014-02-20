@@ -5,7 +5,7 @@ from tornado.web import authenticated
 from tornado_json.utils import io_schema, api_assert
 
 from cutthroat.handlers import APIHandler
-from cutthroat.db2 import Player, Room, Game, NotFoundError
+from cutthroat.db2 import Player, Room, Game, NotFoundError, stringify_list
 from cutthroat.common import get_player, get_room
 
 
@@ -55,9 +55,9 @@ POST the required parameter to create a new game; only the owner of a room can m
         gamemaster = self.get_current_user()
         player = get_player(self.db_conn.db, gamemaster)
         room_name = player["current_room"]
-        api_assert(room_name, 403,
-                   log_message="You must own a room to create a game.")
         room = get_room(self.db_conn.db, room_name)
+        api_assert(room["owner"] == gamemaster, 403,
+                   log_message="You must own a room to create a game.")
 
         player_names = room["current_players"]
         nplayers = len(player_names)
@@ -86,8 +86,23 @@ POST the required parameter to create a new game; only the owner of a room can m
         unclaimed_balls = balls[:]
 
         # Create game, then delete the room
-        self.db_conn.create_game(game_id, players, unclaimed_balls, gamemaster)
-        self.db_conn.delete_room(gamemaster)
+        self.db_conn.db["games"].insert(
+            {
+                "game_id": game_id,
+                "players": stringify_list(players.keys()),
+                "unclaimed_balls": stringify_list(unclaimed_balls),
+                "orig_unclaimed_balls": stringify_list(unclaimed_balls),
+                "gamemaster": gamemaster,
+                "status": "active"
+            }
+        )
+        for name, balls in players.iteritems():
+            p = get_player(self.db_conn.db, name)
+            p["current_game_id"] = game_id
+            p["balls"] = balls
+            p["orig_balls"] = balls
+            p["current_room"] = None
+        self.db_conn.db["rooms"].delete(name=room_name)
 
         return {"game_id": game_id}
 

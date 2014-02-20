@@ -34,43 +34,6 @@ class Connection(object):
     def __init__(self, db_path):
         self.db = dataset.connect('sqlite:///{}'.format(db_path))
 
-    def create_game(self, game_id, players, unclaimed_balls, gamemaster):
-        """Create game with game_id `game_id`
-
-        Adds entry for a new game with given parameters to database, and
-        updates players as well.
-        :raises APIError: If any players are not already registered
-        """
-        ptable = self.db['players']
-        all_players = [p['name'] for p in ptable]
-        api_assert(all(p in all_players for p in players), 409,
-                   log_message="Your list of players contains unregistered"
-                   " names. Please register all players first.")
-
-        table = self.db['games']
-        table.insert(
-            {
-                "game_id": game_id,
-                "players": stringify_list(players.keys()),
-                "unclaimed_balls": stringify_list(unclaimed_balls),
-                "orig_unclaimed_balls": stringify_list(unclaimed_balls),
-                "gamemaster": gamemaster,
-                "status": "active"
-            }
-        )
-
-        table = self.db['players']
-        for name, balls in players.iteritems():
-            table.update(
-                {
-                    "name": name,
-                    "current_game_id": game_id,
-                    "balls": stringify_list(balls),
-                    "orig_balls": stringify_list(balls)
-                },
-                ['name']
-            )
-
     def get_balls_for_player(self, player_name):
         """
         :returns: Balls belonging to player `player_name`
@@ -182,36 +145,6 @@ class Connection(object):
         api_assert(room, 409,
                    log_message="No room {} exists".format(room_name))
         return rtable, room
-
-    def delete_room(self, player_name):
-        ptable, player = self._get_player(player_name)
-        room_name = player["current_room"]
-        api_assert(
-            room_name, 409,
-            "`{}` is currently not in a room.".format(player_name)
-        )
-
-        rtable = self.db['rooms']
-        room = rtable.find_one(name=room_name)
-
-        api_assert(
-            room["owner"] == player_name,
-            403,
-            log_message="You must own the room if you want to destroy it."
-        )
-
-        # Set each player's room to None, then delete the room
-        for p in listify_string(str, room["current_players"]):
-            ptable.update(
-                {
-                    "name": p,
-                    "current_room": None
-                },
-                ['name']
-            )
-        rtable.delete(name=room_name)
-
-        return room_name
 
     def get_player_room(self, player_name):
         """:returns: Name of the room `player_name` is in, or None"""
