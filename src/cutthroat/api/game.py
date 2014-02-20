@@ -5,7 +5,8 @@ from tornado.web import authenticated
 from tornado_json.utils import io_schema, api_assert
 
 from cutthroat.handlers import APIHandler
-from cutthroat.db2 import Player, Room, Game, NotFoundError
+from cutthroat.db2 import Player, Room, Game, NotFoundError, stringify_list
+from cutthroat.common import get_player, get_room, get_balls_on_table
 
 
 TOTAL_NUM_BALLS = 15
@@ -14,13 +15,6 @@ TOTAL_NUM_BALLS = 15
 def generate_balls(num):
     """:returns: list of balls from 1 through num"""
     return map(lambda x: x + 1, range(num))
-
-
-def balls_sunk(cls, game_id):
-    return list(
-        set(generate_balls(TOTAL_NUM_BALLS)) - set(
-            cls.db_conn.get_balls_on_table(game_id))
-    )
 
 
 class CreateGame(APIHandler):
@@ -52,12 +46,13 @@ POST the required parameter to create a new game; only the owner of a room can m
         """POST RequestHandler"""
         game_id = uuid.uuid4().hex
         gamemaster = self.get_current_user()
-        room_name = self.db_conn.get_owned_room(gamemaster)
-
-        api_assert(room_name, 403,
+        player = get_player(self.db_conn.db, gamemaster)
+        room_name = player["current_room"]
+        room = get_room(self.db_conn.db, room_name)
+        api_assert(room["owner"] == gamemaster, 403,
                    log_message="You must own a room to create a game.")
 
-        player_names = self.db_conn.get_players_in_room(room_name)
+        player_names = room["current_players"]
         nplayers = len(player_names)
         nbpp = self.body["nbpp"]
 
@@ -84,8 +79,23 @@ POST the required parameter to create a new game; only the owner of a room can m
         unclaimed_balls = balls[:]
 
         # Create game, then delete the room
-        self.db_conn.create_game(game_id, players, unclaimed_balls, gamemaster)
-        self.db_conn.delete_room(gamemaster)
+        self.db_conn.db["games"].insert(
+            {
+                "game_id": game_id,
+                "players": stringify_list(players.keys()),
+                "unclaimed_balls": stringify_list(unclaimed_balls),
+                "orig_unclaimed_balls": stringify_list(unclaimed_balls),
+                "gamemaster": gamemaster,
+                "status": "active"
+            }
+        )
+        for name, balls in players.iteritems():
+            p = get_player(self.db_conn.db, name)
+            p["current_game_id"] = game_id
+            p["balls"] = balls
+            p["orig_balls"] = balls
+            p["current_room"] = None
+        self.db_conn.db["rooms"].delete(name=room_name)
 
         return {"game_id": game_id}
 
@@ -176,19 +186,20 @@ POST the required parameters to register the pocketing/unpocketing of a ball
 
         gamemaster = self.get_current_user()
         ball = self.body['ball']
-        game_id = self.db_conn._get_player(gamemaster)[1]["current_game_id"]
+        game_id = get_player(self.db_conn.db, gamemaster)["current_game_id"]
+        game = Game(self.db_conn.db, "game_id", game_id)
 
         res = {"game_id": game_id}
 
         # Authenticate
         api_assert(
-            self.db_conn.auth_game_update_request(game_id, gamemaster),
+            game["gamemaster"] == gamemaster,
             401,
             log_message="You are not the gamemaster of the current game"
         )
 
         # If ball is already sunk, retable it
-        if ball not in self.db_conn.get_balls_on_table(game_id):
+        if ball not in get_balls_on_table(self.db_conn.db, game_id):
             game = Game(db, "game_id", game_id)
             if ball in game["orig_unclaimed_balls"]:
                 game["unclaimed_balls"] = game["unclaimed_balls"] + [ball]
@@ -202,12 +213,18 @@ POST the required parameters to register the pocketing/unpocketing of a ball
             return res
 
         # Otherwise, sink the ball
-        for p in self.db_conn.get_players_for_game(game_id):
-            if ball in self.db_conn.get_balls_for_player(p):
-                self.db_conn.remove_ball_for_player(p, ball)
+        for pname in Game(self.db_conn.db, "game_id", game_id)["players"]:
+            p = get_player(self.db_conn.db, pname)
+            if ball in p["balls"]:
+                p["balls"] = list(set(p["balls"]) - {ball})
                 break
         else:
-            self.db_conn.remove_ball_from_unclaimed(game_id, ball)
+            # Remove ball from unclaimed
+            g = Game(self.db_conn.db, "game_id", game_id)
+            uballs = list(game["unclaimed_balls"])
+            uballs.remove(ball)
+            game["unclaimed_balls"] = uballs
+
         res["message"] = "Ball {} was sunk.".format(ball)
         return res
 
@@ -241,7 +258,7 @@ GET to receive list of balls on the table in current game
         api_assert(game_id, 400, log_message="You are not currently in"
                    " a game.")
 
-        return self.db_conn.get_balls_on_table(game_id)
+        return get_balls_on_table(db, game_id)
 
 
 class ListPlayers(APIHandler):
