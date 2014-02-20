@@ -13,3 +13,15 @@ def get_player(db, player_name):
         )
 
     return player
+
+
+def get_room(db, room_name):
+    try:
+        room = Room(db, "name", room_name)
+    except NotFoundError:
+        raise APIError(
+            409,
+            log_message="No room {} exists.".format(room_name)
+        )
+
+    return room

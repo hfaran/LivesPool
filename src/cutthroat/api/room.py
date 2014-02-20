@@ -3,7 +3,7 @@ from tornado.web import authenticated
 
 from cutthroat.handlers import APIHandler
 from cutthroat.db2 import Player, Room, Game, NotFoundError
-from cutthroat.common import get_player
+from cutthroat.common import get_player, get_room
 
 
 def assert_non_tenant(rh, body):
@@ -20,6 +20,7 @@ def assert_non_tenant(rh, body):
             )
         )
     )
+
 
 def create_room(db, room_name, password, owner):
     """Create a new room `room_name`
@@ -40,6 +41,32 @@ def create_room(db, room_name, password, owner):
             "current_players": ""
         }
     )
+
+
+def join_room(db, room_name, password, player_name):
+    """Join room `room_name`
+
+    Updates `current_players` entry for room `room_name` with
+    player `player_name` to the database.
+
+    :raises APIError: If a room with `room_name` does not exist;
+        or if the password is incorrect for room `room_name`, or if player
+        `player_name` does not exist
+    """
+    room = get_room(db, room_name)
+    api_assert(password == room['password'], 403,
+               log_message="Bad password for room `{}`.".format(room_name))
+    player = get_player(db, player_name)
+    api_assert(
+        player_name not in room["current_players"],
+        409,
+        log_message="Player `{}` already in room `{}`".format(
+            player_name, room_name)
+    )
+
+    room["current_players"] += [player_name]
+    player["current_room"] = room_name
+
 
 class CreateRoom(APIHandler):
     apid = {}
@@ -75,12 +102,15 @@ POST the required parameters to create a new room
         create_room(
             self.db_conn.db,
             room_name=self.body["roomname"],
-            password=self.body.get("password") if self.body.get("password") else "",
+            password=self.body.get("password") if self.body.get(
+                "password") else "",
             owner=self.get_current_user()
         )
-        self.db_conn.join_room(
+        join_room(
+            db=self.db_conn.db,
             room_name=self.body["roomname"],
-            password=self.body.get("password") if self.body.get("password") else "",
+            password=self.body.get("password") if self.body.get(
+                "password") else "",
             player_name=self.get_current_user()
         )
         return {"roomname": self.body["roomname"]}
@@ -117,9 +147,11 @@ POST the required parameters to create a new room
         # player must not already be in a room
         assert_non_tenant(self, self.body)
 
-        self.db_conn.join_room(
+        join_room(
+            db=self.db_conn.db,
             room_name=self.body["name"],
-            password=self.body.get("password") if self.body.get("password") else "",
+            password=self.body.get("password") if self.body.get(
+                "password") else "",
             player_name=self.get_current_user()
         )
         return {"name": self.body["name"]}
@@ -234,7 +266,9 @@ DELETE to leave current room. If the room owner leaves, the room will be deleted
             db["rooms"].delete(name=room_name)
             return "{} successfully deleted {}".format(player_name, room_name)
         else:
-            # Set player's current_room to None and remove from room's current_players list
+            # Set player's current_room to None and remove from room's
+            # current_players list
             player["current_room"] = None
-            room["current_players"] = [p for p in room["current_players"] if p != player_name]
+            room["current_players"] = [
+                p for p in room["current_players"] if p != player_name]
             return "{} successfully left {}".format(player_name, room_name)

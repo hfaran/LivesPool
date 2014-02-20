@@ -161,8 +161,6 @@ class Connection(object):
             #   stale, we would do this:
             # games.delete(game_id=game_id)
 
-
-
     def __get_player(self, player_name):
         ptable = self.db['players']
         player = ptable.find_one(name=player_name)
@@ -184,51 +182,6 @@ class Connection(object):
         api_assert(room, 409,
                    log_message="No room {} exists".format(room_name))
         return rtable, room
-
-    def join_room(self, room_name, password, player_name):
-        """Join room `room_name`
-
-        Updates `current_players` entry for room `room_name` with
-        player `player_name` to the database.
-
-        :raises APIError: If a room with `room_name` does not exist;
-            or if the password is incorrect for room `room_name`, or if player
-            `player_name` does not exist
-        """
-        rtable = self.db['rooms']
-        room = rtable.find_one(name=room_name)
-        api_assert(room, 409,
-                   log_message="No room {} exists".format(room_name))
-        api_assert(password == room['password'], 403,
-                   log_message="Bad password for room `{}`.".format(room_name))
-
-        ptable, player = self._get_player(player_name)
-
-        api_assert(
-            player_name not in listify_string(str, room['current_players']),
-            409,
-            log_message="Player `{}` already in room `{}`".format(
-                player_name, room_name)
-        )
-
-        rtable.update(
-            {
-                "name": room_name,
-                "current_players": stringify_list(
-                    listify_string(str, room['current_players']) +
-                    [player_name]
-                )
-            },
-            ['name']
-        )
-
-        ptable.update(
-            {
-                "name": player_name,
-                "current_room": room_name
-            },
-            ['name']
-        )
 
     def delete_room(self, player_name):
         ptable, player = self._get_player(player_name)
