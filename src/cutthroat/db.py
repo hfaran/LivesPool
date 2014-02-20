@@ -33,23 +33,6 @@ class Connection(object):
     def __init__(self, db_path):
         self.db = dataset.connect('sqlite:///{}'.format(db_path))
 
-    def get_balls_for_player(self, player_name):
-        """
-        :returns: Balls belonging to player `player_name`
-        :rtype: [int, ...]
-        """
-        table = self.db['players']
-        return listify_string(int, table.find_one(name=player_name)['balls'])
-
-    def remove_ball_for_player(self, player_name, ball):
-        """Remove `ball` from `player_name`'s active list of balls"""
-        balls = self.get_balls_for_player(player_name)
-        balls.remove(ball)
-
-        table = self.db['players']
-        table.update(dict(name=player_name, balls=stringify_list(balls)),
-                     ['name'])
-
     def remove_ball_from_unclaimed(self, game_id, ball):
         """Remove `ball` from `game_id`'s list of unclaimed_balls"""
         table = self.db['games']

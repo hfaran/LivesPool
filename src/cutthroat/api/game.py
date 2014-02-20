@@ -220,9 +220,10 @@ POST the required parameters to register the pocketing/unpocketing of a ball
             return res
 
         # Otherwise, sink the ball
-        for p in Game(self.db_conn.db, "game_id", game_id)["players"]:
-            if ball in self.db_conn.get_balls_for_player(p):
-                self.db_conn.remove_ball_for_player(p, ball)
+        for pname in Game(self.db_conn.db, "game_id", game_id)["players"]:
+            p = get_player(self.db_conn.db, pname)
+            if ball in p["balls"]:
+                p["balls"] = list(set(p["balls"]) - {ball})
                 break
         else:
             self.db_conn.remove_ball_from_unclaimed(game_id, ball)
