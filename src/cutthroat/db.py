@@ -224,12 +224,6 @@ class Connection(object):
         player_room = player["current_room"]
         return player_room if player_room else None
 
-    def get_owned_room(self, player_name):
-        """:returns: name of room owned by `player_name` else None"""
-        rtable = self.db['rooms']
-        room = rtable.find_one(owner=player_name)
-        return room["name"] if room else None
-
     def get_players_in_room(self, room_name):
         """
         :returns: Players participating in game `game_id`

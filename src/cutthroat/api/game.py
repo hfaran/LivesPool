@@ -6,6 +6,7 @@ from tornado_json.utils import io_schema, api_assert
 
 from cutthroat.handlers import APIHandler
 from cutthroat.db2 import Player, Room, Game, NotFoundError
+from cutthroat.common import get_player, get_room
 
 
 TOTAL_NUM_BALLS = 15
@@ -52,7 +53,8 @@ POST the required parameter to create a new game; only the owner of a room can m
         """POST RequestHandler"""
         game_id = uuid.uuid4().hex
         gamemaster = self.get_current_user()
-        room_name = self.db_conn.get_owned_room(gamemaster)
+        player = get_player(self.db_conn.db, gamemaster)
+        room_name = player["current_room"]
 
         api_assert(room_name, 403,
                    log_message="You must own a room to create a game.")
