@@ -55,11 +55,11 @@ POST the required parameter to create a new game; only the owner of a room can m
         gamemaster = self.get_current_user()
         player = get_player(self.db_conn.db, gamemaster)
         room_name = player["current_room"]
-
         api_assert(room_name, 403,
                    log_message="You must own a room to create a game.")
+        room = get_room(self.db_conn.db, room_name)
 
-        player_names = self.db_conn.get_players_in_room(room_name)
+        player_names = room["current_players"]
         nplayers = len(player_names)
         nbpp = self.body["nbpp"]
 

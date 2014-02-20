@@ -223,12 +223,3 @@ class Connection(object):
         ptable, player = self._get_player(player_name)
         player_room = player["current_room"]
         return player_room if player_room else None
-
-    def get_players_in_room(self, room_name):
-        """
-        :returns: Players participating in game `game_id`
-        :rtype: [str, ...]
-        """
-        rtable, room = self._get_room(room_name)
-        players = listify_string(str, room['current_players'])
-        return players
