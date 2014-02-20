@@ -17,13 +17,6 @@ def generate_balls(num):
     return map(lambda x: x + 1, range(num))
 
 
-def balls_sunk(cls, game_id):
-    return list(
-        set(generate_balls(TOTAL_NUM_BALLS)) - set(
-            cls.db_conn.get_balls_on_table(game_id))
-    )
-
-
 class CreateGame(APIHandler):
     apid = {}
     apid["post"] = {

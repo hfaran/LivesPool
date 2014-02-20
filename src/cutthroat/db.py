@@ -1,30 +1,6 @@
 import logging
 import dataset
 
-from tornado_json.utils import api_assert
-
-
-def stringify_list(l):
-    """Stringify list `l`
-
-    :returns: A comma-joined string rep of `l`
-    :rtype: str
-    """
-    return ",".join(map(str, l))
-
-
-def listify_string(func, s):
-    """'Decode' `s` into a list
-
-    :returns: A list of elements from a comma-split of s each wrapped
-        with func
-    :rtype: list
-    """
-    if not s:
-        return []
-    else:
-        return map(func, s.split(","))
-
 
 class Connection(object):
 
@@ -60,36 +36,3 @@ class Connection(object):
             # If we wanted to delete games instead of simply marking them
             #   stale, we would do this:
             # games.delete(game_id=game_id)
-
-    def __get_player(self, player_name):
-        ptable = self.db['players']
-        player = ptable.find_one(name=player_name)
-        return ptable, player
-
-    def _get_player(self, player_name):
-        ptable, player = self.__get_player(player_name)
-        api_assert(player, 409,
-                   log_message="No user {} exists.".format(player_name))
-        return ptable, player
-
-    def __get_room(self, room_name):
-        rtable = self.db['rooms']
-        room = rtable.find_one(name=room_name)
-        return rtable, room
-
-    def _get_room(self, room_name):
-        rtable, room = self.__get_room(room_name)
-        api_assert(room, 409,
-                   log_message="No room {} exists".format(room_name))
-        return rtable, room
-
-    def get_player_room(self, player_name):
-        """:returns: Name of the room `player_name` is in, or None"""
-        # rtable = self.db['rooms']
-        # for room in rtable.all():
-        #     if player_name in listify_string(str, room['current_players']):
-        #         return room["name"]
-        # return None
-        ptable, player = self._get_player(player_name)
-        player_room = player["current_room"]
-        return player_room if player_room else None
