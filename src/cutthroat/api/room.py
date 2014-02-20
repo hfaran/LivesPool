@@ -179,7 +179,12 @@ GET to receive list of rooms
     @io_schema
     @authenticated
     def get(self):
-        return self.db_conn.list_rooms()
+        return [
+            {
+                "name": r["name"],
+                "pwd_req": bool(r["password"])
+            } for r in self.db_conn.db['rooms'].all()
+        ]
 
 
 class ListPlayers(APIHandler):

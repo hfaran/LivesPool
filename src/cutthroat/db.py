@@ -224,19 +224,6 @@ class Connection(object):
         player_room = player["current_room"]
         return player_room if player_room else None
 
-    def list_rooms(self):
-        """List rooms
-
-        :returns: List of all created rooms
-        :rtype: list
-        """
-        return [
-            {
-                "name": r["name"],
-                "pwd_req": bool(r["password"])
-            } for r in self.db['rooms'].all()
-        ]
-
     def get_owned_room(self, player_name):
         """:returns: name of room owned by `player_name` else None"""
         rtable = self.db['rooms']
