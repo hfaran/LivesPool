@@ -7,6 +7,25 @@
 <script type="text/javascript" src="{{ static_url("joinaroom.js") }}"></script>
 {% end %}
 
+{% block modal_dialog %}
+<div id="join_room_dialog" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 id ="room_title" class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <p>Join room?</p>
+            </div>
+            <div class="modal-footer">
+                <button id="join">Join</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% end %}
+
 {% block body %}
 
 <div id="room_container" style="max-width: 200px; margin: auto; padding-top: 10px;">
