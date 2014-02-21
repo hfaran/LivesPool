@@ -45,7 +45,7 @@ GET to check if authenticated. Should be obvious from status code (403 vs. 200).
 
     @io_schema
     def post(self):
-        db = self.db_conn.db
+        db = self.db_conn
 
         player_name = self.body["username"]
         password = self.body["password"]
@@ -108,5 +108,6 @@ DELETE to clear cookie for current user.
         #  logout which occurs by closing the window. In some ways,
         #  that's a much better way to log out that to have an explicit
         #  button anyways.
+        # UPDATE: Works in browser.
         self.clear_cookie("user")
         return "Logout was successful."

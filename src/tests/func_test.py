@@ -5,7 +5,6 @@ from tornado.testing import AsyncHTTPSTestCase
 from tornado_json.application import Application
 
 from cutthroat import routes as mod_routes
-from cutthroat import db
 from cutthroat import db2
 from cutthroat import ctconfig
 
@@ -22,15 +21,14 @@ class APIFunctionalTest(AsyncHTTPSTestCase):
 
     def get_app(self):
         ctconfig.define_options()
-        db_conn = db.Connection("cutthroat_test.db")
-        self.db = db_conn.db
+        self.db = db2.Connection("cutthroat_test.db").db
         settings = dict(
             cookie_secret="I am a secret cookie.",
         )
         return Application(
             routes=mod_routes.assemble_routes(),
             settings=settings,
-            db_conn=db_conn
+            db_conn=self.db
         )
 
     def _sign_up(self, username, password):

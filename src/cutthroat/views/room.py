@@ -29,7 +29,7 @@ class Lobby(ViewHandler):
     @authenticated
     def get(self):
         player_name = self.get_current_user()
-        player = Player(self.db_conn.db, "name", player_name)
+        player = Player(self.db_conn, "name", player_name)
         self.render("roomlobby.html", room_name=player["current_room"])
 
 class Game(ViewHandler):

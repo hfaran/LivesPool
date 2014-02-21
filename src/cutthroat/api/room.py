@@ -97,17 +97,17 @@ POST the required parameters to create a new room
     @io_schema
     def post(self):
         # player must not already be in a room
-        assert_non_tenant(self.db_conn.db, self.get_current_user())
+        assert_non_tenant(self.db_conn, self.get_current_user())
 
         create_room(
-            self.db_conn.db,
+            self.db_conn,
             room_name=self.body["roomname"],
             password=self.body.get("password") if self.body.get(
                 "password") else "",
             owner=self.get_current_user()
         )
         join_room(
-            db=self.db_conn.db,
+            db=self.db_conn,
             room_name=self.body["roomname"],
             password=self.body.get("password") if self.body.get(
                 "password") else "",
@@ -145,10 +145,10 @@ POST the required parameters to create a new room
     @io_schema
     def post(self):
         # player must not already be in a room
-        assert_non_tenant(self.db_conn.db, self.get_current_user())
+        assert_non_tenant(self.db_conn, self.get_current_user())
 
         join_room(
-            db=self.db_conn.db,
+            db=self.db_conn,
             room_name=self.body["name"],
             password=self.body.get("password") if self.body.get(
                 "password") else "",
@@ -183,7 +183,7 @@ GET to receive list of rooms
             {
                 "name": r["name"],
                 "pwd_req": bool(r["password"])
-            } for r in self.db_conn.db['rooms'].all()
+            } for r in self.db_conn['rooms'].all()
         ]
 
 
@@ -217,7 +217,7 @@ GET to receive list of players in current room
     @authenticated
     @io_schema
     def get(self):
-        db = self.db_conn.db
+        db = self.db_conn
 
         # Get player
         player_name = self.get_current_user()
@@ -252,7 +252,7 @@ DELETE to leave current room. If the room owner leaves, the room will be deleted
     @authenticated
     @io_schema
     def delete(self):
-        db = self.db_conn.db
+        db = self.db_conn
 
         player_name = self.get_current_user()
         player = Player(db, "name", player_name)

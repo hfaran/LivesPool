@@ -40,3 +40,6 @@ def get_balls_on_table(db, game_id):
     return list(
         chain(*[get_player(db, p)["balls"] for p in players])
     ) + unclaimed_balls
+
+
+# Periodic Callbacks ###################################################

@@ -19,7 +19,7 @@ class Landing(ViewHandler):
 
     @authenticated
     def get(self):
-        player = get_player(self.db_conn.db, self.get_current_user())
+        player = get_player(self.db_conn, self.get_current_user())
         if player["current_game_id"]:
             self.redirect("/room/game")
         elif player["current_room"]:

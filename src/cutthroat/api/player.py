@@ -49,11 +49,11 @@ GET to retrieve player info
         player_name = self.body["username"]
         password = self.body["password"]
         # Create player
-        player_exists = self.db_conn.db['players'].find_one(name=player_name)
+        player_exists = self.db_conn['players'].find_one(name=player_name)
         api_assert(not player_exists, 409,
                    log_message="{} is already registered.".format(player_name))
         salt = bcrypt.gensalt(rounds=12)
-        self.db_conn.db['players'].insert(
+        self.db_conn['players'].insert(
             {
                 "name": player_name,
                 "current_game_id": "",
@@ -78,7 +78,7 @@ GET to retrieve player info
         player_name = self.get_current_user()
 
         try:
-            player = db2_Player(self.db_conn.db, "name", player_name)
+            player = db2_Player(self.db_conn, "name", player_name)
         except NotFoundError:
             raise APIError(
                 409,

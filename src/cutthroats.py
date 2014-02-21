@@ -16,7 +16,7 @@ from tornado.options import options
 from tornado_json.application import Application
 
 import cutthroat
-from cutthroat import db
+from cutthroat import db2
 from cutthroat import ctconfig
 from cutthroat import routes as mod_routes
 
@@ -96,7 +96,7 @@ def main():
         Application(
             routes=routes,
             settings=settings,
-            db_conn=db.Connection(options.sqlite_db),
+            db_conn=db2.Connection(options.sqlite_db).db,
         )
     )
 
@@ -104,11 +104,6 @@ def main():
 
     signal.signal(signal.SIGTERM, sig_handler)
     signal.signal(signal.SIGINT, sig_handler)
-
-    # Add periodic callback to mark stale games every minute
-    p = tornado.ioloop.PeriodicCallback(
-        http_server.request_callback.db_conn.mark_stale_games, 60000)
-    p.start()
 
     print("Welcome to cutthroat-server")
     tornado.ioloop.IOLoop.instance().start()

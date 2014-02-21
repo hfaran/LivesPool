@@ -1,3 +1,4 @@
+import dataset
 import logging
 from collections import MutableMapping
 
@@ -32,6 +33,12 @@ class NotFoundError(Exception):
 class IllegalDeleteError(Exception):
 
     """IllegalDeleteError"""
+
+
+class Connection(object):
+
+    def __init__(self, db_path):
+        self.db = dataset.connect('sqlite:///{}'.format(db_path))
 
 
 class DBObjectMapping(MutableMapping):

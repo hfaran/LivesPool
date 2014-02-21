@@ -46,9 +46,9 @@ POST the required parameter to create a new game; only the owner of a room can m
         """POST RequestHandler"""
         game_id = uuid.uuid4().hex
         gamemaster = self.get_current_user()
-        player = get_player(self.db_conn.db, gamemaster)
+        player = get_player(self.db_conn, gamemaster)
         room_name = player["current_room"]
-        room = get_room(self.db_conn.db, room_name)
+        room = get_room(self.db_conn, room_name)
         api_assert(room["owner"] == gamemaster, 403,
                    log_message="You must own a room to create a game.")
 
@@ -79,23 +79,24 @@ POST the required parameter to create a new game; only the owner of a room can m
         unclaimed_balls = balls[:]
 
         # Create game, then delete the room
-        self.db_conn.db["games"].insert(
+        self.db_conn["games"].insert(
             {
                 "game_id": game_id,
                 "players": stringify_list(players.keys()),
+                "orig_players": stringify_list(players.keys()),
                 "unclaimed_balls": stringify_list(unclaimed_balls),
                 "orig_unclaimed_balls": stringify_list(unclaimed_balls),
                 "gamemaster": gamemaster,
-                "status": "active"
+                "winner": None
             }
         )
         for name, balls in players.iteritems():
-            p = get_player(self.db_conn.db, name)
+            p = get_player(self.db_conn, name)
             p["current_game_id"] = game_id
             p["balls"] = balls
             p["orig_balls"] = balls
             p["current_room"] = None
-        self.db_conn.db["rooms"].delete(name=room_name)
+        self.db_conn["rooms"].delete(name=room_name)
 
         return {"game_id": game_id}
 
@@ -120,7 +121,7 @@ DELETE to remove yourself from current game
     @io_schema
     def delete(self):
         # Shorthand since we need to reference this multiple times
-        db = self.db_conn.db
+        db = self.db_conn
 
         # Get player and the game_id he's in
         player_name = self.get_current_user()
@@ -182,12 +183,12 @@ POST the required parameters to register the pocketing/unpocketing of a ball
     @authenticated
     @io_schema
     def post(self):
-        db = self.db_conn.db
+        db = self.db_conn
 
         gamemaster = self.get_current_user()
         ball = self.body['ball']
-        game_id = get_player(self.db_conn.db, gamemaster)["current_game_id"]
-        game = Game(self.db_conn.db, "game_id", game_id)
+        game_id = get_player(self.db_conn, gamemaster)["current_game_id"]
+        game = Game(self.db_conn, "game_id", game_id)
 
         res = {"game_id": game_id}
 
@@ -199,7 +200,7 @@ POST the required parameters to register the pocketing/unpocketing of a ball
         )
 
         # If ball is already sunk, retable it
-        if ball not in get_balls_on_table(self.db_conn.db, game_id):
+        if ball not in get_balls_on_table(self.db_conn, game_id):
             game = Game(db, "game_id", game_id)
             if ball in game["orig_unclaimed_balls"]:
                 game["unclaimed_balls"] = game["unclaimed_balls"] + [ball]
@@ -213,14 +214,14 @@ POST the required parameters to register the pocketing/unpocketing of a ball
             return res
 
         # Otherwise, sink the ball
-        for pname in Game(self.db_conn.db, "game_id", game_id)["players"]:
-            p = get_player(self.db_conn.db, pname)
+        for pname in Game(self.db_conn, "game_id", game_id)["players"]:
+            p = get_player(self.db_conn, pname)
             if ball in p["balls"]:
                 p["balls"] = list(set(p["balls"]) - {ball})
                 break
         else:
             # Remove ball from unclaimed
-            g = Game(self.db_conn.db, "game_id", game_id)
+            g = Game(self.db_conn, "game_id", game_id)
             uballs = list(game["unclaimed_balls"])
             uballs.remove(ball)
             game["unclaimed_balls"] = uballs
@@ -250,7 +251,7 @@ GET to receive list of balls on the table in current game
     @authenticated
     @io_schema
     def get(self):
-        db = self.db_conn.db
+        db = self.db_conn
 
         player_name = self.get_current_user()
         player = Player(db, "name", player_name)
@@ -291,7 +292,7 @@ GET to receive list of players in current game
     @authenticated
     @io_schema
     def get(self):
-        db = self.db_conn.db
+        db = self.db_conn
 
         player_name = self.get_current_user()
         player = Player(db, "name", player_name)
