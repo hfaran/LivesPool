@@ -22,6 +22,7 @@ class Create(ViewHandler):
     def get(self):
         self.render("createaroom.html")
 
+
 class Lobby(ViewHandler):
 
     """Lobby"""
@@ -32,6 +33,7 @@ class Lobby(ViewHandler):
         player = Player(self.db_conn, "name", player_name)
         self.render("roomlobby.html", room_name=player["current_room"])
 
+
 class Game(ViewHandler):
 
     """Game"""
@@ -39,4 +41,3 @@ class Game(ViewHandler):
     @authenticated
     def get(self):
         self.render("game.html")
-
