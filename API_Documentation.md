@@ -366,7 +366,24 @@ null
 ### Output Schema
 ```json
 {
-    "type": "object"
+    "type": "object", 
+    "properties": {
+        "current_room": {
+            "type": "string"
+        }, 
+        "orig_balls": {
+            "type": "array"
+        }, 
+        "current_game_id": {
+            "type": "string"
+        }, 
+        "name": {
+            "type": "string"
+        }, 
+        "balls": {
+            "type": "array"
+        }
+    }
 }
 ```
 

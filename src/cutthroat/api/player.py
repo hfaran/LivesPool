@@ -37,7 +37,14 @@ POST the required parameters to permanently register a new player
     apid["get"] = {
         "input_schema": None,
         "output_schema": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+                "name": {"type": "string"},
+                "current_game_id": {"type": "string"},
+                "current_room": {"type": "string"},
+                "balls": {"type": "array"},
+                "orig_balls": {"type": "array"},
+            }
         },
         "doc": """
 GET to retrieve player info
@@ -89,4 +96,8 @@ GET to retrieve player info
         res.pop("password")  # Redact password
         res.pop("salt")  # Redact salt
         res.pop("id")  # Players don't care about this
+        # Make the following strings b/c the schema expects strings
+        for k in ["current_game_id", "current_room"]:
+            if not res[k]:
+                res[k] = ""
         return res
