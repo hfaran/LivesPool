@@ -5,3 +5,4 @@
 * Tournament Mode (or something similar)
 * Optionally registering with email to be able to restore your password etc.
 * Coroutines/Celery/explore asynchronous things
+* Back-end unittests (functional tests currently implemented are probably sufficient; however, these would be useful as an additional measure of stability)
