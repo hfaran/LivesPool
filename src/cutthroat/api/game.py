@@ -1,7 +1,6 @@
 import uuid
 from random import shuffle, choice
 from tornado.web import authenticated
-
 from tornado_json.utils import io_schema, api_assert, APIError
 
 from cutthroat.handlers import APIHandler
