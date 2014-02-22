@@ -1,13 +1,11 @@
 import bcrypt
-import logging
 
 from tornado.options import options
 from tornado.web import authenticated
-from tornado_json.utils import io_schema, api_assert, APIError
+from tornado_json.utils import io_schema, api_assert
 
 from cutthroat.handlers import APIHandler
-from cutthroat.db2 import NotFoundError
-from cutthroat.db2 import Player as db2_Player
+from cutthroat.common import get_player
 
 
 class Player(APIHandler):
@@ -55,10 +53,11 @@ GET to retrieve player info
     def post(self):
         player_name = self.body["username"]
         password = self.body["password"]
-        # Create player
+        # Check if a player with the given name already exists
         player_exists = self.db_conn['players'].find_one(name=player_name)
         api_assert(not player_exists, 409,
                    log_message="{} is already registered.".format(player_name))
+        # Create a new user/write to DB
         salt = bcrypt.gensalt(rounds=12)
         self.db_conn['players'].insert(
             {
@@ -71,7 +70,7 @@ GET to retrieve player info
                 "games_won": ""
             }
         )
-
+        # We also do the step of logging the player in after registration
         self.set_secure_cookie(
             "user",
             player_name,
@@ -84,14 +83,7 @@ GET to retrieve player info
     @io_schema
     def get(self):
         player_name = self.get_current_user()
-
-        try:
-            player = db2_Player(self.db_conn, "name", player_name)
-        except NotFoundError:
-            raise APIError(
-                409,
-                log_message="No user {} exists.".format(player_name)
-            )
+        player = get_player(self.db_conn, player_name)
 
         res = dict(player)
         res.pop("password")  # Redact password
