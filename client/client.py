@@ -169,6 +169,15 @@ class CutthroatAPI(object):
             self.game = None
         return r.json()
 
+    def end_game(self):
+        r = requests.delete(
+            self.base_url + "/api/game/endgame",
+            cookies=self.cookies
+        )
+        if r.status_code == 200:
+            self.game = None
+        return r.json()
+
     def toggle_ball(self, ball=None):
         if ball is None:
             ball = int(raw_input("Which ball to toggle? "))

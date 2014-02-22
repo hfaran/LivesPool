@@ -126,10 +126,12 @@ class Player(DBObjectMapping):
     def r_transform(self, key, value):
         if key in ["balls", "orig_balls"]:
             value = listify_string(int, value)
+        elif key in ["games_won"]:
+            value = listify_string(str, value)
         return value
 
     def w_transform(self, key, value):
-        if key in ["balls", "orig_balls"]:
+        if key in ["balls", "orig_balls", "games_won"]:
             value = stringify_list(value)
         return value
 

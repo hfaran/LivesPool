@@ -138,6 +138,37 @@ POST the required parameter to create a new game; only the owner of a room can m
 
 
 
+# `/api/game/endgame`
+
+    Content-Type: application/json
+
+## DELETE
+### Input Schema
+```json
+null
+```
+
+### Output Schema
+```json
+{
+    "type": "string"
+}
+```
+
+### Output Example
+```json
+"Game 12345678910 was completed; Guy was the winner."
+```
+
+
+
+DELETE to end the game; this endpoint should only be triggered if GameState indicates there is a winner.
+
+
+
+
+
+
 # `/api/game/gamestate`
 
     Content-Type: application/json

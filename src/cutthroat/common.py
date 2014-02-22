@@ -51,4 +51,25 @@ def get_balls_on_table(db, game_id):
     ) + unclaimed_balls
 
 
+def get_game_winner(db, game_id):
+    """Get winner of game ``game_id``
+
+    :returns: Game winner if there is one otherwise empty string
+    :rtype: str
+    """
+    game = get_game(db, game_id)
+    players_with_balls = []
+    for pname in game["players"]:
+        p = get_player(db, pname)
+        if p["balls"]:
+            players_with_balls.append(pname)
+        if len(players_with_balls) > 1:
+            winner = ""
+            break
+    else:
+        winner = players_with_balls[0]
+
+    return winner
+
+
 # Periodic Callbacks ###################################################
