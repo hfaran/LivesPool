@@ -6,7 +6,9 @@ from tornado_json.utils import io_schema, api_assert
 
 from cutthroat.handlers import APIHandler
 from cutthroat.db2 import Player, Room, Game, NotFoundError, stringify_list
-from cutthroat.common import get_player, get_room, get_balls_on_table
+from cutthroat.common import (
+    get_player, get_room, get_balls_on_table, get_game
+)
 
 
 TOTAL_NUM_BALLS = 15
@@ -203,7 +205,7 @@ POST the required parameters to register the pocketing/unpocketing of a ball
         if ball not in get_balls_on_table(self.db_conn, game_id):
             game = Game(db, "game_id", game_id)
             if ball in game["orig_unclaimed_balls"]:
-                game["unclaimed_balls"] = game["unclaimed_balls"] + [ball]
+                game["unclaimed_balls"] += [ball]
             else:
                 for pname in game["players"]:
                     p = Player(db, "name", pname)
@@ -230,21 +232,29 @@ POST the required parameters to register the pocketing/unpocketing of a ball
         return res
 
 
-class BallsOnTable(APIHandler):
+class GameState(APIHandler):
 
-    """Balls on table for current game"""
+    """State of the current game"""
 
     apid = {}
     apid["get"] = {
         "input_schema": None,
         "output_schema": {
-            "type": "array",
+            "type": "object",
+            "properties": {
+                "balls_on_table": {"type": "array"},
+                "winner": {"type": "string"},
+            },
         },
-        "output_example": [
-            2, 5, 9, 6
-        ],
+        "output_example": {
+            "winner": "Guy",
+            "balls_on_table": [2, 5, 9, 6],
+        },
         "doc": """
-GET to receive list of balls on the table in current game
+GET to receive state of current_game
+
+`winner`: Potential winner of the game, or empty string
+`balls_on_table`: Array of balls still on the table
 """
     }
 
@@ -259,7 +269,22 @@ GET to receive list of balls on the table in current game
         api_assert(game_id, 400, log_message="You are not currently in"
                    " a game.")
 
-        return get_balls_on_table(db, game_id)
+        res = {}
+        res["balls_on_table"] = get_balls_on_table(db, game_id)
+
+        game = get_game(self.db_conn, game_id)
+        players_with_balls = []
+        for pname in game["players"]:
+            p = get_player(self.db_conn, pname)
+            if p["balls"]:
+                players_with_balls.append(pname)
+            if len(players_with_balls) > 1:
+                res["winner"] = ""
+                break
+        else:
+            res["winner"] = players_with_balls[0]
+
+        return res
 
 
 class ListPlayers(APIHandler):

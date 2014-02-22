@@ -12,7 +12,6 @@ def get_player(db, player_name):
             409,
             log_message="No user {} exists.".format(player_name)
         )
-
     return player
 
 
@@ -24,8 +23,18 @@ def get_room(db, room_name):
             409,
             log_message="No room {} exists.".format(room_name)
         )
-
     return room
+
+
+def get_game(db, game_id):
+    try:
+        game = Game(db, "game_id", game_id)
+    except NotFoundError:
+        raise APIError(
+            409,
+            log_message="No game with game_id {} exists.".format(game_id)
+        )
+    return game
 
 
 def get_balls_on_table(db, game_id):
