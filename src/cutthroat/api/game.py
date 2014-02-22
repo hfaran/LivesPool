@@ -67,6 +67,7 @@ POST the required parameter to create a new game; only the owner of a room can m
                                 "everyone.")
                    )
 
+        # Create set of 15 balls, shuffle, and then match to players
         balls = generate_balls(TOTAL_NUM_BALLS)
         shuffle(balls)
 
@@ -80,7 +81,7 @@ POST the required parameter to create a new game; only the owner of a room can m
 
         unclaimed_balls = balls[:]
 
-        # Create game, then delete the room
+        # Create game
         self.db_conn["games"].insert(
             {
                 "game_id": game_id,
@@ -92,12 +93,14 @@ POST the required parameter to create a new game; only the owner of a room can m
                 "winner": None
             }
         )
+        # Assign each player their set of balls, set game, leave room
         for name, balls in players.iteritems():
             p = get_player(self.db_conn, name)
             p["current_game_id"] = game_id
             p["balls"] = balls
             p["orig_balls"] = balls
             p["current_room"] = None
+        # The room can be deleted
         self.db_conn["rooms"].delete(name=room_name)
 
         return {"game_id": game_id}
@@ -122,18 +125,15 @@ DELETE to remove yourself from current game
     @authenticated
     @io_schema
     def delete(self):
-        # Shorthand since we need to reference this multiple times
-        db = self.db_conn
-
         # Get player and the game_id he's in
         player_name = self.get_current_user()
-        player = Player(db, "name", player_name)
+        player = Player(self.db_conn, "name", player_name)
         game_id = player["current_game_id"]
         api_assert(game_id, 409,
                    log_message="You are not currently in a game.")
 
         # Get game
-        game = Game(db, "game_id", game_id)
+        game = Game(self.db_conn, "game_id", game_id)
 
         # Get remaining set of players
         rem_players = list(set(game["players"]) - {player_name})
@@ -148,7 +148,7 @@ DELETE to remove yourself from current game
         # Set remaining players in game and add players' balls to game's
         #   unclaimed set
         game["players"] = rem_players
-        game["unclaimed_balls"] = game["unclaimed_balls"] + player["balls"]
+        game["unclaimed_balls"] += player["balls"]
 
         # Set the player's game_id to None and his list of balls to empty
         player["current_game_id"] = None
@@ -185,8 +185,6 @@ POST the required parameters to register the pocketing/unpocketing of a ball
     @authenticated
     @io_schema
     def post(self):
-        db = self.db_conn
-
         gamemaster = self.get_current_user()
         ball = self.body['ball']
         game_id = get_player(self.db_conn, gamemaster)["current_game_id"]
@@ -203,19 +201,22 @@ POST the required parameters to register the pocketing/unpocketing of a ball
 
         # If ball is already sunk, retable it
         if ball not in get_balls_on_table(self.db_conn, game_id):
-            game = Game(db, "game_id", game_id)
+            game = Game(self.db_conn, "game_id", game_id)
+            # Look for ball in game's set of unclaimed balls
             if ball in game["orig_unclaimed_balls"]:
                 game["unclaimed_balls"] += [ball]
+            # If it's not there, look for it from each player's set
             else:
                 for pname in game["players"]:
-                    p = Player(db, "name", pname)
+                    p = Player(self.db_conn, "name", pname)
                     if ball in p["orig_balls"]:
-                        p["balls"] = p["balls"] + [ball]
+                        p["balls"] += [ball]
                         break
             res['message'] = "Ball {} was retabled.".format(ball)
             return res
 
         # Otherwise, sink the ball
+        # Look for it in players' first
         for pname in Game(self.db_conn, "game_id", game_id)["players"]:
             p = get_player(self.db_conn, pname)
             if ball in p["balls"]:
@@ -261,17 +262,14 @@ GET to receive state of current_game
     @authenticated
     @io_schema
     def get(self):
-        db = self.db_conn
-
         player_name = self.get_current_user()
-        player = Player(db, "name", player_name)
+        player = Player(self.db_conn, "name", player_name)
         game_id = player["current_game_id"]
         api_assert(game_id, 400, log_message="You are not currently in"
                    " a game.")
 
         res = {}
-        res["balls_on_table"] = get_balls_on_table(db, game_id)
-
+        res["balls_on_table"] = get_balls_on_table(self.db_conn, game_id)
         res["winner"] = get_game_winner(self.db_conn, game_id)
 
         return res
@@ -307,15 +305,13 @@ GET to receive list of players in current game
     @authenticated
     @io_schema
     def get(self):
-        db = self.db_conn
-
         player_name = self.get_current_user()
-        player = Player(db, "name", player_name)
+        player = Player(self.db_conn, "name", player_name)
         game_id = player["current_game_id"]
         api_assert(game_id, 400, log_message="You are not currently in"
                    " a game.")
 
-        game = Game(db, "game_id", game_id)
+        game = Game(self.db_conn, "game_id", game_id)
         return {
             "players": game["players"],
             "gamemaster": game["gamemaster"]
@@ -355,12 +351,15 @@ DELETE to end the game; this endpoint should only be triggered if GameState indi
 
         winner = get_game_winner(self.db_conn, game_id)
 
+        # If there is no current winner, return an error
         if not winner:
             raise APIError(
                 409,
                 log_message="The game currently has no winner."
             )
+        # Otherwise, clean up everything
         else:
+            # Record the win for the player who won
             player["games_won"] += [game_id]
             game["winner"] = player_name
             # Remove all players from game
@@ -369,6 +368,7 @@ DELETE to end the game; this endpoint should only be triggered if GameState indi
                 p["current_game_id"] = None
                 p["balls"] = []
                 p["orig_balls"] = []
+            # Clear the game's "current" attributes
             game["players"] = []
             game["gamemaster"] = None
 
