@@ -67,7 +67,8 @@ GET to retrieve player info
                 "current_room": "",
                 "balls": "",
                 "salt": salt,
-                "password": bcrypt.hashpw(str(password), salt)
+                "password": bcrypt.hashpw(str(password), salt),
+                "games_won": ""
             }
         )
 

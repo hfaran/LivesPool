@@ -8,6 +8,14 @@
         "{\"py/type\": \"cutthroat.api.auth.Logout\"}"
     ], 
     [
+        "/api/game/listplayers", 
+        "{\"py/type\": \"cutthroat.api.game.ListPlayers\"}"
+    ], 
+    [
+        "/api/game/leavegame", 
+        "{\"py/type\": \"cutthroat.api.game.LeaveGame\"}"
+    ], 
+    [
         "/api/game/creategame", 
         "{\"py/type\": \"cutthroat.api.game.CreateGame\"}"
     ], 
@@ -20,12 +28,8 @@
         "{\"py/type\": \"cutthroat.api.game.GameState\"}"
     ], 
     [
-        "/api/game/listplayers", 
-        "{\"py/type\": \"cutthroat.api.game.ListPlayers\"}"
-    ], 
-    [
-        "/api/game/leavegame", 
-        "{\"py/type\": \"cutthroat.api.game.LeaveGame\"}"
+        "/api/game/endgame", 
+        "{\"py/type\": \"cutthroat.api.game.EndGame\"}"
     ], 
     [
         "/api/player/player", 

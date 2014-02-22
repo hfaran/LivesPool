@@ -149,6 +149,13 @@ class APIFunctionalTest(AsyncHTTPSTestCase):
             headers={"Cookie": cookies}
         )
 
+    def _end_game(self, cookies):
+        return self.fetch(
+            "/api/game/endgame",
+            method="DELETE",
+            headers={"Cookie": cookies}
+        )
+
     def sign_up(self, username, password):
         r = self._sign_up(username, password)
         self.assertEqual(r.code, 200)
@@ -327,6 +334,9 @@ class APIFunctionalTest(AsyncHTTPSTestCase):
         gamma_balls.remove(unc_ball)
         r = self._toggle_ball(cookies["alpha"], unc_ball)
         self.assertEqual(r.code, 200)
+        # Try to end game when there is no winner
+        r = self._end_game(cookies["alpha"])
+        self.assertEqual(r.code, 409)
         # Gamemaster leave game
         p = db2.Player(self.db, "name", "alpha")
         alpha_balls = list(p["balls"])
@@ -343,7 +353,10 @@ class APIFunctionalTest(AsyncHTTPSTestCase):
             jl(r.body)["data"]["winner"],
             "beta"
         )
-        # Last player in game, leave
-        r = self._leave_game(cookies["beta"])
+        # End game
+        r = self._end_game(cookies["beta"])
         self.assertEqual(r.code, 200)
         self.assertEqual(g["gamemaster"], None)
+        self.assertEqual(g["players"], [])
+        p = db2.Player(self.db, "name", "beta")
+        self.assertEqual(p["current_game_id"], None)

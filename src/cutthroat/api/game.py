@@ -2,12 +2,12 @@ import uuid
 from random import shuffle, choice
 from tornado.web import authenticated
 
-from tornado_json.utils import io_schema, api_assert
+from tornado_json.utils import io_schema, api_assert, APIError
 
 from cutthroat.handlers import APIHandler
-from cutthroat.db2 import Player, Room, Game, NotFoundError, stringify_list
+from cutthroat.db2 import Player, Game, stringify_list
 from cutthroat.common import (
-    get_player, get_room, get_balls_on_table, get_game
+    get_player, get_room, get_balls_on_table, get_game_winner, get_game
 )
 
 
@@ -272,17 +272,7 @@ GET to receive state of current_game
         res = {}
         res["balls_on_table"] = get_balls_on_table(db, game_id)
 
-        game = get_game(self.db_conn, game_id)
-        players_with_balls = []
-        for pname in game["players"]:
-            p = get_player(self.db_conn, pname)
-            if p["balls"]:
-                players_with_balls.append(pname)
-            if len(players_with_balls) > 1:
-                res["winner"] = ""
-                break
-        else:
-            res["winner"] = players_with_balls[0]
+        res["winner"] = get_game_winner(self.db_conn, game_id)
 
         return res
 
@@ -330,3 +320,58 @@ GET to receive list of players in current game
             "players": game["players"],
             "gamemaster": game["gamemaster"]
         }
+
+
+class EndGame(APIHandler):
+
+    """End the game"""
+
+    apid = {}
+    apid["delete"] = {
+        "input_schema": None,
+        "output_schema": {"type": "string"},
+        "output_example": "Game 12345678910 was completed; Guy was the winner.",
+        "doc": """
+DELETE to end the game; this endpoint should only be triggered if GameState indicates there is a winner.
+"""
+    }
+
+    @authenticated
+    @io_schema
+    def delete(self):
+        player_name = self.get_current_user()
+        player = Player(self.db_conn, "name", player_name)
+        game_id = player["current_game_id"]
+        api_assert(game_id, 400, log_message="You are not currently in"
+                   " a game.")
+        game = get_game(self.db_conn, game_id)
+
+        # Authenticate
+        api_assert(
+            game["gamemaster"] == player_name,
+            401,
+            log_message="You are not the gamemaster of the current game."
+        )
+
+        winner = get_game_winner(self.db_conn, game_id)
+
+        if not winner:
+            raise APIError(
+                409,
+                log_message="The game currently has no winner."
+            )
+        else:
+            player["games_won"] += [game_id]
+            game["winner"] = player_name
+            # Remove all players from game
+            for pname in game["players"]:
+                p = get_player(self.db_conn, pname)
+                p["current_game_id"] = None
+                p["balls"] = []
+                p["orig_balls"] = []
+            game["players"] = []
+            game["gamemaster"] = None
+
+            return "Game {} was completed; {} was the winner.".format(
+                game_id, player_name
+            )
