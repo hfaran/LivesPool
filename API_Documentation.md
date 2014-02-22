@@ -95,42 +95,6 @@ DELETE to clear cookie for current user.
 
 
 
-# `/api/game/ballsontable`
-
-    Content-Type: application/json
-
-## GET
-### Input Schema
-```json
-null
-```
-
-### Output Schema
-```json
-{
-    "type": "array"
-}
-```
-
-### Output Example
-```json
-[
-    2, 
-    5, 
-    9, 
-    6
-]
-```
-
-
-
-GET to receive list of balls on the table in current game
-
-
-
-
-
-
 # `/api/game/creategame`
 
     Content-Type: application/json
@@ -168,6 +132,56 @@ GET to receive list of balls on the table in current game
 POST the required parameter to create a new game; only the owner of a room can make this request
 
 * `nbpp`: Number of balls per player
+
+
+
+
+
+
+# `/api/game/gamestate`
+
+    Content-Type: application/json
+
+## GET
+### Input Schema
+```json
+null
+```
+
+### Output Schema
+```json
+{
+    "type": "object", 
+    "properties": {
+        "winner": {
+            "type": "string"
+        }, 
+        "balls_on_table": {
+            "type": "array"
+        }
+    }
+}
+```
+
+### Output Example
+```json
+{
+    "winner": "Guy", 
+    "balls_on_table": [
+        2, 
+        5, 
+        9, 
+        6
+    ]
+}
+```
+
+
+
+GET to receive state of current_game
+
+`winner`: Potential winner of the game, or empty string
+`balls_on_table`: Array of balls still on the table
 
 
 

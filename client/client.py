@@ -179,9 +179,9 @@ class CutthroatAPI(object):
         )
         return r.json()
 
-    def balls_on_table(self):
+    def game_state(self):
         r = requests.get(
-            self.base_url + "/api/game/ballsontable",
+            self.base_url + "/api/game/gamestate",
             cookies=self.cookies
         )
         return r.json()

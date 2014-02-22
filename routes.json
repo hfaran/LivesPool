@@ -16,8 +16,8 @@
         "{\"py/type\": \"cutthroat.api.game.ToggleBall\"}"
     ], 
     [
-        "/api/game/ballsontable", 
-        "{\"py/type\": \"cutthroat.api.game.BallsOnTable\"}"
+        "/api/game/gamestate", 
+        "{\"py/type\": \"cutthroat.api.game.GameState\"}"
     ], 
     [
         "/api/game/listplayers", 

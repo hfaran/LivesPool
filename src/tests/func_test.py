@@ -142,9 +142,9 @@ class APIFunctionalTest(AsyncHTTPSTestCase):
             headers={"Cookie": cookies}
         )
 
-    def _balls_on_table(self, cookies):
+    def _game_state(self, cookies):
         return self.fetch(
-            "/api/game/ballsontable",
+            "/api/game/gamestate",
             method="GET",
             headers={"Cookie": cookies}
         )
@@ -291,14 +291,18 @@ class APIFunctionalTest(AsyncHTTPSTestCase):
         self.assertEqual(r.code, 200)
 
         # Attempt to get balls on table when not in game
-        r = self._balls_on_table(cookies["delta"])
+        r = self._game_state(cookies["delta"])
         self.assertEqual(r.code, 400)
-        # Test balls on table
-        r = self._balls_on_table(cookies["beta"])
+        # Test game state(balls on table, no winner yet)
+        r = self._game_state(cookies["beta"])
         self.assertEqual(r.code, 200)
         self.assertEqual(
-            sorted(jl(r.body)["data"]),
+            sorted(jl(r.body)["data"]["balls_on_table"]),
             filter(lambda a: a not in [10], xrange(1, 16))
+        )
+        self.assertEqual(
+            jl(r.body)["data"]["winner"],
+            ""
         )
 
         # Attempt to leave game when not in a game
@@ -332,6 +336,13 @@ class APIFunctionalTest(AsyncHTTPSTestCase):
         self.assertFalse(p["current_game_id"])
         self.assertEqual(g["gamemaster"], "beta")
         self.assertEqual(g["unclaimed_balls"], gamma_balls + alpha_balls)
+        # Assert that last player in game is winner
+        r = self._game_state(cookies["beta"])
+        self.assertEqual(r.code, 200)
+        self.assertEqual(
+            jl(r.body)["data"]["winner"],
+            "beta"
+        )
         # Last player in game, leave
         r = self._leave_game(cookies["beta"])
         self.assertEqual(r.code, 200)
