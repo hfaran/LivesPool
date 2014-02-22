@@ -5,7 +5,7 @@ from tornado.web import authenticated
 from tornado_json.utils import io_schema, APIError
 
 from cutthroat.handlers import APIHandler
-from cutthroat.db2 import Player, NotFoundError
+from cutthroat.common import get_player
 
 
 class Login(APIHandler):
@@ -45,21 +45,15 @@ GET to check if authenticated. Should be obvious from status code (403 vs. 200).
 
     @io_schema
     def post(self):
-        db = self.db_conn
-
         player_name = self.body["username"]
         password = self.body["password"]
-        try:
-            player = Player(db, "name", player_name)
-        except NotFoundError:
-            raise APIError(
-                400,
-                log_message="No user {} exists.".format(player_name)
-            )
+        player = get_player(self.db_conn, player_name, err_code=400)
+
+        # Check if the given password hashed with the player's known
+        #   salt matches the stored password
         password_match = bcrypt.hashpw(
             str(password), str(player["salt"])
         ) == player['password']
-
         if password_match:
             self.set_secure_cookie(
                 "user", player_name, options.session_timeout_days
@@ -99,15 +93,14 @@ DELETE to clear cookie for current user.
     @authenticated
     @io_schema
     def delete(self):
-        # TODO: So this doesn't actually with the CLI client...
+        # So this doesn't actually with the CLI client...
         #  can still authenticate with old cookie. Maybe we'll have
-        #  better luck with browser?
+        #  better luck with browser? UPDATE: Works in browser.
         # Apparently if you set `expires_days` to None, it becomes
         #  a session cookie which will be gone when the player closes
         #  their browser, so if all else fails, we can just have an implicit
         #  logout which occurs by closing the window. In some ways,
         #  that's a much better way to log out that to have an explicit
         #  button anyways.
-        # UPDATE: Works in browser.
         self.clear_cookie("user")
         return "Logout was successful."

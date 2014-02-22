@@ -2,11 +2,16 @@ from tornado_json.utils import io_schema, api_assert, APIError
 from tornado.web import authenticated
 
 from cutthroat.handlers import APIHandler
-from cutthroat.db2 import Player, Room, Game, NotFoundError
+from cutthroat.db2 import Player, Room
 from cutthroat.common import get_player, get_room
 
 
 def assert_non_tenant(db, player_name):
+    """Assert that player ``player_name`` is not already in a room
+
+    :type  player_name: str
+    :raises APIError: If ``player_name`` is already in a room.
+    """
     player = get_player(db, player_name)
     player_room = player["current_room"]
     api_assert(
@@ -23,9 +28,9 @@ def assert_non_tenant(db, player_name):
 
 
 def create_room(db, room_name, password, owner):
-    """Create a new room `room_name`
+    """Create a new room ``room_name``
 
-    Adds entry for room `room_name` to the database.
+    Adds entry for room ``room_name`` to the database.
     :raises APIError: If a room with `room_name` has already
         been created.
     """
@@ -44,15 +49,18 @@ def create_room(db, room_name, password, owner):
 
 
 def join_room(db, room_name, password, player_name):
-    """Join room `room_name`
+    """Join room ``room_name``
 
-    Updates `current_players` entry for room `room_name` with
-    player `player_name` to the database.
+    Updates ``current_players`` entry for room ``room_name`` with
+    player ``player_name`` to the database.
 
-    :raises APIError: If a room with `room_name` does not exist;
-        or if the password is incorrect for room `room_name`, or if player
-        `player_name` does not exist
+    :raises APIError: If a room with ``room_name`` does not exist;
+        or if the password is incorrect for room ``room_name``, or if player
+        ``player_name`` does not exist
     """
+    # Ensure that the following preconditions are met:
+    #   * Correct password to room is give if required
+    #   * The player is not already in a room
     room = get_room(db, room_name)
     api_assert(password == room['password'], 403,
                log_message="Bad password for room `{}`.".format(room_name))
@@ -63,7 +71,7 @@ def join_room(db, room_name, password, player_name):
         log_message="Player `{}` already in room `{}`".format(
             player_name, room_name)
     )
-
+    # If they are met, add the player to the room
     room["current_players"] += [player_name]
     player["current_room"] = room_name
 
@@ -96,9 +104,10 @@ POST the required parameters to create a new room
     @authenticated
     @io_schema
     def post(self):
-        # player must not already be in a room
+        # Player must not already be in a room
         assert_non_tenant(self.db_conn, self.get_current_user())
-
+        # We create a room, and then add the player to the room
+        #   as the owner.
         create_room(
             self.db_conn,
             room_name=self.body["roomname"],
@@ -144,9 +153,9 @@ POST the required parameters to create a new room
     @authenticated
     @io_schema
     def post(self):
-        # player must not already be in a room
+        # Player must not already be in a room
         assert_non_tenant(self.db_conn, self.get_current_user())
-
+        # Add player to the room
         join_room(
             db=self.db_conn,
             room_name=self.body["name"],
@@ -217,17 +226,23 @@ GET to receive list of players in current room
     @authenticated
     @io_schema
     def get(self):
-        db = self.db_conn
-
-        # Get player
         player_name = self.get_current_user()
-        player = Player(db, "name", player_name)
+        # The reason we don't use get_player in a case like
+        #   this, is because this is an authenticated method,
+        #   so a player with the name of the current user
+        #   SHOULD exist; if he doesn't, then that indicates
+        #   a problem on our side (if that happens, the user
+        #   will see a 500 Internal Server Error) which
+        #   is arguably appropriate in this case.
+        player = Player(self.db_conn, "name", player_name)
         room_name = player["current_room"]
         api_assert(room_name, 400, log_message="You are not currently in"
                    " a room.")
 
-        # Get room
-        room = Room(db, "name", room_name)
+        # Again, same thing here; if the player has joined
+        #   a room, the room name must exist, otherwise, it
+        #   indicates a failure somewhere earlier down the line.
+        room = Room(self.db_conn, "name", room_name)
         return {
             "players": room["current_players"],
             "owner": room["owner"]
@@ -252,27 +267,25 @@ DELETE to leave current room. If the room owner leaves, the room will be deleted
     @authenticated
     @io_schema
     def delete(self):
-        db = self.db_conn
-
         player_name = self.get_current_user()
-        player = Player(db, "name", player_name)
+        player = Player(self.db_conn, "name", player_name)
         room_name = player["current_room"]
         if room_name:
-            room = Room(db, "name", room_name)
+            room = Room(self.db_conn, "name", room_name)
         else:
             raise APIError(409, log_message="You are currently not in a room.")
 
         if room["owner"] == player_name:
             # Set all players' current_room to None
             for pname in room["current_players"]:
-                p = Player(db, "name", pname)
+                p = Player(self.db_conn, "name", pname)
                 p["current_room"] = None
             # Delete the room
-            db["rooms"].delete(name=room_name)
+            self.db_conn["rooms"].delete(name=room_name)
             return "{} successfully deleted {}".format(player_name, room_name)
         else:
             # Set player's current_room to None and remove from room's
-            # current_players list
+            #   current_players list
             player["current_room"] = None
             room["current_players"] = [
                 p for p in room["current_players"] if p != player_name]
