@@ -82,7 +82,13 @@ def get_game_winner(db, game_id):
             winner = ""
             break
     else:
-        winner = players_with_balls[0]
+        if players_with_balls:
+            winner = players_with_balls[0]
+        else:
+            raise APIError(
+                409,
+                log_message="No player currently has balls on the table."
+            )
 
     return winner
 
