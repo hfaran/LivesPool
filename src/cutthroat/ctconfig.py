@@ -55,3 +55,10 @@ def define_options():
               "each time the server is restarted, or to any string which is "
               "the cookie secret.")
     )
+
+    define(
+        "dblock_file",
+        default="/var/lock/cutthroat.tmp",
+        type=str,
+        help="Location of the lock file used for synchronized DB access."
+    )

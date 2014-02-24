@@ -8,6 +8,7 @@ from cutthroat.db2 import Player, Game, stringify_list
 from cutthroat.common import (
     get_player, get_room, get_balls_on_table, get_game_winner, get_game
 )
+from cutthroat.dblock import DBLock
 
 
 TOTAL_NUM_BALLS = 15
@@ -131,27 +132,28 @@ DELETE to remove yourself from current game
         api_assert(game_id, 409,
                    log_message="You are not currently in a game.")
 
-        # Get game
-        game = Game(self.db_conn, "game_id", game_id)
+        with DBLock():
+            # Get game
+            game = Game(self.db_conn, "game_id", game_id)
 
-        # Get remaining set of players
-        rem_players = list(set(game["players"]) - {player_name})
+            # Get remaining set of players
+            rem_players = list(set(game["players"]) - {player_name})
 
-        # Set new gamemaster
-        if not rem_players:
-            game["gamemaster"] = None
-        # If gamemaster is leaving, assign to a random player
-        elif game["gamemaster"] == player_name:
-            game["gamemaster"] = choice(rem_players)
+            # Set new gamemaster
+            if not rem_players:
+                game["gamemaster"] = None
+            # If gamemaster is leaving, assign to a random player
+            elif game["gamemaster"] == player_name:
+                game["gamemaster"] = choice(rem_players)
 
-        # Set remaining players in game and add players' balls to game's
-        #   unclaimed set
-        game["players"] = rem_players
-        game["unclaimed_balls"] += player["balls"]
+            # Set remaining players in game and add players' balls to game's
+            #   unclaimed set
+            game["players"] = rem_players
+            game["unclaimed_balls"] += player["balls"]
 
-        # Set the player's game_id to None and his list of balls to empty
-        player["current_game_id"] = None
-        player["balls"] = []
+            # Set the player's game_id to None and his list of balls to empty
+            player["current_game_id"] = None
+            player["balls"] = []
 
         return {"game_id": game_id}
 
@@ -348,29 +350,30 @@ DELETE to end the game; this endpoint should only be triggered if GameState indi
             log_message="You are not the gamemaster of the current game."
         )
 
-        winner = get_game_winner(self.db_conn, game_id)
+        with DBLock():
+            winner = get_game_winner(self.db_conn, game_id)
 
-        # If there is no current winner, return an error
-        if not winner:
-            raise APIError(
-                409,
-                log_message="The game currently has no winner."
-            )
-        # Otherwise, clean up everything
-        else:
-            # Record the win for the player who won
-            player["games_won"] += [game_id]
-            game["winner"] = player_name
-            # Remove all players from game
-            for pname in game["players"]:
-                p = get_player(self.db_conn, pname)
-                p["current_game_id"] = None
-                p["balls"] = []
-                p["orig_balls"] = []
-            # Clear the game's "current" attributes
-            game["players"] = []
-            game["gamemaster"] = None
+            # If there is no current winner, return an error
+            if not winner:
+                raise APIError(
+                    409,
+                    log_message="The game currently has no winner."
+                )
+            # Otherwise, clean up everything
+            else:
+                # Record the win for the player who won
+                player["games_won"] += [game_id]
+                game["winner"] = player_name
+                # Remove all players from game
+                for pname in game["players"]:
+                    p = get_player(self.db_conn, pname)
+                    p["current_game_id"] = None
+                    p["balls"] = []
+                    p["orig_balls"] = []
+                # Clear the game's "current" attributes
+                game["players"] = []
+                game["gamemaster"] = None
 
-            return "Game {} was completed; {} was the winner.".format(
-                game_id, player_name
-            )
+                return "Game {} was completed; {} was the winner.".format(
+                    game_id, player_name
+                )
