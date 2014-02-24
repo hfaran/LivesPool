@@ -19,10 +19,11 @@ def define_options():
 
     # Port
     define(
-        "port",
-        default=8888,
-        help="run on the given port",
-        type=int
+        "ports",
+        default=[8888],
+        help=("A list of ports to listen on; each port will be tried"
+              " until one can be successfully bound to."),
+        type=list
     )
 
     # Database options

@@ -7,6 +7,7 @@ import signal
 import json
 import jsonpickle
 import uuid
+import socket
 
 import tornado.httpserver
 import tornado.ioloop
@@ -15,7 +16,6 @@ from tornado.options import options
 
 from tornado_json.application import Application
 
-import cutthroat
 from cutthroat import db2
 from cutthroat import ctconfig
 from cutthroat import routes as mod_routes
@@ -100,7 +100,16 @@ def main():
         )
     )
 
-    http_server.listen(options.port)
+    for port in options.ports:
+        try:
+            logging.info("Attempting to bind on {}.".format(port))
+            http_server.listen(port)
+            logging.info("Listening on {}.".format(port))
+            break
+        except socket.error:
+            logging.info("Could not bind on {}.".format(port))
+    else:
+        raise StandardError("Ran out of ports to try.")
 
     signal.signal(signal.SIGTERM, sig_handler)
     signal.signal(signal.SIGINT, sig_handler)
