@@ -1,6 +1,6 @@
 import fcntl
 
-from tornado import options
+from tornado.options import options
 
 
 class DBLock(object):

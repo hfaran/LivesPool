@@ -4,6 +4,7 @@ from tornado.web import authenticated
 from cutthroat.handlers import APIHandler
 from cutthroat.db2 import Player, Room
 from cutthroat.common import get_player, get_room
+from cutthroat.dblock import DBLock
 
 
 def assert_non_tenant(db, player_name):
@@ -275,18 +276,19 @@ DELETE to leave current room. If the room owner leaves, the room will be deleted
         else:
             raise APIError(409, log_message="You are currently not in a room.")
 
-        if room["owner"] == player_name:
-            # Set all players' current_room to None
-            for pname in room["current_players"]:
-                p = Player(self.db_conn, "name", pname)
-                p["current_room"] = None
-            # Delete the room
-            self.db_conn["rooms"].delete(name=room_name)
-            return "{} successfully deleted {}".format(player_name, room_name)
-        else:
-            # Set player's current_room to None and remove from room's
-            #   current_players list
-            player["current_room"] = None
-            room["current_players"] = [
-                p for p in room["current_players"] if p != player_name]
-            return "{} successfully left {}".format(player_name, room_name)
+        with DBLock():
+            if room["owner"] == player_name:
+                # Set all players' current_room to None
+                for pname in room["current_players"]:
+                    p = Player(self.db_conn, "name", pname)
+                    p["current_room"] = None
+                # Delete the room
+                self.db_conn["rooms"].delete(name=room_name)
+                return "{} successfully deleted {}".format(player_name, room_name)
+            else:
+                # Set player's current_room to None and remove from room's
+                #   current_players list
+                player["current_room"] = None
+                room["current_players"] = [
+                    p for p in room["current_players"] if p != player_name]
+                return "{} successfully left {}".format(player_name, room_name)

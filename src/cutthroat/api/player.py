@@ -6,6 +6,7 @@ from tornado_json.utils import io_schema, api_assert
 
 from cutthroat.handlers import APIHandler
 from cutthroat.common import get_player
+from cutthroat.dblock import DBLock
 
 
 class Player(APIHandler):
@@ -53,23 +54,25 @@ GET to retrieve player info
     def post(self):
         player_name = self.body["username"]
         password = self.body["password"]
-        # Check if a player with the given name already exists
-        player_exists = self.db_conn['players'].find_one(name=player_name)
-        api_assert(not player_exists, 409,
-                   log_message="{} is already registered.".format(player_name))
-        # Create a new user/write to DB
-        salt = bcrypt.gensalt(rounds=12)
-        self.db_conn['players'].insert(
-            {
-                "name": player_name,
-                "current_game_id": "",
-                "current_room": "",
-                "balls": "",
-                "salt": salt,
-                "password": bcrypt.hashpw(str(password), salt),
-                "games_won": ""
-            }
-        )
+
+        with DBLock():
+            # Check if a player with the given name already exists
+            player_exists = self.db_conn['players'].find_one(name=player_name)
+            api_assert(not player_exists, 409,
+                       log_message="{} is already registered.".format(player_name))
+            # Create a new user/write to DB
+            salt = bcrypt.gensalt(rounds=12)
+            self.db_conn['players'].insert(
+                {
+                    "name": player_name,
+                    "current_game_id": "",
+                    "current_room": "",
+                    "balls": "",
+                    "salt": salt,
+                    "password": bcrypt.hashpw(str(password), salt),
+                    "games_won": ""
+                }
+            )
         # We also do the step of logging the player in after registration
         self.set_secure_cookie(
             "user",
