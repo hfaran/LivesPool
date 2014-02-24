@@ -38,9 +38,9 @@ function load_balls() {
 	];
 
 	$.ajax({
-        url: "/api/game/ballsontable",
+        url: "/api/game/gamestate",
         success: function(data) {
-            $.each(data["data"], function(index, value) {
+            $.each(data["data"]["balls_on_table"], function(index, value) {
             	ballsInPlay[indexToId[value]] = true;
             });
 	        $.each(ballsInPlay, function(index, value) {
