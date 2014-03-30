@@ -1,3 +1,5 @@
+"use strict";
+
 function load_balls() {
     var ballsInPlay = {
         "placeholder": false,

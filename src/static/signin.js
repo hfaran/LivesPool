@@ -14,8 +14,8 @@ $(document).ready(function() {
                 window.location.href = "/";
             },
             error: function(jqXHR, status, error) {
-                if (jqXHR.status == 400) {
-                    alert("Bad username/password combination")
+                if (jqXHR.status === 400) {
+                    alert("Bad username/password combination");
                 }
             }
         });
