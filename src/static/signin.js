@@ -1,3 +1,5 @@
+"use strict";
+
 $(document).ready(function() {
     $("#signinForm").submit(function(event) {
         event.preventDefault();
@@ -9,10 +11,10 @@ $(document).ready(function() {
             content_type: "application/json; charset=utf-8",
             dataType: "json",
             success: function() {
-                window.location.href ="/";
+                window.location.href = "/";
             },
-            error: function (jqXHR, status, error) {
-                if(jqXHR.status == 400) {
+            error: function(jqXHR, status, error) {
+                if (jqXHR.status == 400) {
                     alert("Bad username/password combination")
                 }
             }
