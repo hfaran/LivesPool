@@ -1,5 +1,5 @@
 from itertools import chain
-from tornado_json.utils import APIError
+from tornado_json.exceptions import APIError
 
 from cutthroat.db2 import Player, Game, Room, NotFoundError
 
