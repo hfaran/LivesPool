@@ -1,4 +1,5 @@
-from tornado_json.utils import io_schema, api_assert, APIError
+from tornado_json.exceptions import api_assert, APIError
+from tornado_json import schema
 from tornado.web import authenticated
 
 from cutthroat.handlers import APIHandler
@@ -78,9 +79,10 @@ def join_room(db, room_name, password, player_name):
 
 
 class CreateRoom(APIHandler):
-    apid = {}
-    apid["post"] = {
-        "input_schema": {
+
+    @authenticated
+    @schema.validate(
+        input_schema={
             "type": "object",
             "properties": {
                 "roomname": {"type": "string"},
@@ -88,23 +90,21 @@ class CreateRoom(APIHandler):
             },
             "required": ["roomname"]
         },
-        "output_schema": {
+        output_schema={
             "type": "object",
             "properties": {
                 "roomname": {"type": "string"}
             }
         },
-        "doc": """
-POST the required parameters to create a new room
-
-* `name`: Name of the room
-* `password`: (Optional) Password to the room if you wish to keep entry restricted to players who know the password
-"""
-    }
-
-    @authenticated
-    @io_schema
+    )
     def post(self):
+        """
+        POST the required parameters to create a new room
+
+        * `name`: Name of the room
+        * `password`: (Optional) Password to the room if you wish to keep
+            entry restricted to players who know the password
+        """
         # Player must not already be in a room
         assert_non_tenant(self.db_conn, self.get_current_user())
         # We create a room, and then add the player to the room
@@ -127,9 +127,10 @@ POST the required parameters to create a new room
 
 
 class JoinRoom(APIHandler):
-    apid = {}
-    apid["post"] = {
-        "input_schema": {
+
+    @authenticated
+    @schema.validate(
+        input_schema={
             "type": "object",
             "properties": {
                 "name": {"type": "string"},
@@ -137,23 +138,20 @@ class JoinRoom(APIHandler):
             },
             "required": ["name"]
         },
-        "output_schema": {
+        output_schema={
             "type": "object",
             "properties": {
                 "name": {"type": "string"}
             }
         },
-        "doc": """
-POST the required parameters to create a new room
-
-* `name`: Name of the room
-* `password`: (Optional) Password to the room if it has one
-"""
-    }
-
-    @authenticated
-    @io_schema
+    )
     def post(self):
+        """
+        POST the required parameters to create a new room
+
+        * `name`: Name of the room
+        * `password`: (Optional) Password to the room if it has one
+        """
         # Player must not already be in a room
         assert_non_tenant(self.db_conn, self.get_current_user())
         # Add player to the room
@@ -171,24 +169,18 @@ class ListRooms(APIHandler):
 
     """ListRooms"""
 
-    apid = {}
-    apid["get"] = {
-        "input_schema": None,
-        "output_schema": {
+    @authenticated
+    @schema.validate(
+        output_schema={
             "type": "array",
         },
-        "output_example": [
+        output_example=[
             {"name": "Curve", "pwd_req": True},
             {"name": "Cue", "pwd_req": False}
         ],
-        "doc": """
-GET to receive list of rooms
-"""
-    }
-
-    @authenticated
-    @io_schema
+    )
     def get(self):
+        """GET to receive list of rooms"""
         return [
             {
                 "name": r["name"],
@@ -201,10 +193,9 @@ class ListPlayers(APIHandler):
 
     """List players in room"""
 
-    apid = {}
-    apid["get"] = {
-        "input_schema": None,
-        "output_schema": {
+    @authenticated
+    @schema.validate(
+        output_schema={
             "type": "object",
             "properties": {
                 "owner": {"type": "string"},
@@ -212,21 +203,18 @@ class ListPlayers(APIHandler):
             },
             "required": ["owner", "players"],
         },
-        "output_example": {
+        output_example={
             "owner": "Stark",
             "players": ["Stark", "Stannis", "Baratheon", "Tyrell", "Lannister"]
         },
-        "doc": """
-GET to receive list of players in current room
-
-* `players` array includes ALL players (including owner)
-* `owner` field is useful for highlighting the room owner in the UI
-"""
-    }
-
-    @authenticated
-    @io_schema
+    )
     def get(self):
+        """
+        GET to receive list of players in current room
+
+        * `players` array includes ALL players (including owner)
+        * `owner` field is useful for highlighting the room owner in the UI
+        """
         player_name = self.get_current_user()
         # The reason we don't use get_player in a case like
         #   this, is because this is an authenticated method,
@@ -254,20 +242,14 @@ class LeaveRoom(APIHandler):
 
     """LeaveRoom"""
 
-    apid = {}
-    apid["delete"] = {
-        "input_schema": None,
-        "output_schema": {
-            "type": "string",
-        },
-        "doc": """
-DELETE to leave current room. If the room owner leaves, the room will be deleted.
-"""
-    }
-
     @authenticated
-    @io_schema
+    @schema.validate(
+        output_schema={"type": "string"},
+    )
     def delete(self):
+        """
+        DELETE to leave current room. If the room owner leaves, the room will be deleted.
+        """
         player_name = self.get_current_user()
         player = Player(self.db_conn, "name", player_name)
         room_name = player["current_room"]
