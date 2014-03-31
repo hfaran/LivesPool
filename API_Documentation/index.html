@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+
+        <title>API Documentation - Lives Pool</title>
+
+        <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../css/font-awesome-4.0.3.css" rel="stylesheet">
+        <link href="../css/prettify-1.0.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+
+        
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+            <!-- Main title -->
+            <a class="navbar-brand" href="./">Lives Pool</a>
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+            <!-- Main navigation -->
+            <ul class="nav navbar-nav">
+            
+            
+                <li class="active">
+                    <a href="./">API Documentation</a>
+                </li>
+            
+            
+            </ul>
+
+            <!-- Search, Navigation and Repo links -->
+            <ul class="nav navbar-nav navbar-right">
+                
+                <li class="disabled">
+                    <a rel="next" >
+                        <i class="fa fa-arrow-left"></i> Previous
+                    </a>
+                </li>
+                <li class="disabled">
+                    <a rel="prev" >
+                        Next <i class="fa fa-arrow-right"></i>
+                    </a>
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+</div>
+
+        <div class="container">
+            <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+    
+        <li class="main active"><a href="#apiauthlogin">/api/auth/login</a></li>
+        
+            <li><a href="#post">POST</a></li>
+        
+            <li><a href="#get">GET</a></li>
+        
+    
+        <li class="main "><a href="#apiauthlogout">/api/auth/logout</a></li>
+        
+            <li><a href="#delete">DELETE</a></li>
+        
+    
+        <li class="main "><a href="#apigamecreategame">/api/game/creategame</a></li>
+        
+            <li><a href="#post_1">POST</a></li>
+        
+    
+        <li class="main "><a href="#apigameendgame">/api/game/endgame</a></li>
+        
+            <li><a href="#delete_1">DELETE</a></li>
+        
+    
+        <li class="main "><a href="#apigamegamestate">/api/game/gamestate</a></li>
+        
+            <li><a href="#get_1">GET</a></li>
+        
+    
+        <li class="main "><a href="#apigameleavegame">/api/game/leavegame</a></li>
+        
+            <li><a href="#delete_2">DELETE</a></li>
+        
+    
+        <li class="main "><a href="#apigamelistplayers">/api/game/listplayers</a></li>
+        
+            <li><a href="#get_2">GET</a></li>
+        
+    
+        <li class="main "><a href="#apigametoggleball">/api/game/toggleball</a></li>
+        
+            <li><a href="#post_2">POST</a></li>
+        
+    
+        <li class="main "><a href="#apiplayerplayer">/api/player/player</a></li>
+        
+            <li><a href="#post_3">POST</a></li>
+        
+            <li><a href="#get_3">GET</a></li>
+        
+    
+        <li class="main "><a href="#apiroomcreateroom">/api/room/createroom</a></li>
+        
+            <li><a href="#post_4">POST</a></li>
+        
+    
+        <li class="main "><a href="#apiroomjoinroom">/api/room/joinroom</a></li>
+        
+            <li><a href="#post_5">POST</a></li>
+        
+    
+        <li class="main "><a href="#apiroomleaveroom">/api/room/leaveroom</a></li>
+        
+            <li><a href="#delete_3">DELETE</a></li>
+        
+    
+        <li class="main "><a href="#apiroomlistplayers">/api/room/listplayers</a></li>
+        
+            <li><a href="#get_4">GET</a></li>
+        
+    
+        <li class="main "><a href="#apiroomlistrooms">/api/room/listrooms</a></li>
+        
+            <li><a href="#get_5">GET</a></li>
+        
+    
+    </ul>
+</div></div>
+            <div class="col-md-9" role="main">
+
+<p><strong>This documentation is automatically generated.</strong></p>
+<p><strong>Output schemas only represent <code>data</code> and not the full output; see output examples and the JSend specification.</strong></p>
+<h1 id="apiauthlogin"><code>/api/auth/login</code></h1>
+<pre class="prettyprint well"><code>Content-Type: application/json
+</code></pre>
+<h2 id="post">POST</h2>
+<h3 id="input-schema">Input Schema</h3>
+<pre class="prettyprint well"><code class="json">{
+    &quot;required&quot;: [
+        &quot;username&quot;, 
+        &quot;password&quot;
+    ], 
+    &quot;type&quot;: &quot;object&quot;, 
+    &quot;properties&quot;: {
+        &quot;username&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+        }, 
+        &quot;password&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+        }
+    }
+}
+</code></pre>
+
+<h3 id="output-schema">Output Schema</h3>
+<pre class="prettyprint well"><code class="json">{
+    &quot;type&quot;: &quot;object&quot;, 
+    &quot;properties&quot;: {
+        &quot;username&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+        }
+    }
+}
+</code></pre>
+
+<p>POST the required credentials to get back a cookie</p>
+<ul>
+<li><code>username</code>: Username</li>
+<li><code>password</code>: Password</li>
+</ul>
+<h2 id="get">GET</h2>
+<h3 id="input-schema_1">Input Schema</h3>
+<pre class="prettyprint well"><code class="json">null
+</code></pre>
+
+<h3 id="output-schema_1">Output Schema</h3>
+<pre class="prettyprint well"><code class="json">{
+    &quot;type&quot;: &quot;string&quot;
+}
+</code></pre>
+
+<p>GET to check if authenticated. Should be obvious from status code (403 vs. 200).</p>
+<h1 id="apiauthlogout"><code>/api/auth/logout</code></h1>
+<pre class="prettyprint well"><code>Content-Type: application/json
+</code></pre>
+<h2 id="delete">DELETE</h2>
+<h3 id="input-schema_2">Input Schema</h3>
+<pre class="prettyprint well"><code class="json">null
+</code></pre>
+
+<h3 id="output-schema_2">Output Schema</h3>
+<pre class="prettyprint well"><code class="json">{
+    &quot;type&quot;: &quot;string&quot;
+}
+</code></pre>
+
+<p>DELETE to clear cookie for current user.</p>
+<h1 id="apigamecreategame"><code>/api/game/creategame</code></h1>
+<pre class="prettyprint well"><code>Content-Type: application/json
+</code></pre>
+<h2 id="post_1">POST</h2>
+<h3 id="input-schema_3">Input Schema</h3>
+<pre class="prettyprint well"><code class="json">{
+    &quot;required&quot;: [
+        &quot;nbpp&quot;
+    ], 
+    &quot;type&quot;: &quot;object&quot;, 
+    &quot;properties&quot;: {
+        &quot;nbpp&quot;: {
+            &quot;type&quot;: &quot;number&quot;
+        }
+    }
+}
+</code></pre>
+
+<h3 id="output-schema_3">Output Schema</h3>
+<pre class="prettyprint well"><code class="json">{
+    &quot;type&quot;: &quot;object&quot;, 
+    &quot;properties&quot;: {
+        &quot;game_id&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+        }
+    }
+}
+</code></pre>
+
+<p>POST the required parameter to create a new game; only the owner of a room can make this request</p>
+<ul>
+<li><code>nbpp</code>: Number of balls per player</li>
+</ul>
+<h1 id="apigameendgame"><code>/api/game/endgame</code></h1>
+<pre class="prettyprint well"><code>Content-Type: application/json
+</code></pre>
+<h2 id="delete_1">DELETE</h2>
+<h3 id="input-schema_4">Input Schema</h3>
+<pre class="prettyprint well"><code class="json">null
+</code></pre>
+
+<h3 id="output-schema_4">Output Schema</h3>
+<pre class="prettyprint well"><code class="json">{
+    &quot;type&quot;: &quot;string&quot;
+}
+</code></pre>
+
+<h3 id="output-example">Output Example</h3>
+<pre class="prettyprint well"><code class="json">&quot;Game 12345678910 was completed; Guy was the winner.&quot;
+</code></pre>
+
+<p>DELETE to end the game; this endpoint should only be triggered if GameState indicates there is a winner.</p>
+<h1 id="apigamegamestate"><code>/api/game/gamestate</code></h1>
+<pre class="prettyprint well"><code>Content-Type: application/json
+</code></pre>
+<h2 id="get_1">GET</h2>
+<h3 id="input-schema_5">Input Schema</h3>
+<pre class="prettyprint well"><code class="json">null
+</code></pre>
+
+<h3 id="output-schema_5">Output Schema</h3>
+<pre class="prettyprint well"><code class="json">{
+    &quot;type&quot;: &quot;object&quot;, 
+    &quot;properties&quot;: {
+        &quot;winner&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+        }, 
+        &quot;balls_on_table&quot;: {
+            &quot;type&quot;: &quot;array&quot;
+        }
+    }
+}
+</code></pre>
+
+<h3 id="output-example_1">Output Example</h3>
+<pre class="prettyprint well"><code class="json">{
+    &quot;winner&quot;: &quot;Guy&quot;, 
+    &quot;balls_on_table&quot;: [
+        2, 
+        5, 
+        9, 
+        6
+    ]
+}
+</code></pre>
+
+<p>GET to receive state of current_game</p>
+<p><code>winner</code>: Potential winner of the game, or empty string
+<code>balls_on_table</code>: Array of balls still on the table</p>
+<h1 id="apigameleavegame"><code>/api/game/leavegame</code></h1>
+<pre class="prettyprint well"><code>Content-Type: application/json
+</code></pre>
+<h2 id="delete_2">DELETE</h2>
+<h3 id="input-schema_6">Input Schema</h3>
+<pre class="prettyprint well"><code class="json">null
+</code></pre>
+
+<h3 id="output-schema_6">Output Schema</h3>
+<pre class="prettyprint well"><code class="json">{
+    &quot;required&quot;: [
+        &quot;game_id&quot;
+    ], 
+    &quot;type&quot;: &quot;object&quot;, 
+    &quot;properties&quot;: {
+        &quot;game_id&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+        }
+    }
+}
+</code></pre>
+
+<p>DELETE to remove yourself from current game</p>
+<h1 id="apigamelistplayers"><code>/api/game/listplayers</code></h1>
+<pre class="prettyprint well"><code>Content-Type: application/json
+</code></pre>
+<h2 id="get_2">GET</h2>
+<h3 id="input-schema_7">Input Schema</h3>
+<pre class="prettyprint well"><code class="json">null
+</code></pre>
+
+<h3 id="output-schema_7">Output Schema</h3>
+<pre class="prettyprint well"><code class="json">{
+    &quot;required&quot;: [
+        &quot;gamemaster&quot;, 
+        &quot;players&quot;
+    ], 
+    &quot;type&quot;: &quot;object&quot;, 
+    &quot;properties&quot;: {
+        &quot;players&quot;: {
+            &quot;type&quot;: &quot;array&quot;
+        }, 
+        &quot;gamemaster&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+        }
+    }
+}
+</code></pre>
+
+<h3 id="output-example_2">Output Example</h3>
+<pre class="prettyprint well"><code class="json">{
+    &quot;players&quot;: [
+        &quot;Stark&quot;, 
+        &quot;Stannis&quot;, 
+        &quot;Baratheon&quot;, 
+        &quot;Tyrell&quot;, 
+        &quot;Lannister&quot;
+    ], 
+    &quot;gamemaster&quot;: &quot;Stark&quot;
+}
+</code></pre>
+
+<p>GET to receive list of players in current game</p>
+<ul>
+<li><code>players</code> array includes ALL players (including gamemaster)</li>
+<li><code>gamemaster</code> field is useful for highlighting the gamemaster in the UI</li>
+</ul>
+<h1 id="apigametoggleball"><code>/api/game/toggleball</code></h1>
+<pre class="prettyprint well"><code>Content-Type: application/json
+</code></pre>
+<h2 id="post_2">POST</h2>
+<h3 id="input-schema_8">Input Schema</h3>
+<pre class="prettyprint well"><code class="json">{
+    &quot;required&quot;: [
+        &quot;ball&quot;
+    ], 
+    &quot;type&quot;: &quot;object&quot;, 
+    &quot;properties&quot;: {
+        &quot;ball&quot;: {
+            &quot;type&quot;: &quot;number&quot;
+        }
+    }
+}
+</code></pre>
+
+<h3 id="output-schema_8">Output Schema</h3>
+<pre class="prettyprint well"><code class="json">{
+    &quot;required&quot;: [
+        &quot;game_id&quot;
+    ], 
+    &quot;type&quot;: &quot;object&quot;, 
+    &quot;properties&quot;: {
+        &quot;game_id&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+        }, 
+        &quot;message&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+        }
+    }
+}
+</code></pre>
+
+<p>POST the required parameters to register the pocketing/unpocketing of a ball</p>
+<ul>
+<li><code>ball</code>: The ball that was pocketed/unpocketed</li>
+</ul>
+<h1 id="apiplayerplayer"><code>/api/player/player</code></h1>
+<pre class="prettyprint well"><code>Content-Type: application/json
+</code></pre>
+<h2 id="post_3">POST</h2>
+<h3 id="input-schema_9">Input Schema</h3>
+<pre class="prettyprint well"><code class="json">{
+    &quot;required&quot;: [
+        &quot;username&quot;, 
+        &quot;password&quot;
+    ], 
+    &quot;type&quot;: &quot;object&quot;, 
+    &quot;properties&quot;: {
+        &quot;username&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+        }, 
+        &quot;password&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+        }
+    }
+}
+</code></pre>
+
+<h3 id="output-schema_9">Output Schema</h3>
+<pre class="prettyprint well"><code class="json">{
+    &quot;type&quot;: &quot;object&quot;, 
+    &quot;properties&quot;: {
+        &quot;username&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+        }
+    }
+}
+</code></pre>
+
+<p>POST the required parameters to permanently register a new player</p>
+<ul>
+<li><code>username</code>: Username of the player</li>
+<li><code>password</code>: Password for future logins</li>
+</ul>
+<h2 id="get_3">GET</h2>
+<h3 id="input-schema_10">Input Schema</h3>
+<pre class="prettyprint well"><code class="json">null
+</code></pre>
+
+<h3 id="output-schema_10">Output Schema</h3>
+<pre class="prettyprint well"><code class="json">{
+    &quot;type&quot;: &quot;object&quot;, 
+    &quot;properties&quot;: {
+        &quot;current_room&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+        }, 
+        &quot;orig_balls&quot;: {
+            &quot;type&quot;: &quot;array&quot;
+        }, 
+        &quot;current_game_id&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+        }, 
+        &quot;name&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+        }, 
+        &quot;balls&quot;: {
+            &quot;type&quot;: &quot;array&quot;
+        }
+    }
+}
+</code></pre>
+
+<p>GET to retrieve player info</p>
+<h1 id="apiroomcreateroom"><code>/api/room/createroom</code></h1>
+<pre class="prettyprint well"><code>Content-Type: application/json
+</code></pre>
+<h2 id="post_4">POST</h2>
+<h3 id="input-schema_11">Input Schema</h3>
+<pre class="prettyprint well"><code class="json">{
+    &quot;required&quot;: [
+        &quot;roomname&quot;
+    ], 
+    &quot;type&quot;: &quot;object&quot;, 
+    &quot;properties&quot;: {
+        &quot;roomname&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+        }, 
+        &quot;password&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+        }
+    }
+}
+</code></pre>
+
+<h3 id="output-schema_11">Output Schema</h3>
+<pre class="prettyprint well"><code class="json">{
+    &quot;type&quot;: &quot;object&quot;, 
+    &quot;properties&quot;: {
+        &quot;roomname&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+        }
+    }
+}
+</code></pre>
+
+<p>POST the required parameters to create a new room</p>
+<ul>
+<li><code>name</code>: Name of the room</li>
+<li><code>password</code>: (Optional) Password to the room if you wish to keep entry restricted to players who know the password</li>
+</ul>
+<h1 id="apiroomjoinroom"><code>/api/room/joinroom</code></h1>
+<pre class="prettyprint well"><code>Content-Type: application/json
+</code></pre>
+<h2 id="post_5">POST</h2>
+<h3 id="input-schema_12">Input Schema</h3>
+<pre class="prettyprint well"><code class="json">{
+    &quot;required&quot;: [
+        &quot;name&quot;
+    ], 
+    &quot;type&quot;: &quot;object&quot;, 
+    &quot;properties&quot;: {
+        &quot;password&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+        }, 
+        &quot;name&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+        }
+    }
+}
+</code></pre>
+
+<h3 id="output-schema_12">Output Schema</h3>
+<pre class="prettyprint well"><code class="json">{
+    &quot;type&quot;: &quot;object&quot;, 
+    &quot;properties&quot;: {
+        &quot;name&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+        }
+    }
+}
+</code></pre>
+
+<p>POST the required parameters to create a new room</p>
+<ul>
+<li><code>name</code>: Name of the room</li>
+<li><code>password</code>: (Optional) Password to the room if it has one</li>
+</ul>
+<h1 id="apiroomleaveroom"><code>/api/room/leaveroom</code></h1>
+<pre class="prettyprint well"><code>Content-Type: application/json
+</code></pre>
+<h2 id="delete_3">DELETE</h2>
+<h3 id="input-schema_13">Input Schema</h3>
+<pre class="prettyprint well"><code class="json">null
+</code></pre>
+
+<h3 id="output-schema_13">Output Schema</h3>
+<pre class="prettyprint well"><code class="json">{
+    &quot;type&quot;: &quot;string&quot;
+}
+</code></pre>
+
+<p>DELETE to leave current room. If the room owner leaves, the room will be deleted.</p>
+<h1 id="apiroomlistplayers"><code>/api/room/listplayers</code></h1>
+<pre class="prettyprint well"><code>Content-Type: application/json
+</code></pre>
+<h2 id="get_4">GET</h2>
+<h3 id="input-schema_14">Input Schema</h3>
+<pre class="prettyprint well"><code class="json">null
+</code></pre>
+
+<h3 id="output-schema_14">Output Schema</h3>
+<pre class="prettyprint well"><code class="json">{
+    &quot;required&quot;: [
+        &quot;owner&quot;, 
+        &quot;players&quot;
+    ], 
+    &quot;type&quot;: &quot;object&quot;, 
+    &quot;properties&quot;: {
+        &quot;owner&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+        }, 
+        &quot;players&quot;: {
+            &quot;type&quot;: &quot;array&quot;
+        }
+    }
+}
+</code></pre>
+
+<h3 id="output-example_3">Output Example</h3>
+<pre class="prettyprint well"><code class="json">{
+    &quot;owner&quot;: &quot;Stark&quot;, 
+    &quot;players&quot;: [
+        &quot;Stark&quot;, 
+        &quot;Stannis&quot;, 
+        &quot;Baratheon&quot;, 
+        &quot;Tyrell&quot;, 
+        &quot;Lannister&quot;
+    ]
+}
+</code></pre>
+
+<p>GET to receive list of players in current room</p>
+<ul>
+<li><code>players</code> array includes ALL players (including owner)</li>
+<li><code>owner</code> field is useful for highlighting the room owner in the UI</li>
+</ul>
+<h1 id="apiroomlistrooms"><code>/api/room/listrooms</code></h1>
+<pre class="prettyprint well"><code>Content-Type: application/json
+</code></pre>
+<h2 id="get_5">GET</h2>
+<h3 id="input-schema_15">Input Schema</h3>
+<pre class="prettyprint well"><code class="json">null
+</code></pre>
+
+<h3 id="output-schema_15">Output Schema</h3>
+<pre class="prettyprint well"><code class="json">{
+    &quot;type&quot;: &quot;array&quot;
+}
+</code></pre>
+
+<h3 id="output-example_4">Output Example</h3>
+<pre class="prettyprint well"><code class="json">[
+    {
+        &quot;pwd_req&quot;: true, 
+        &quot;name&quot;: &quot;Curve&quot;
+    }, 
+    {
+        &quot;pwd_req&quot;: false, 
+        &quot;name&quot;: &quot;Cue&quot;
+    }
+]
+</code></pre>
+
+<p>GET to receive list of rooms</p>
+</div>
+        </div>
+
+        
+
+        <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+        <script src="../js/bootstrap-3.0.3.min.js"></script>
+        <script src="../js/prettify-1.0.min.js"></script>
+        <script src="../js/base.js"></script>
+    </body>
+</html>
