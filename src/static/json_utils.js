@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 $.fn.serializeObject = function() {
     var o = {};
