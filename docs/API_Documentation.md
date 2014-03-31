@@ -2,12 +2,12 @@
 
 **Output schemas only represent `data` and not the full output; see output examples and the JSend specification.**
 
-# `/api/auth/login`
+# /api/auth/login/?
 
     Content-Type: application/json
 
 ## POST
-### Input Schema
+**Input Schema**
 ```json
 {
     "required": [
@@ -26,7 +26,7 @@
 }
 ```
 
-### Output Schema
+**Output Schema**
 ```json
 {
     "type": "object", 
@@ -39,6 +39,7 @@
 ```
 
 
+**Notes**
 
 POST the required credentials to get back a cookie
 
@@ -48,12 +49,12 @@ POST the required credentials to get back a cookie
 
 
 ## GET
-### Input Schema
+**Input Schema**
 ```json
 null
 ```
 
-### Output Schema
+**Output Schema**
 ```json
 {
     "type": "string"
@@ -61,25 +62,28 @@ null
 ```
 
 
+**Notes**
 
-GET to check if authenticated. Should be obvious from status code (403 vs. 200).
+GET to check if authenticated.
+
+Should be obvious from status code (403 vs. 200).
 
 
 
+<br>
+<br>
 
-
-
-# `/api/auth/logout`
+# /api/auth/logout/?
 
     Content-Type: application/json
 
 ## DELETE
-### Input Schema
+**Input Schema**
 ```json
 null
 ```
 
-### Output Schema
+**Output Schema**
 ```json
 {
     "type": "string"
@@ -87,20 +91,21 @@ null
 ```
 
 
+**Notes**
 
 DELETE to clear cookie for current user.
 
 
 
+<br>
+<br>
 
-
-
-# `/api/game/creategame`
+# /api/game/creategame/?
 
     Content-Type: application/json
 
 ## POST
-### Input Schema
+**Input Schema**
 ```json
 {
     "required": [
@@ -115,7 +120,7 @@ DELETE to clear cookie for current user.
 }
 ```
 
-### Output Schema
+**Output Schema**
 ```json
 {
     "type": "object", 
@@ -128,58 +133,62 @@ DELETE to clear cookie for current user.
 ```
 
 
+**Notes**
 
-POST the required parameter to create a new game; only the owner of a room can make this request
+POST the required parameter to create a new game;
+    only the owner of a room can make this request
 
 * `nbpp`: Number of balls per player
 
 
 
+<br>
+<br>
 
-
-
-# `/api/game/endgame`
+# /api/game/endgame/?
 
     Content-Type: application/json
 
 ## DELETE
-### Input Schema
+**Input Schema**
 ```json
 null
 ```
 
-### Output Schema
+**Output Schema**
 ```json
 {
     "type": "string"
 }
 ```
 
-### Output Example
+**Output Example**
 ```json
 "Game 12345678910 was completed; Guy was the winner."
 ```
 
 
+**Notes**
 
-DELETE to end the game; this endpoint should only be triggered if GameState indicates there is a winner.
-
-
-
-
+DELETE to end the game; this endpoint should only be triggered if
+    GameState indicates there is a winner.
 
 
-# `/api/game/gamestate`
+
+<br>
+<br>
+
+# /api/game/gamestate/?
 
     Content-Type: application/json
 
 ## GET
-### Input Schema
+**Input Schema**
 ```json
 null
 ```
 
-### Output Schema
+**Output Schema**
 ```json
 {
     "type": "object", 
@@ -194,7 +203,7 @@ null
 }
 ```
 
-### Output Example
+**Output Example**
 ```json
 {
     "winner": "Guy", 
@@ -208,6 +217,7 @@ null
 ```
 
 
+**Notes**
 
 GET to receive state of current_game
 
@@ -216,20 +226,20 @@ GET to receive state of current_game
 
 
 
+<br>
+<br>
 
-
-
-# `/api/game/leavegame`
+# /api/game/leavegame/?
 
     Content-Type: application/json
 
 ## DELETE
-### Input Schema
+**Input Schema**
 ```json
 null
 ```
 
-### Output Schema
+**Output Schema**
 ```json
 {
     "required": [
@@ -245,25 +255,26 @@ null
 ```
 
 
+**Notes**
 
 DELETE to remove yourself from current game
 
 
 
+<br>
+<br>
 
-
-
-# `/api/game/listplayers`
+# /api/game/listplayers/?
 
     Content-Type: application/json
 
 ## GET
-### Input Schema
+**Input Schema**
 ```json
 null
 ```
 
-### Output Schema
+**Output Schema**
 ```json
 {
     "required": [
@@ -282,7 +293,7 @@ null
 }
 ```
 
-### Output Example
+**Output Example**
 ```json
 {
     "players": [
@@ -297,6 +308,7 @@ null
 ```
 
 
+**Notes**
 
 GET to receive list of players in current game
 
@@ -305,15 +317,15 @@ GET to receive list of players in current game
 
 
 
+<br>
+<br>
 
-
-
-# `/api/game/toggleball`
+# /api/game/toggleball/?
 
     Content-Type: application/json
 
 ## POST
-### Input Schema
+**Input Schema**
 ```json
 {
     "required": [
@@ -328,7 +340,7 @@ GET to receive list of players in current game
 }
 ```
 
-### Output Schema
+**Output Schema**
 ```json
 {
     "required": [
@@ -347,6 +359,7 @@ GET to receive list of players in current game
 ```
 
 
+**Notes**
 
 POST the required parameters to register the pocketing/unpocketing of a ball
 
@@ -354,15 +367,15 @@ POST the required parameters to register the pocketing/unpocketing of a ball
 
 
 
+<br>
+<br>
 
-
-
-# `/api/player/player`
+# /api/player/player/?
 
     Content-Type: application/json
 
 ## POST
-### Input Schema
+**Input Schema**
 ```json
 {
     "required": [
@@ -381,7 +394,7 @@ POST the required parameters to register the pocketing/unpocketing of a ball
 }
 ```
 
-### Output Schema
+**Output Schema**
 ```json
 {
     "type": "object", 
@@ -394,6 +407,7 @@ POST the required parameters to register the pocketing/unpocketing of a ball
 ```
 
 
+**Notes**
 
 POST the required parameters to permanently register a new player
 
@@ -403,12 +417,12 @@ POST the required parameters to permanently register a new player
 
 
 ## GET
-### Input Schema
+**Input Schema**
 ```json
 null
 ```
 
-### Output Schema
+**Output Schema**
 ```json
 {
     "type": "object", 
@@ -433,20 +447,21 @@ null
 ```
 
 
+**Notes**
 
 GET to retrieve player info
 
 
 
+<br>
+<br>
 
-
-
-# `/api/room/createroom`
+# /api/room/createroom/?
 
     Content-Type: application/json
 
 ## POST
-### Input Schema
+**Input Schema**
 ```json
 {
     "required": [
@@ -464,7 +479,7 @@ GET to retrieve player info
 }
 ```
 
-### Output Schema
+**Output Schema**
 ```json
 {
     "type": "object", 
@@ -477,23 +492,25 @@ GET to retrieve player info
 ```
 
 
+**Notes**
 
 POST the required parameters to create a new room
 
 * `name`: Name of the room
-* `password`: (Optional) Password to the room if you wish to keep entry restricted to players who know the password
+* `password`: (Optional) Password to the room if you wish to keep
+    entry restricted to players who know the password
 
 
 
+<br>
+<br>
 
-
-
-# `/api/room/joinroom`
+# /api/room/joinroom/?
 
     Content-Type: application/json
 
 ## POST
-### Input Schema
+**Input Schema**
 ```json
 {
     "required": [
@@ -511,7 +528,7 @@ POST the required parameters to create a new room
 }
 ```
 
-### Output Schema
+**Output Schema**
 ```json
 {
     "type": "object", 
@@ -524,6 +541,7 @@ POST the required parameters to create a new room
 ```
 
 
+**Notes**
 
 POST the required parameters to create a new room
 
@@ -532,20 +550,20 @@ POST the required parameters to create a new room
 
 
 
+<br>
+<br>
 
-
-
-# `/api/room/leaveroom`
+# /api/room/leaveroom/?
 
     Content-Type: application/json
 
 ## DELETE
-### Input Schema
+**Input Schema**
 ```json
 null
 ```
 
-### Output Schema
+**Output Schema**
 ```json
 {
     "type": "string"
@@ -553,25 +571,26 @@ null
 ```
 
 
+**Notes**
 
 DELETE to leave current room. If the room owner leaves, the room will be deleted.
 
 
 
+<br>
+<br>
 
-
-
-# `/api/room/listplayers`
+# /api/room/listplayers/?
 
     Content-Type: application/json
 
 ## GET
-### Input Schema
+**Input Schema**
 ```json
 null
 ```
 
-### Output Schema
+**Output Schema**
 ```json
 {
     "required": [
@@ -590,7 +609,7 @@ null
 }
 ```
 
-### Output Example
+**Output Example**
 ```json
 {
     "owner": "Stark", 
@@ -605,6 +624,7 @@ null
 ```
 
 
+**Notes**
 
 GET to receive list of players in current room
 
@@ -613,27 +633,27 @@ GET to receive list of players in current room
 
 
 
+<br>
+<br>
 
-
-
-# `/api/room/listrooms`
+# /api/room/listrooms/?
 
     Content-Type: application/json
 
 ## GET
-### Input Schema
+**Input Schema**
 ```json
 null
 ```
 
-### Output Schema
+**Output Schema**
 ```json
 {
     "type": "array"
 }
 ```
 
-### Output Example
+**Output Example**
 ```json
 [
     {
@@ -648,6 +668,7 @@ null
 ```
 
 
+**Notes**
 
 GET to receive list of rooms
 
