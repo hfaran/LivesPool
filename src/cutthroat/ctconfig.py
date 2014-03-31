@@ -1,5 +1,3 @@
-import logging
-import json
 from tornado.options import define, options
 
 

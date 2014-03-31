@@ -1,86 +1,86 @@
 [
     [
-        "/api/auth/login", 
+        "/api/auth/login/?", 
         "{\"py/type\": \"cutthroat.api.auth.Login\"}"
     ], 
     [
-        "/api/auth/logout", 
+        "/api/auth/logout/?", 
         "{\"py/type\": \"cutthroat.api.auth.Logout\"}"
     ], 
     [
-        "/api/game/listplayers", 
+        "/api/game/listplayers/?", 
         "{\"py/type\": \"cutthroat.api.game.ListPlayers\"}"
     ], 
     [
-        "/api/game/leavegame", 
+        "/api/game/leavegame/?", 
         "{\"py/type\": \"cutthroat.api.game.LeaveGame\"}"
     ], 
     [
-        "/api/game/creategame", 
+        "/api/game/creategame/?", 
         "{\"py/type\": \"cutthroat.api.game.CreateGame\"}"
     ], 
     [
-        "/api/game/toggleball", 
+        "/api/game/toggleball/?", 
         "{\"py/type\": \"cutthroat.api.game.ToggleBall\"}"
     ], 
     [
-        "/api/game/gamestate", 
+        "/api/game/gamestate/?", 
         "{\"py/type\": \"cutthroat.api.game.GameState\"}"
     ], 
     [
-        "/api/game/endgame", 
+        "/api/game/endgame/?", 
         "{\"py/type\": \"cutthroat.api.game.EndGame\"}"
     ], 
     [
-        "/api/player/player", 
+        "/api/player/player/?", 
         "{\"py/type\": \"cutthroat.api.player.Player\"}"
     ], 
     [
-        "/api/room/joinroom", 
+        "/api/room/joinroom/?", 
         "{\"py/type\": \"cutthroat.api.room.JoinRoom\"}"
     ], 
     [
-        "/api/room/leaveroom", 
+        "/api/room/leaveroom/?", 
         "{\"py/type\": \"cutthroat.api.room.LeaveRoom\"}"
     ], 
     [
-        "/api/room/createroom", 
+        "/api/room/createroom/?", 
         "{\"py/type\": \"cutthroat.api.room.CreateRoom\"}"
     ], 
     [
-        "/api/room/listplayers", 
+        "/api/room/listplayers/?", 
         "{\"py/type\": \"cutthroat.api.room.ListPlayers\"}"
     ], 
     [
-        "/api/room/listrooms", 
+        "/api/room/listrooms/?", 
         "{\"py/type\": \"cutthroat.api.room.ListRooms\"}"
     ], 
     [
-        "/room/create", 
+        "/room/create/?", 
         "{\"py/type\": \"cutthroat.views.room.Create\"}"
     ], 
     [
-        "/room/join", 
+        "/room/join/?", 
         "{\"py/type\": \"cutthroat.views.room.Join\"}"
     ], 
     [
-        "/room/lobby", 
+        "/room/lobby/?", 
         "{\"py/type\": \"cutthroat.views.room.Lobby\"}"
     ], 
     [
-        "/room/game", 
+        "/room/game/?", 
         "{\"py/type\": \"cutthroat.views.room.Game\"}"
     ], 
     [
-        "/roomlogin/roomlogin", 
+        "/roomlogin/roomlogin/?", 
         "{\"py/type\": \"cutthroat.views.roomlogin.RoomLogin\"}"
     ], 
     [
-        "/signin/signin", 
+        "/signin/signin/?", 
         "{\"py/type\": \"cutthroat.views.signin.SignIn\"}"
     ], 
     [
-        "/signin/landing", 
+        "/signin/landing/?", 
         "{\"py/type\": \"cutthroat.views.signin.Landing\"}"
     ], 
     [

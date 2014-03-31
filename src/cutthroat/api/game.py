@@ -1,7 +1,8 @@
 import uuid
 from random import shuffle, choice
 from tornado.web import authenticated
-from tornado_json.utils import io_schema, api_assert, APIError
+from tornado_json.exceptions import api_assert, APIError
+from tornado_json import schema
 
 from cutthroat.handlers import APIHandler
 from cutthroat.db2 import Player, Game, stringify_list
@@ -20,32 +21,29 @@ def generate_balls(num):
 
 
 class CreateGame(APIHandler):
-    apid = {}
-    apid["post"] = {
-        "input_schema": {
+
+    @authenticated
+    @schema.validate(
+        input_schema={
             "type": "object",
             "properties": {
                 "nbpp": {"type": "number"},
             },
             "required": ["nbpp"]
         },
-        "output_schema": {
+        output_schema={
             "type": "object",
             "properties": {
                 "game_id": {"type": "string"}
             }
         },
-        "doc": """
-POST the required parameter to create a new game; only the owner of a room can make this request
-
-* `nbpp`: Number of balls per player
-"""
-    }
-
-    @authenticated
-    @io_schema
+    )
     def post(self):
-        """POST RequestHandler"""
+        """POST the required parameter to create a new game;
+            only the owner of a room can make this request
+
+        * `nbpp`: Number of balls per player
+        """
         game_id = uuid.uuid4().hex
         gamemaster = self.get_current_user()
         player = get_player(self.db_conn, gamemaster)
@@ -107,24 +105,19 @@ POST the required parameter to create a new game; only the owner of a room can m
 
 
 class LeaveGame(APIHandler):
-    apid = {}
-    apid["delete"] = {
-        "input_schema": None,
-        "output_schema": {
+
+    @authenticated
+    @schema.validate(
+        output_schema={
             "type": "object",
             "properties": {
                 "game_id": {"type": "string"}
             },
             "required": ["game_id"]
         },
-        "doc": """
-DELETE to remove yourself from current game
-"""
-    }
-
-    @authenticated
-    @io_schema
+    )
     def delete(self):
+        """DELETE to remove yourself from current game"""
         # Get player and the game_id he's in
         player_name = self.get_current_user()
         player = Player(self.db_conn, "name", player_name)
@@ -159,16 +152,17 @@ DELETE to remove yourself from current game
 
 
 class ToggleBall(APIHandler):
-    apid = {}
-    apid["post"] = {
-        "input_schema": {
+
+    @authenticated
+    @schema.validate(
+        input_schema={
             "type": "object",
             "properties": {
                 "ball": {"type": "number"},
             },
             "required": ["ball"]
         },
-        "output_schema": {
+        output_schema={
             "type": "object",
             "properties": {
                 "game_id": {"type": "string"},
@@ -176,16 +170,13 @@ class ToggleBall(APIHandler):
             },
             "required": ["game_id"]
         },
-        "doc": """
-POST the required parameters to register the pocketing/unpocketing of a ball
-
-* `ball`: The ball that was pocketed/unpocketed
-"""
-    }
-
-    @authenticated
-    @io_schema
+    )
     def post(self):
+        """
+        POST the required parameters to register the pocketing/unpocketing of a ball
+
+        * `ball`: The ball that was pocketed/unpocketed
+        """
         gamemaster = self.get_current_user()
         ball = self.body['ball']
         game_id = get_player(self.db_conn, gamemaster)["current_game_id"]
@@ -238,31 +229,27 @@ class GameState(APIHandler):
 
     """State of the current game"""
 
-    apid = {}
-    apid["get"] = {
-        "input_schema": None,
-        "output_schema": {
+    @authenticated
+    @schema.validate(
+        output_schema={
             "type": "object",
             "properties": {
                 "balls_on_table": {"type": "array"},
                 "winner": {"type": "string"},
             },
         },
-        "output_example": {
+        output_example={
             "winner": "Guy",
             "balls_on_table": [2, 5, 9, 6],
         },
-        "doc": """
-GET to receive state of current_game
-
-`winner`: Potential winner of the game, or empty string
-`balls_on_table`: Array of balls still on the table
-"""
-    }
-
-    @authenticated
-    @io_schema
+    )
     def get(self):
+        """
+        GET to receive state of current_game
+
+        `winner`: Potential winner of the game, or empty string
+        `balls_on_table`: Array of balls still on the table
+        """
         player_name = self.get_current_user()
         player = Player(self.db_conn, "name", player_name)
         game_id = player["current_game_id"]
@@ -280,10 +267,9 @@ class ListPlayers(APIHandler):
 
     """List players in game"""
 
-    apid = {}
-    apid["get"] = {
-        "input_schema": None,
-        "output_schema": {
+    @authenticated
+    @schema.validate(
+        output_schema={
             "type": "object",
             "properties": {
                 "gamemaster": {"type": "string"},
@@ -291,21 +277,18 @@ class ListPlayers(APIHandler):
             },
             "required": ["gamemaster", "players"],
         },
-        "output_example": {
+        output_example={
             "gamemaster": "Stark",
             "players": ["Stark", "Stannis", "Baratheon", "Tyrell", "Lannister"]
         },
-        "doc": """
-GET to receive list of players in current game
-
-* `players` array includes ALL players (including gamemaster)
-* `gamemaster` field is useful for highlighting the gamemaster in the UI
-"""
-    }
-
-    @authenticated
-    @io_schema
+    )
     def get(self):
+        """
+        GET to receive list of players in current game
+
+        * `players` array includes ALL players (including gamemaster)
+        * `gamemaster` field is useful for highlighting the gamemaster in the UI
+        """
         player_name = self.get_current_user()
         player = Player(self.db_conn, "name", player_name)
         game_id = player["current_game_id"]
@@ -323,19 +306,16 @@ class EndGame(APIHandler):
 
     """End the game"""
 
-    apid = {}
-    apid["delete"] = {
-        "input_schema": None,
-        "output_schema": {"type": "string"},
-        "output_example": "Game 12345678910 was completed; Guy was the winner.",
-        "doc": """
-DELETE to end the game; this endpoint should only be triggered if GameState indicates there is a winner.
-"""
-    }
-
     @authenticated
-    @io_schema
+    @schema.validate(
+        output_schema={"type": "string"},
+        output_example="Game 12345678910 was completed; Guy was the winner.",
+    )
     def delete(self):
+        """
+        DELETE to end the game; this endpoint should only be triggered if
+            GameState indicates there is a winner.
+        """
         player_name = self.get_current_user()
         player = Player(self.db_conn, "name", player_name)
         game_id = player["current_game_id"]

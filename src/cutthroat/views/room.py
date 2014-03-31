@@ -1,4 +1,3 @@
-from tornado import template
 from tornado.web import authenticated
 
 from cutthroat.handlers import ViewHandler

@@ -2,7 +2,8 @@ import bcrypt
 
 from tornado.options import options
 from tornado.web import authenticated
-from tornado_json.utils import io_schema, api_assert
+from tornado_json.exceptions import api_assert
+from tornado_json import schema
 
 from cutthroat.handlers import APIHandler
 from cutthroat.common import get_player
@@ -10,9 +11,9 @@ from cutthroat.dblock import DBLock
 
 
 class Player(APIHandler):
-    apid = {}
-    apid["post"] = {
-        "input_schema": {
+
+    @schema.validate(
+        input_schema={
             "type": "object",
             "properties": {
                 "username": {"type": "string"},
@@ -20,38 +21,20 @@ class Player(APIHandler):
             },
             "required": ["username", "password"]
         },
-        "output_schema": {
+        output_schema={
             "type": "object",
             "properties": {
                 "username": {"type": "string"}
             }
         },
-        "doc": """
-POST the required parameters to permanently register a new player
-
-* `username`: Username of the player
-* `password`: Password for future logins
-"""
-    }
-    apid["get"] = {
-        "input_schema": None,
-        "output_schema": {
-            "type": "object",
-            "properties": {
-                "name": {"type": "string"},
-                "current_game_id": {"type": "string"},
-                "current_room": {"type": "string"},
-                "balls": {"type": "array"},
-                "orig_balls": {"type": "array"},
-            }
-        },
-        "doc": """
-GET to retrieve player info
-"""
-    }
-
-    @io_schema
+    )
     def post(self):
+        """
+        POST the required parameters to permanently register a new player
+
+        * `username`: Username of the player
+        * `password`: Password for future logins
+        """
         player_name = self.body["username"]
         password = self.body["password"]
 
@@ -83,8 +66,22 @@ GET to retrieve player info
         return {"username": player_name}
 
     @authenticated
-    @io_schema
+    @schema.validate(
+        output_schema={
+            "type": "object",
+            "properties": {
+                "name": {"type": "string"},
+                "current_game_id": {"type": "string"},
+                "current_room": {"type": "string"},
+                "balls": {"type": "array"},
+                "orig_balls": {"type": "array"},
+            }
+        },
+    )
     def get(self):
+        """
+        GET to retrieve player info
+        """
         player_name = self.get_current_user()
         player = get_player(self.db_conn, player_name)
 

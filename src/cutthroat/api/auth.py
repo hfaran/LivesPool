@@ -2,7 +2,8 @@ import bcrypt
 
 from tornado.options import options
 from tornado.web import authenticated
-from tornado_json.utils import io_schema, APIError
+from tornado_json.exceptions import APIError
+from tornado_json import schema
 
 from cutthroat.handlers import APIHandler
 from cutthroat.common import get_player
@@ -12,9 +13,8 @@ class Login(APIHandler):
 
     """Handle authentication"""
 
-    apid = {}
-    apid["post"] = {
-        "input_schema": {
+    @schema.validate(
+        input_schema={
             "required": ["username", "password"],
             "type": "object",
             "properties": {
@@ -22,29 +22,19 @@ class Login(APIHandler):
                 "password": {"type": "string"},
             },
         },
-        "output_schema": {
+        output_schema={
             "type": "object",
             "properties": {
                 "username": {"type": "string"}
             }
         },
-        "doc": """
-POST the required credentials to get back a cookie
-
-* `username`: Username
-* `password`: Password
-"""
-    }
-    apid["get"] = {
-        "input_schema": None,
-        "output_schema": {"type": "string"},
-        "doc": """
-GET to check if authenticated. Should be obvious from status code (403 vs. 200).
-"""
-    }
-
-    @io_schema
+    )
     def post(self):
+        """POST the required credentials to get back a cookie
+
+        * `username`: Username
+        * `password`: Password
+        """
         player_name = self.body["username"]
         password = self.body["password"]
         player = get_player(self.db_conn, player_name, err_code=400)
@@ -65,8 +55,14 @@ GET to check if authenticated. Should be obvious from status code (403 vs. 200).
                 log_message="Bad username/password combo"
             )
 
-    @io_schema
+    @schema.validate(
+        output_schema={"type": "string"}
+    )
     def get(self):
+        """GET to check if authenticated.
+
+        Should be obvious from status code (403 vs. 200).
+        """
         if not self.get_current_user():
             raise APIError(
                 403,
@@ -81,18 +77,12 @@ class Logout(APIHandler):
 
     """Logout"""
 
-    apid = {}
-    apid["delete"] = {
-        "input_schema": None,
-        "output_schema": {"type": "string"},
-    "doc": """
-DELETE to clear cookie for current user.
-"""
-    }
-
     @authenticated
-    @io_schema
+    @schema.validate(
+        output_schema={"type": "string"},
+    )
     def delete(self):
+        """DELETE to clear cookie for current user."""
         # So this doesn't actually with the CLI client...
         #  can still authenticate with old cookie. Maybe we'll have
         #  better luck with browser? UPDATE: Works in browser.
