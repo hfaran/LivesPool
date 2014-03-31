@@ -129,7 +129,7 @@ input#inputNumBalls {
 }
 
 .contain-buttons {
-  max-width: 150px; 
+  max-width: 150px;
   margin: auto;
 }
 
@@ -157,7 +157,7 @@ input#inputNumBalls {
     text-align: center;
     vertical-align: middle;
     line-height: 36px;
-    
+
     border-radius: 50%;
 
     background: #fff;
@@ -170,36 +170,36 @@ input#inputNumBalls {
 }
 
 .blue {
-    background-color: blue;    
+    background-color: blue;
 }
 
 .yellow {
-    background-color: yellow;   
+    background-color: yellow;
     color: #000;
 }
 
 .green {
-    background-color: green;    
+    background-color: green;
 }
 
 .red {
-    background-color: red;    
+    background-color: red;
 }
 
 .orange {
-    background-color: #FFA125;    
+    background-color: #FFA125;
 }
 
 .purple {
-    background-color: #8A15CE;    
+    background-color: #8A15CE;
 }
 
 .maroon {
-    background-color: maroon;    
+    background-color: maroon;
 }
 
 .black {
-    background-color: black;    
+    background-color: black;
 }
 
 .myBall {
