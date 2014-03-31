@@ -16,3 +16,7 @@ src/cutthroats.py
 ```bash
 ./runtests.bash
 ```
+
+## API Documentation
+* [Markdown](https://github.com/hfaran/LivesPool/blob/master/docs/API_Documentation.md)
+* [HTML](http://hfaran.github.io/LivesPool/API_Documentation/)
