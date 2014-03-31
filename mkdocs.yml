@@ -1,0 +1,4 @@
+site_name: Lives Pool
+theme: slate
+pages:
+  - [API_Documentation.md, API Documentation]
