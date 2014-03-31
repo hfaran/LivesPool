@@ -8,7 +8,7 @@ function load_players() {
             $("#lobby_container").append('<ul id="playerlist" class="list-group"></ul>');
 
             var firstItem = true;
-            $.each(data["data"]["players"], function(key, value) {
+            $.each(data.data.players, function(key, value) {
 
                 if (firstItem) {
                     $("ul#playerlist").append('<li class="list-group-item owner">' + value + '</li>');
@@ -51,7 +51,7 @@ function create_game() {
             content_type: "application/json; charset=utf-8",
             dataType: "json",
             success: function() {
-                window.location.href = "/room/game"
+                window.location.href = "/room/game";
             },
             error: function(jqXHR, status, error) {
                 // TODO: implement

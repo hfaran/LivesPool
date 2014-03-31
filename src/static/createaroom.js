@@ -1,3 +1,5 @@
+"use strict";
+
 $(document).ready(function() {
     $("#createroomForm").submit(function(event) {
         event.preventDefault();
@@ -13,7 +15,7 @@ $(document).ready(function() {
             },
             error: function(jqXHR, status, error) {
                 if (jqXHR.status === 409) {
-                    alert("Room already exists")
+                    alert("Room already exists");
                 }
             }
         });

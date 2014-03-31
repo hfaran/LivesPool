@@ -1,7 +1,7 @@
 "use strict";
 
 $(document).ready(function() {
-    if (window.location.pathname != "/signin/signin") {
+    if (window.location.pathname !== "/signin/signin") {
         $('#afterLogoutItem').after('<li><a id="signoutButton">Sign Out</a></li>');
     }
 
