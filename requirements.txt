@@ -1,3 +1,5 @@
+supervisor>=3.0
+
 tornado>=3.2.0
 Tornado-JSON==0.40
 

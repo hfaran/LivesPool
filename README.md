@@ -12,6 +12,18 @@ src/cutthroats.py
 # Visit localhost:8888
 ```
 
+## Running with ``supervisord``
+```bash
+# If supervisord isn't already going, start it
+supervisord -c supervisord.conf
+# We can use the following commands to get status, start, stop, restart
+supervisorctl status
+supervisorctl start all
+supervisorctl restart all
+supervisorctl stop all
+# These commands must all be run from the root directory
+```
+
 ## Running Tests
 ```bash
 ./runtests.bash
