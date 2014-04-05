@@ -11,7 +11,14 @@ ORIGUSER="$USER"
 
 # Install any system packages (Ubuntu/Debian only) that are pre-requisites
 echo -e "\n\nInstalling required system packages . . ."
-sudo apt-get install libffi-dev
+sudo apt-get install gcc build-essential python-dev
+sudo apt-get install python-setuptools
+sudo apt-get install libffi-dev  # For python bcrypt package
+# Install pip if required
+if ! which pip; then
+    sudo easy_install-2.7 pip
+fi
+
 
 # Install all required Python packages
 echo -e "\n\nInstalled required Python packages with pip . . ."

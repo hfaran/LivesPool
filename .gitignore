@@ -38,3 +38,6 @@ nosetests.xml
 # PyCharm
 .idea
 
+# Various local files
+API_Documentation.md
+cutthroat.db
