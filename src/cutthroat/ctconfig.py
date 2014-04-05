@@ -7,7 +7,9 @@ _CONFIG_FILENAME = "cutthroat.conf"
 def define_options():
     """Define defaults for most custom options"""
     # Log file and config file paths
-    options.log_file_prefix = "/var/log/cutthroat/cutthroat.log"
+    # Since we are now using supervisord, we just let it capture the
+    #   log from STDERR. The following line is therefore commented out.
+    # options.log_file_prefix = "/var/log/cutthroat/cutthroat.log"
     define(
         "conf_file_path",
         default="/etc/cutthroat/{}".format(_CONFIG_FILENAME),
