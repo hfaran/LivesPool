@@ -23,22 +23,22 @@ var indexToId = [
 
 function highlight_player_balls() {
 
-    /* Store player_balls in localStorage so we don't have
+    /* Store player_balls in sessionStorage so we don't have
     to fetch it every second*/
-    if (localStorage.getItem('player_balls') === null || localStorage.getItem('pb_refresh_count') > 5) {
+    if (sessionStorage.getItem('player_balls') === null || sessionStorage.getItem('pb_refresh_count') > 5) {
         $.ajax({
             url: '/api/player/player',
             success: function(data) {
-                localStorage.setItem('player_balls', JSON.stringify(data.data.orig_balls));
+                sessionStorage.setItem('player_balls', JSON.stringify(data.data.orig_balls));
             }
         });
-        localStorage.setItem('pb_refresh_count', '0');
+        sessionStorage.setItem('pb_refresh_count', '0');
     }
     else {
-        var pb_refresh_count = Number(localStorage.getItem('pb_refresh_count'));
-        localStorage.setItem('pb_refresh_count', String(pb_refresh_count + 1));
+        var pb_refresh_count = Number(sessionStorage.getItem('pb_refresh_count'));
+        sessionStorage.setItem('pb_refresh_count', String(pb_refresh_count + 1));
     }
-    var player_balls = JSON.parse(localStorage.getItem('player_balls'));
+    var player_balls = JSON.parse(sessionStorage.getItem('player_balls'));
 
     // Swap background-color with color to create crappy flashing effect
     // TODO: Make this less crappy
