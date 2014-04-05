@@ -26,10 +26,10 @@ sudo pip install -r requirements.txt
 
 # Create log directory and give $USER access to the folder
 sudo mkdir -p $LOGDIR
-sudo setfacl -m user:$ORIGUSER:rwx $LOGDIR
+sudo chown -hR $ORIGUSER $LOGDIR
 # Create config directory and give $USER access to the folder
 sudo mkdir -p $CONFDIR
-sudo setfacl -m user:$ORIGUSER:rwx $CONFDIR
+sudo chown -hR $ORIGUSER $CONFDIR
 # Copy config file over to $CONFDIR
 cp --no-clobber "config/cutthroat.conf" "$CONFDIR/cutthroat.conf"
 # For a quickstart; ideally the DB should be placed elsewhere
