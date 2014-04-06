@@ -29,7 +29,7 @@ def define_options():
     # Database options
     define(
         "sqlite_db",
-        default="cutthroat.db"
+        default="/var/lib/cutthroat/cutthroat.db"
     )
 
     define(

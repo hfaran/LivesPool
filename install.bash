@@ -7,7 +7,9 @@
 
 LOGDIR="/var/log/cutthroat"
 CONFDIR="/etc/cutthroat"
+DATADIR="/var/lib/cutthroat"
 ORIGUSER="$USER"
+
 
 # Install any system packages (Ubuntu/Debian only) that are pre-requisites
 echo -e "\n\nInstalling required system packages . . ."
@@ -30,9 +32,13 @@ sudo chown -hR $ORIGUSER $LOGDIR
 # Create config directory and give $USER access to the folder
 sudo mkdir -p $CONFDIR
 sudo chown -hR $ORIGUSER $CONFDIR
+# Create data directory and give $USER access to the folder
+sudo mkdir -p $DATADIR
+sudo chown -hR $ORIGUSER $DATADIR
 # Copy config file over to $CONFDIR
-cp --no-clobber "config/cutthroat.conf" "$CONFDIR/cutthroat.conf"
+cp --no-clobber "config/cutthroat.conf" "${CONFDIR}/cutthroat.conf"
 # For a quickstart; ideally the DB should be placed elsewhere
-cp --no-clobber "starter.db" "cutthroat.db"
+cp --no-clobber "starter.db" "${DATADIR}/cutthroat.db"
+
 
 echo -e "\n\nBootstrapping complete."
