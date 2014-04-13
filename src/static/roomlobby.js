@@ -63,8 +63,26 @@ function create_game() {
     });
 }
 
+function check_start() {
+    $.ajax({
+        url: '/api/player/player',
+        type: 'GET',
+        success: function(data) {
+            data = data.data;
+            if (data.current_game_id) {
+                window.location.href = '/room/game';
+            }
+        }
+    });
+
+    setTimeout(check_start, 5000);
+}
+
 $(document).ready(function() {
     load_players();
     create_game();
     leave_room();
+    // Forward player to game room if gamemaster has
+    //  started the game
+    check_start();
 });
