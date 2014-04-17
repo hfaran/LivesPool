@@ -81,6 +81,17 @@ function load_balls() {
             $.each(data.data.balls_on_table, function(index, value) {
                 ballsInPlay[indexToId[value]] = true;
             });
+
+            if(data.data.winner != "") {
+                $.ajax({
+                    url: '/api/game/endgame',
+                    type: 'DELETE',
+                    success: function() {
+                        window.location.href = '/room/join';
+                    } 
+                });                
+            }
+
             $.each(ballsInPlay, function(index, value) {
                 if (value) {
                     $('#' + index).css('opacity', 1);
