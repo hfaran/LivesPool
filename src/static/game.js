@@ -87,7 +87,7 @@ function load_balls() {
                     url: '/api/game/endgame',
                     type: 'DELETE',
                     success: function() {
-                        window.location.href = '/room/join';
+                        alert('The winner is: ' + data.data.winner);
                     } 
                 });                
             }
@@ -99,6 +99,12 @@ function load_balls() {
                     $('#' + index).css('opacity', 0.3);
                 }
             });
+        },
+        error: function(jqXHR, status, error) {
+            if (jqXHR.status === 400) {
+                alert('Game Over!');
+                window.location.href = '/';
+            }
         }
     });
 
