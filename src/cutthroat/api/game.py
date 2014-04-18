@@ -317,43 +317,48 @@ class EndGame(APIHandler):
             GameState indicates there is a winner.
         """
         player_name = self.get_current_user()
-        player = Player(self.db_conn, "name", player_name)
+        player = get_player(self.db_conn, player_name)
         game_id = player["current_game_id"]
         api_assert(game_id, 400, log_message="You are not currently in"
                    " a game.")
         game = get_game(self.db_conn, game_id)
 
-        # Authenticate
-        api_assert(
-            game["gamemaster"] == player_name,
-            401,
-            log_message="You are not the gamemaster of the current game."
-        )
-
         with DBLock():
-            winner = get_game_winner(self.db_conn, game_id)
+            is_gamemaster = game["gamemaster"] == player_name
+            gamemaster_has_closed = game["gamemaster"] is None
 
+            winner_name = get_game_winner(self.db_conn, game_id)
             # If there is no current winner, return an error
-            if not winner:
+            if not winner_name:
                 raise APIError(
                     409,
                     log_message="The game currently has no winner."
                 )
             # Otherwise, clean up everything
             else:
-                # Record the win for the player who won
-                player["games_won"] += [game_id]
-                game["winner"] = player_name
-                # Remove all players from game
-                for pname in game["players"]:
-                    p = get_player(self.db_conn, pname)
-                    p["current_game_id"] = None
-                    p["balls"] = []
-                    p["orig_balls"] = []
-                # Clear the game's "current" attributes
-                game["players"] = []
-                game["gamemaster"] = None
+                # We want the gamemaster to FIRST to do the cleanup
+                if is_gamemaster:
+                    # Record the win for the player who won
+                    winner = get_player(self.db_conn, winner_name)
+                    winner["games_won"] += [game_id]
+                    game["winner"] = winner_name
+                    # Remove all players from game
+                    for pname in game["players"]:
+                        p = get_player(self.db_conn, pname)
+                        p["balls"] = []
+                        p["orig_balls"] = []
+                    # Clear the game's "current" attributes
+                    game["players"] = []
+                    game["gamemaster"] = None
+                    # Remove the gamemaster's current_game_id
+                    player["current_game_id"] = None
+                # Then the remainder of the players can truly leave the game
+                #   so they have a chance to query who the winner was from GameState
+                #   before having their current_game_id set to None
+                elif gamemaster_has_closed:
+                    player["current_game_id"] = None
 
                 return "Game {} was completed; {} was the winner.".format(
-                    game_id, player_name
+                        game_id,
+                        winner_name
                 )
