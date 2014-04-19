@@ -55,9 +55,9 @@ def shutdown():
 def retrieve_static_dep(args):
     url, filename = args[0], args[1]
     if os.path.exists(filename):
-        print("{} already available".format(filename))
+        logging.info("{} already available".format(filename))
     else:
-        print("Retrieving {} for {}".format(url, filename))
+        logging.info("Retrieving {} for {}".format(url, filename))
         urlretrieve(url, filename)
 
 
@@ -70,14 +70,8 @@ def main():
     """
     global http_server
 
-    print("Getting any static dependencies . . .")
-    deps = [
-        ("https://raw.github.com/daneden/animate.css/master/animate.min.css", "src/static/animate.css")
-    ]
-    map(retrieve_static_dep, deps)
-
-    print("Getting ready . . .")
-
+    # NOTE: There should be NO logging done before options are loaded
+    #   as logging handlers are not yet created
     ctconfig.define_options()  # Define options with defaults
     # Attempt to load config from config file
     try:
@@ -86,6 +80,12 @@ def main():
         errmsg = ("{} doesn't exist or couldn't be opened. Using defaults."
                   .format(options.conf_file_path))
         logging.error(errmsg)
+
+    logging.info("Getting any static dependencies . . .")
+    deps = [
+        ("https://raw.github.com/daneden/animate.css/master/animate.min.css", "src/static/animate.css")
+    ]
+    map(retrieve_static_dep, deps)
 
     routes = mod_routes.assemble_routes()
     settings = dict(
@@ -118,19 +118,18 @@ def main():
 
     for port in options.ports:
         try:
-            logging.info("Attempting to bind on {}.".format(port))
+            logging.debug("Attempting to bind on {}.".format(port))
             http_server.listen(port)
             logging.info("Listening on {}.".format(port))
             break
         except socket.error:
-            logging.info("Could not bind on {}.".format(port))
+            logging.debug("Could not bind on {}.".format(port))
     else:
         raise StandardError("Ran out of ports to try.")
 
     signal.signal(signal.SIGTERM, sig_handler)
     signal.signal(signal.SIGINT, sig_handler)
 
-    print("Welcome to cutthroat-server")
     tornado.ioloop.IOLoop.instance().start()
 
     logging.info("Exit...")
