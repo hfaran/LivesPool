@@ -1,12 +1,15 @@
 'use strict';
 
+
 $(document).ready(function() {
+    get_player_balls();
     var ballsInPlay = load_balls();
     on_click_ball(ballsInPlay);
     load_players(); // TODO: fix player list layout
     leave_game();
     highlight_player_balls();
 });
+
 
 var indexToId = [
     'placeholder',
@@ -29,22 +32,6 @@ var indexToId = [
 
 
 function highlight_player_balls() {
-
-    /* Store player_balls in sessionStorage so we don't have
-    to fetch it every second*/
-    if (sessionStorage.getItem('player_balls') === null || sessionStorage.getItem('pb_refresh_count') > 5) {
-        $.ajax({
-            url: '/api/player/player',
-            success: function(data) {
-                sessionStorage.setItem('player_balls', JSON.stringify(data.data.orig_balls));
-            }
-        });
-        sessionStorage.setItem('pb_refresh_count', '0');
-    }
-    else {
-        var pb_refresh_count = Number(sessionStorage.getItem('pb_refresh_count'));
-        sessionStorage.setItem('pb_refresh_count', String(pb_refresh_count + 1));
-    }
     var player_balls = JSON.parse(sessionStorage.getItem('player_balls'));
 
     // Swap background-color with color to create crappy flashing effect
@@ -202,3 +189,15 @@ function leave_game() {
     });
 }
 
+
+function get_player_balls() {
+    // Puts player_balls in sessionStorage so that highlight_player_balls
+    //  may use it later
+    $.ajax({
+        url: '/api/player/player',
+        success: function(data) {
+            sessionStorage.clear();
+            sessionStorage.setItem('player_balls', JSON.stringify(data.data.orig_balls));
+        }
+    });
+}
