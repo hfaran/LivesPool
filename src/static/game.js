@@ -1,5 +1,12 @@
 'use strict';
 
+$(document).ready(function() {
+    var ballsInPlay = load_balls();
+    on_click_ball(ballsInPlay);
+    load_players(); // TODO: fix player list layout
+    leave_game();
+    highlight_player_balls();
+});
 
 var indexToId = [
     'placeholder',
@@ -88,6 +95,7 @@ function load_balls() {
                     type: 'DELETE',
                     success: function() {
                         alert('The winner is: ' + data.data.winner);
+                        window.location.href = '/';
                     } 
                 });                
             }
@@ -99,12 +107,6 @@ function load_balls() {
                     $('#' + index).css('opacity', 0.3);
                 }
             });
-        },
-        error: function(jqXHR, status, error) {
-            if (jqXHR.status === 400) {
-                alert('Game Over!');
-                window.location.href = '/';
-            }
         }
     });
 
@@ -200,11 +202,3 @@ function leave_game() {
     });
 }
 
-
-$(document).ready(function() {
-    var ballsInPlay = load_balls();
-    on_click_ball(ballsInPlay);
-    load_players(); // TODO: fix player list layout
-    leave_game();
-    highlight_player_balls();
-});
