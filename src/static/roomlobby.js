@@ -1,6 +1,12 @@
 'use strict';
 
+$(document).ready(function() {
+    load_players();
+    check_start();
+});
+
 function load_players() {
+    var gamemaster;
     $.ajax({
         url: '/api/room/listplayers',
         success: function(data) {
@@ -15,6 +21,7 @@ function load_players() {
                     $('ul#playerlist').append('<li class="list-' +
                         'group-item owner">' + value + '</li>');
                     firstItem = false;
+                    gamemaster = value.toString();
                 } else {
                     $('ul#playerlist').append('<li class="list-' +
                         'group-item">' + value + '</li>');
@@ -22,9 +29,45 @@ function load_players() {
 
             });
         }
+    }).done(function() {
+        load_buttons(gamemaster);
     });
-
+    
     setTimeout(load_players, 5000);
+}
+
+function load_buttons(gamemaster) {
+    $.ajax({
+        url: '/api/player/player',
+        success: function(data) {
+            $('#numBallsForm').empty();
+            if(data.data.name == gamemaster.toString()) {
+                $('#numBallsForm').append(
+                    '<div class="form-group">' +
+                        '<label id="ballsPerPlayerLabel" for="inputNumBalls">Balls per player:</label>' +
+                        '<div class="form-group">' +
+                            '<input id="inputNumBalls" name="nbpp" class="form-control form-spacing numBalls" type="number" required="" max="5" min="1" />' +
+                        '</div>' +
+                        '<div id="roomlobby-buttons" class="contain-buttons">' +
+                            '<button id="leaveroombutton" type="button" class="btn btn-danger btn-block">Leave</button>' +
+                            '<button id="startgamebutton" type="submit" class="btn btn-info btn-block">Start</button>' +
+                        '</div>' +
+                    '</div>'
+                );
+
+            }
+            else {
+                $('#numBallsForm').append(
+                    '<div id="roomlobby-buttons" class="contain-buttons">' +
+                        '<button id="leaveroombutton" type="button" class="btn btn-danger btn-block">Leave</button>' +
+                    '</div>'
+                );
+            }
+        }
+    }).done(function() {
+        leave_room();
+        create_game();
+    });
 }
 
 function leave_room() {
@@ -63,13 +106,14 @@ function create_game() {
     });
 }
 
+// Forward player to game room if gamemaster has
+// started the game
 function check_start() {
     $.ajax({
         url: '/api/player/player',
         type: 'GET',
         success: function(data) {
-            data = data.data;
-            if (data.current_game_id) {
+            if (data.data.current_game_id) {
                 window.location.href = '/room/game';
             }
         }
@@ -78,11 +122,3 @@ function check_start() {
     setTimeout(check_start, 5000);
 }
 
-$(document).ready(function() {
-    load_players();
-    create_game();
-    leave_room();
-    // Forward player to game room if gamemaster has
-    //  started the game
-    check_start();
-});
