@@ -1,11 +1,13 @@
 'use strict';
 
 $(document).ready(function() {
-    load_players();
+    var initialLoad = true;
+
+    load_players(initialLoad);
     check_start();
 });
 
-function load_players() {
+function load_players(initialLoad) {
     var gamemaster;
     $.ajax({
         url: '/api/room/listplayers',
@@ -30,9 +32,13 @@ function load_players() {
             });
         }
     }).done(function() {
-        load_buttons(gamemaster);
+        // only call load_buttons once
+        if(initialLoad !== undefined) {
+            load_buttons(gamemaster);
+            initialLoad = undefined;
+        }
     });
-    
+
     setTimeout(load_players, 5000);
 }
 
@@ -121,4 +127,4 @@ function check_start() {
 
     setTimeout(check_start, 5000);
 }
-     
+
