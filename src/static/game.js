@@ -96,8 +96,8 @@ function load_balls() {
                     success: function() {
                         alert('The winner is: ' + data.data.winner);
                         window.location.href = '/';
-                    } 
-                });                
+                    }
+                });
             }
 
             $.each(ballsInPlay, function(index, value) {
