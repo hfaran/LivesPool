@@ -1,15 +1,10 @@
 'use strict';
 
-
 $(document).ready(function() {
     get_player_balls();
-    var ballsInPlay = load_balls();
-    on_click_ball(ballsInPlay);
     load_players(); // TODO: fix player list layout
     leave_game();
-    highlight_player_balls();
 });
-
 
 var indexToId = [
     'placeholder',
@@ -30,19 +25,19 @@ var indexToId = [
     'ball-fifteen'
 ];
 
-
-function highlight_player_balls() {
-    var player_balls = JSON.parse(sessionStorage.getItem('player_balls'));
-
-    $.each(player_balls, function(k, v) {
-        var ball_id = '#' + String(indexToId[v]);
-        $.each(["webkit", "moz"], function(n, i) {
-            $(ball_id).css("-" + i + "-animation-iteration-count", "infinite");
-         });
-        $(ball_id).addClass('animated flip');
+function get_player_balls() {
+    // Puts player_balls in sessionStorage so that highlight_player_balls
+    //  may use it later
+    $.ajax({
+        url: '/api/player/player',
+        success: function(data) {
+            sessionStorage.clear();
+            sessionStorage.setItem('player_balls', JSON.stringify(data.data.orig_balls));
+        }
+    }).done(function() {
+        load_balls();
     });
 }
-
 
 function load_balls() {
     var ballsInPlay = {
@@ -90,12 +85,29 @@ function load_balls() {
                 }
             });
         }
+    }).done(function() {
+        highlight_player_balls();
+        on_click_ball(ballsInPlay);
     });
 
     setTimeout(load_balls, 5000);
     return ballsInPlay;
 }
 
+function on_click_ball(ballsInPlay) {
+    $('div.poolball').click(function() {
+        var id = $(this).attr('id');
+        if (ballsInPlay[id]) {
+            $(this).fadeTo(700, 0.3);
+            ballsInPlay[id] = false;
+            toggle_ball(id);
+        } else {
+            $(this).fadeTo(700, 1);
+            ballsInPlay[id] = true;
+            toggle_ball(id);
+        }
+    });
+}
 
 function toggle_ball(id) {
     var idToBall = {
@@ -130,23 +142,6 @@ function toggle_ball(id) {
     });
 }
 
-
-function on_click_ball(ballsInPlay) {
-    $('div.poolball').click(function() {
-        var id = $(this).attr('id');
-        if (ballsInPlay[id]) {
-            $(this).fadeTo(700, 0.3);
-            ballsInPlay[id] = false;
-            toggle_ball(id);
-        } else {
-            $(this).fadeTo(700, 1);
-            ballsInPlay[id] = true;
-            toggle_ball(id);
-        }
-    });
-}
-
-
 function load_players() {
     $.ajax({
         url: '/api/game/listplayers',
@@ -171,7 +166,6 @@ function load_players() {
     });
 }
 
-
 function leave_game() {
     $('#leavegamebutton').click(function() {
         $.ajax({
@@ -184,15 +178,14 @@ function leave_game() {
     });
 }
 
+function highlight_player_balls() {
+    var player_balls = JSON.parse(sessionStorage.getItem('player_balls'));
 
-function get_player_balls() {
-    // Puts player_balls in sessionStorage so that highlight_player_balls
-    //  may use it later
-    $.ajax({
-        url: '/api/player/player',
-        success: function(data) {
-            sessionStorage.clear();
-            sessionStorage.setItem('player_balls', JSON.stringify(data.data.orig_balls));
-        }
+    $.each(player_balls, function(k, v) {
+        var ball_id = '#' + String(indexToId[v]);
+        $.each(["webkit", "moz"], function(n, i) {
+            $(ball_id).css("-" + i + "-animation-iteration-count", "infinite");
+        });
+        $(ball_id).addClass('animated pulse');
     });
 }
