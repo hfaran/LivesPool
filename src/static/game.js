@@ -34,18 +34,13 @@ var indexToId = [
 function highlight_player_balls() {
     var player_balls = JSON.parse(sessionStorage.getItem('player_balls'));
 
-    // Swap background-color with color to create crappy flashing effect
-    // TODO: Make this less crappy
     $.each(player_balls, function(k, v) {
         var ball_id = '#' + String(indexToId[v]);
-        var bgc = $(ball_id).css('background-color');
-        var c = $(ball_id).css('color');
-        $(ball_id).css('background-color', c);
-        $(ball_id).css('color', bgc);
+        $.each(["webkit", "moz"], function(n, i) {
+            $(ball_id).css("-" + i + "-animation-iteration-count", "infinite");
+         });
+        $(ball_id).addClass('animated flip');
     });
-
-    // This happens every second
-    setTimeout(highlight_player_balls, 1000);
 }
 
 
