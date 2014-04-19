@@ -5,15 +5,15 @@ import os
 import time
 import signal
 import json
-import jsonpickle
 import uuid
 import socket
+from urllib import urlretrieve
 
+import jsonpickle
 import tornado.httpserver
 import tornado.ioloop
 import tornado.options
 from tornado.options import options
-
 from tornado_json.application import Application
 
 from cutthroat import db2
@@ -48,7 +48,17 @@ def shutdown():
         else:
             io_loop.stop()
             logging.info('Shutdown')
+
     stop_loop()
+
+
+def retrieve_static_dep(args):
+    url, filename = args[0], args[1]
+    if os.path.exists(filename):
+        print("{} already available".format(filename))
+    else:
+        print("Retrieving {} for {}".format(url, filename))
+        urlretrieve(url, filename)
 
 
 def main():
@@ -59,6 +69,12 @@ def main():
     - Start the server
     """
     global http_server
+
+    print("Getting any static dependencies . . .")
+    deps = [
+        ("https://raw.github.com/daneden/animate.css/master/animate.min.css", "src/static/animate.css")
+    ]
+    map(retrieve_static_dep, deps)
 
     print("Getting ready . . .")
 

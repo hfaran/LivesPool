@@ -41,3 +41,4 @@ nosetests.xml
 # Various local files
 API_Documentation.md
 cutthroat.db
+src/static/animate.css
