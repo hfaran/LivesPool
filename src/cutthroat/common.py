@@ -73,6 +73,10 @@ def get_game_winner(db, game_id):
     :rtype: str
     """
     game = get_game(db, game_id)
+    # If winner already known, return
+    if game["winner"]:
+        return game["winner"]
+    # Otherwise, determine winner
     players_with_balls = []
     for pname in game["players"]:
         p = get_player(db, pname)
