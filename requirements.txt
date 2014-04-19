@@ -11,3 +11,4 @@ requests>=2.2.1
 
 nose
 nose-cov
+selenium
