@@ -25,8 +25,22 @@ supervisorctl stop all
 ```
 
 ## Running Tests
+
+### Back-end tests
 ```bash
 ./runtests.bash
+```
+
+### Front-end tests
+
+Front-end functional tests literally use `supervisorctl` to start the server to talk to.
+Therefore, you must have LivesPool "installed" already (i.e., have run `install.bash`).
+
+Additionally, manually sign up a user with username "test" and password "test".
+
+```bash
+# Must be run from the root directory of the repository
+src/tests/frontend_test.py
 ```
 
 ## API Documentation
