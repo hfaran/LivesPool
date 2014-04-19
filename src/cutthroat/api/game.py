@@ -235,7 +235,7 @@ class GameState(APIHandler):
             "type": "object",
             "properties": {
                 "balls_on_table": {"type": "array"},
-                "winner": {"type": "string"},
+                "winner": {"type": ["string", "null"]},
             },
         },
         output_example={
@@ -272,7 +272,7 @@ class ListPlayers(APIHandler):
         output_schema={
             "type": "object",
             "properties": {
-                "gamemaster": {"type": "string"},
+                "gamemaster": {"type": ["string", "null"]},
                 "players": {"type": "array"},
             },
             "required": ["gamemaster", "players"],
