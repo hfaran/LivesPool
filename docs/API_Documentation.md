@@ -194,7 +194,10 @@ null
     "type": "object", 
     "properties": {
         "winner": {
-            "type": "string"
+            "type": [
+                "string", 
+                "null"
+            ]
         }, 
         "balls_on_table": {
             "type": "array"
@@ -287,7 +290,10 @@ null
             "type": "array"
         }, 
         "gamemaster": {
-            "type": "string"
+            "type": [
+                "string", 
+                "null"
+            ]
         }
     }
 }
