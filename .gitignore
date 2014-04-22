@@ -42,3 +42,4 @@ nosetests.xml
 API_Documentation.md
 cutthroat.db
 src/static/animate.css
+src/static/debounce.js

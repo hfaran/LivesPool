@@ -83,7 +83,8 @@ def main():
 
     logging.info("Getting any static dependencies . . .")
     deps = [
-        ("https://raw.github.com/daneden/animate.css/master/animate.min.css", "src/static/animate.css")
+        ("https://raw.github.com/daneden/animate.css/master/animate.min.css", "src/static/animate.css"),
+        ("https://raw.githubusercontent.com/cowboy/jquery-throttle-debounce/v1.1/jquery.ba-throttle-debounce.min.js", "src/static/debounce.js")
     ]
     map(retrieve_static_dep, deps)
 
