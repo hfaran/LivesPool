@@ -1,6 +1,12 @@
 'use strict';
 
 var NUM_BALLS = 15;
+var WIDTH_THRESHOLD = 440;
+var BALL_GAP = 4.25;
+
+// inner indices of BALL_IDS:
+var BALL_STRING = 0;
+var BALL_COLOR = 1;
 
 var ID_TO_BALL = {
     'ball-one': 1, 'ball-two': 2, 'ball-three': 3,
@@ -11,19 +17,82 @@ var ID_TO_BALL = {
 };
 
 var BALL_IDS = [
-    'ball-one', 'ball-two', 'ball-three',
-    'ball-four', 'ball-five', 'ball-six',
-    'ball-seven', 'ball-eight', 'ball-nine',
-    'ball-ten', 'ball-eleven', 'ball-twelve',
-    'ball-thirteen', 'ball-fourteen','ball-fifteen'
+    ['ball-one', '#FFD342'],
+    ['ball-two', '#0000EC'],
+    ['ball-three', '#B90315'],
+    ['ball-four', '#650090'],
+    ['ball-five', '#F6731B'],
+    ['ball-six', '#165F3D'],
+    ['ball-seven', '#7F1D1D'],
+    ['ball-eight', '#000000'],
+    ['ball-nine', '#0000EC'],
+    ['ball-ten', '#B90315'],
+    ['ball-eleven', '#650090'],
+    ['ball-twelve', '#F6731B'],
+    ['ball-thirteen', '#165F3D'],
+    ['ball-fourteen', '#7F1D1D'],
+    ['ball-fifteen', '#000000']
 ];
 
 $(document).ready(function() {
+    load_ball_content();
+    setup_triangle_ready();
     get_player_balls();
     on_click_ball();
-    load_players(); // TODO: fix player list layout
+    load_players();
     leave_game();
 });
+
+$(window).resize(function() {
+    setup_triangle_ready();
+});
+
+function load_ball_content() {
+    for(var i = 1; i <= 15; i++) {
+        var spanId = '#b' + i.toString();
+        var figureId = '#' + BALL_IDS[i-1][BALL_STRING];
+        $(spanId).attr('data-content', i.toString());
+        $(figureId).css('background',BALL_IDS[i-1][BALL_COLOR]);
+    }
+
+}
+
+function setup_triangle_ready() {
+    var viewportWidth = $(window).innerWidth();
+
+    if(viewportWidth < WIDTH_THRESHOLD) {
+        var diameter =  $('#game_container').width() / 5 - 15;
+        $('.ball').css('width', toPixel(diameter));
+        $('.ball').css('height', toPixel(diameter));
+
+        var fontSize = Math.round(diameter / 2.5);
+        $('.ball').css('font-size', toPixel(fontSize));
+
+        for(var i = 1; i <= 5; i++) {
+            var row = '.ball-row-' + i.toString();
+            var row_width = diameter * i + BALL_GAP * (i-1);
+            $(row).css('width', toPixel(row_width));
+            $(row).css('height', toPixel(diameter));
+        }
+    }
+    else {
+        var diameter = 55;
+        $('.ball').css('width', toPixel(diameter));
+        $('.ball').css('height', toPixel(diameter));
+        $('.ball').css('font-size', 22);
+
+        for(var i = 1; i <= 5; i++) {
+            var row = '.ball-row-' + i.toString();
+            var row_width = diameter * i + BALL_GAP * (i-1);
+            $(row).css('width', toPixel(row_width));
+            $(row).css('height', toPixel(diameter));
+        }
+    }
+}
+
+function toPixel(num) {
+    return num.toString() + 'px';
+}
 
 function get_player_balls() {
     // Puts player_balls in sessionStorage so that highlight_player_balls
@@ -44,11 +113,11 @@ function load_balls() {
         url: '/api/game/gamestate',
         success: function(data) {
             for(var j = 0; j < NUM_BALLS; j++) {
-                $('#' + BALL_IDS[j]).css('opacity', 0.3);
+                $('#' + BALL_IDS[j][BALL_STRING]).css('opacity', 0.3);
             }
 
             $.each(data.data.balls_on_table, function(key, value) {
-                $('#' + BALL_IDS[value-1]).css('opacity', 1);
+                $('#' + BALL_IDS[value-1][BALL_STRING]).css('opacity', 1);
             });
 
             if(data.data.winner != "") {
@@ -69,7 +138,7 @@ function load_balls() {
 }
 
 function on_click_ball() {
-    $('div.poolball').click($.debounce(100, function(event) {
+    $('.ball').click($.debounce(100, function(event) {
         var id = $(this).attr('id');
         toggle_ball(id, this);
     }));
@@ -135,7 +204,7 @@ function highlight_player_balls() {
     var player_balls = JSON.parse(sessionStorage.getItem('player_balls'));
 
     $.each(player_balls, function(k, v) {
-        var ball_id = '#' + String(BALL_IDS[v-1]);
+        var ball_id = '#' + String(BALL_IDS[v-1][BALL_STRING]);
         $.each(["webkit", "moz"], function(n, i) {
             $(ball_id).css("-" + i + "-animation-iteration-count", "infinite");
         });
