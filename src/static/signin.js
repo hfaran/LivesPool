@@ -44,4 +44,8 @@ $(document).ready(function() {
         $('#signinForm').attr('action', '/api/player/player');
         $('#signinForm').submit();
     });
+
+    $('li#createRoom').remove();
+    $('li#joinRoom').remove();
+    $('li#about').after('<li><a href="#">Blog</a></li>');
 });
