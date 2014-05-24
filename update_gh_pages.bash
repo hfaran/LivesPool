@@ -1,5 +1,8 @@
 #!/bin/bash
 
+set -x
+set -e
+
 TMPDIR="/tmp/livespool-docs-site"
 CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
@@ -13,17 +16,21 @@ fi
 mkdocs build
 
 # Move them to /tmp so we can copy over to gh-pages
-sudo rm -rf $TMPDIR
+mkdir -p $TMPDIR
+rm -rf $TMPDIR
 cp -r "site" $TMPDIR
+git clean -fd
 
 # checkout gh-pages and copy over new docs
 git checkout gh-pages
-sudo rm -rf *
+rm -rf *
 cp -r ${TMPDIR}/* .
 
 # Commit/push new docs
 git add .
+set +e
 git commit -am "Update documentation"
+set -e
 git push origin gh-pages
 
 # Clean up any crud, return to branch and put back changes
