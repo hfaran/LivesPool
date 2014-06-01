@@ -95,6 +95,3 @@ def get_game_winner(db, game_id):
             )
 
     return winner
-
-
-# Periodic Callbacks ###################################################
