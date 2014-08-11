@@ -1,7 +1,7 @@
 supervisor>=3.0
 
 tornado>=3.2.0
-Tornado-JSON==0.40
+Tornado-JSON>=0.40,<0.50
 
 dataset>=0.5.1
 
