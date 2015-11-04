@@ -11,20 +11,26 @@ DATADIR="/var/lib/cutthroat"
 ORIGUSER="$USER"
 
 
+read -p "Make sure you're in a Python virtualenv if you want to be before continuing... ^C now to quit if necessary, or press ENTER to continue."
+
+
 # Install any system packages (Ubuntu/Debian only) that are pre-requisites
-echo -e "\n\nInstalling required system packages . . ."
-sudo apt-get install gcc build-essential python-dev
-sudo apt-get install python-setuptools
-sudo apt-get install libffi-dev  # For python bcrypt package
-# Install pip if required
-if ! which pip; then
-    sudo easy_install-2.7 pip
+if uname -a | grep "Debian\|Ubuntu"
+then
+    echo -e "\n\nInstalling required system packages . . ."
+    sudo apt-get install gcc build-essential python-dev
+    sudo apt-get install python-setuptools
+    sudo apt-get install libffi-dev  # For python bcrypt package
+    # Install pip if required
+    if ! which pip; then
+        sudo easy_install-2.7 pip
+    fi
 fi
 
 
 # Install all required Python packages
 echo -e "\n\nInstalled required Python packages with pip . . ."
-sudo pip install -r requirements.txt
+pip install -r requirements.txt
 
 # Create log directory and give $USER access to the folder
 sudo mkdir -p $LOGDIR

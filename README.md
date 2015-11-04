@@ -9,7 +9,7 @@
 ```bash
 ./install.bash
 src/cutthroats.py
-# Visit localhost:8888
+# Visit localhost:9700
 ```
 
 ## Running with ``supervisord``
